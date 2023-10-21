@@ -11,7 +11,7 @@ import javax.persistence.*;
 public class BoardCategory {
     @Id
     @GeneratedValue
-    @Column(name = "cate_no")
+    @Column(name = "cate_id")
     private Long id;
 
     @Column(name = "cate_name")

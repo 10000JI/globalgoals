@@ -16,7 +16,7 @@ public class Board {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name="cate_no")
+    @JoinColumn(name="cate_id")
     private BoardCategory boardCategory;
 
     @ManyToOne

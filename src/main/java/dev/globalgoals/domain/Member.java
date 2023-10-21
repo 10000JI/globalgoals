@@ -29,5 +29,5 @@ public class Member {
     private RoleName rolename;
 
     @OneToMany(mappedBy = "member")
-    private List<Board> boards = new ArrayList<>();
+    private List<StampCard> stampCards = new ArrayList<>();
 }
