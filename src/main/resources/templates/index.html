@@ -1,10 +1,12 @@
 <!DOCTYPE html>
-<html th:replace="~{layout/layoutFile :: layout(~{::title})}" xmlns:th="http://www.thymeleaf.org">
+<html th:replace="~{layout/layoutFile :: layout(~{::title},~{::main})}" xmlns:th="http://www.thymeleaf.org">
     <head>
         <title>GoalGoals-SDGs</title>
     </head>
     <body class="d-flex flex-column h-100">
         <main class="flex-shrink-0">
+            <!-- Navigation-->
+            <nav th:replace="layout/layoutNav :: nav_layout" class="navbar navbar-expand-lg navbar-dark bg-dark"></nav>
             <!-- Header-->
             <header class="bg-dark py-5">
                 <div class="container px-5">
