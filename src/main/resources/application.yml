@@ -1,0 +1,26 @@
+spring:
+
+  datasource:
+    url: jdbc:h2:tcp://localhost/~/globalgoals
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+
+  sql:
+    init:
+      mode: always
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true
+    defer-datasource-initialization: true
+
+logging:
+  level:
+    me.silvernine: DEBUG
+    org.hibernate.SQL: debug
+    org.hibernate.type: trace

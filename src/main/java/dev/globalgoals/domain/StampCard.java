@@ -17,7 +17,7 @@ public class StampCard {
 
     @ManyToOne
     @JoinColumn(name="member_id")
-    private Member member;
+    private User member;
 
     @Column(name = "card_check")
     private boolean check;
