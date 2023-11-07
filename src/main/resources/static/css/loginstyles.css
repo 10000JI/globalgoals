@@ -89,6 +89,13 @@ p{
 
 }
 
+.email_btn{
+    padding:10px 0!important;
+    font-size: 1.3rem !important;
+    font-weight: 600 !important;
+
+}
+
 .already_member_box p,
 .already_member_box span{
     cursor: pointer;

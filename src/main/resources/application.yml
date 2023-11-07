@@ -19,6 +19,21 @@ spring:
         show_sql: true
     defer-datasource-initialization: true
 
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: kimmin7932@gmail.com
+    password: zcobonksycfssphi
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+  messages:
+    basename: messages,errors
+
 logging:
   level:
     me.silvernine: DEBUG

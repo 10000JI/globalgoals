@@ -1,4 +1,4 @@
-insert into user (user_id, password, name, phone, email) values ('admin', '$2a$08$lDnHPz7eUkSi6ao14Twuau08mzhWrL4kyZGGU5xfiGALO/Vxd5DOi', 'admin', '010-7932-8558','kimmin7932@gmail.com');
+insert into user (user_id, password, name, email) values ('admin', '$2a$08$lDnHPz7eUkSi6ao14Twuau08mzhWrL4kyZGGU5xfiGALO/Vxd5DOi', 'admin','kimmin7932@gmail.com');
 
 insert into authority (authority_name) values ('ROLE_USER');
 insert into authority (authority_name) values ('ROLE_ADMIN');
