@@ -14,9 +14,15 @@ public class UserRepository {
 
     public void save(User user) {em.persist(user);}
 
-    public List<User> findByName(String id) {
+    public List<User> findById(String id) {
         return em.createQuery("select m from User m where m.id=:id", User.class)
                 .setParameter("id", id)
+                .getResultList();
+    }
+
+    public List<User> findByEmail(String email) {
+        return em.createQuery("select m from User m where m.email=:email", User.class)
+                .setParameter("email", email)
                 .getResultList();
     }
 }

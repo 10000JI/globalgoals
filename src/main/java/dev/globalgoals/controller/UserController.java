@@ -33,25 +33,15 @@ public class UserController {
 
     @PostMapping("/join")
     public String addItem(@Validated @ModelAttribute UserForm form, BindingResult bindingResult) {
-
-        //password 일치 검증
-        if (!form.getPasswordCheck().equals(form.getPassword())) {
-            bindingResult.rejectValue("passwordCheck", "user.password.notEqual");
-        }
+        boolean checked = userService.validateDuplicateMember(form, bindingResult);
 
         //검증에 실패하면 다시 입력 폼으로
-        if (bindingResult.hasErrors()) {
+        if (checked) {
             log.info("errors={}", bindingResult);
             return "users/join";
         }
 
-        User user = new User();
-        user.setId(form.getId());
-        user.setPassword(form.getPassword());
-        user.setName(form.getName());
-        user.setEmail(form.getEmail());
-
-        userService.join(user);
+        userService.join(form);
         return "redirect:/";
     }
 
