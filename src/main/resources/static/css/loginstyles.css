@@ -52,18 +52,16 @@ p{
     position: relative !important;
 }
 .accounts_col form .form-control{
-    font-size:1.6rem;
-    padding:20px 10px;
-    margin-bottom:20px;
+    font-size:1.3rem;
+    /*padding:20px 10px;*/
+    margin-bottom:10px;
     background:transparent !important;
 }
 .accounts_col form label,
 .accounts_col form .form-group i{
-    position:absolute;
     z-index: 1;
     pointer-events: none;
     top: 50%;
-    transform: translateY(-50%);
     font-size:1.2rem;
     left:10px;
 
@@ -82,15 +80,18 @@ p{
     cursor: pointer;
     pointer-events:visible;
 }
+
+.pw_margin {
+    margin-bottom: 3rem;
+}
+
 .register_btn{
-    padding:10px 0!important;
     font-size: 1.6rem !important;
     font-weight: 600 !important;
 
 }
 
 .email_btn{
-    padding:10px 0!important;
     font-size: 1.3rem !important;
     font-weight: 600 !important;
 
