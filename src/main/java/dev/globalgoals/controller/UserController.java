@@ -2,7 +2,6 @@ package dev.globalgoals.controller;
 
 import dev.globalgoals.domain.User;
 import dev.globalgoals.form.UserForm;
-import dev.globalgoals.repository.UserRepository;
 import dev.globalgoals.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,9 +10,10 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.mail.MessagingException;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.UUID;
 
@@ -59,11 +59,22 @@ public class UserController {
     }
 
     @GetMapping("/login")
-    public String loginForm(HttpSession session) {
+    public String loginForm(HttpSession session, Model model, HttpServletRequest request) {
         Object obj = session.getAttribute("SPRING_SECURITY_CONTEXT");
         if (obj == null) {
+            // 쿠키 값을 모델에 추가
+            Cookie[] cookies = request.getCookies();
+            if (cookies != null) {
+                for (Cookie cookie : cookies) {
+                    if ("remember".equals(cookie.getName())) {
+                        model.addAttribute("rememberValue", cookie.getValue());
+                        break;
+                    }
+                }
+            }
             return "users/login";
         }
-            return "redirect:../";
+        return "redirect:../";
     }
+
 }
