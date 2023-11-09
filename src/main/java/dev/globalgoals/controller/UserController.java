@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.mail.MessagingException;
+import javax.servlet.http.HttpSession;
 import java.util.UUID;
 
 @Slf4j
@@ -58,10 +59,11 @@ public class UserController {
     }
 
     @GetMapping("/login")
-    public String loginForm(Model model) {
-        model.addAttribute("memberForm", new UserForm());
-        return "users/login";
+    public String loginForm(HttpSession session) {
+        Object obj = session.getAttribute("SPRING_SECURITY_CONTEXT");
+        if (obj == null) {
+            return "users/login";
+        }
+            return "redirect:../";
     }
-
-
 }

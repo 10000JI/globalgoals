@@ -1,10 +1,14 @@
 package dev.globalgoals.service;
 
+import dev.globalgoals.security.UserDetailsConfig;
 import dev.globalgoals.domain.Authority;
 import dev.globalgoals.domain.User;
 import dev.globalgoals.form.UserForm;
 import dev.globalgoals.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,7 +20,7 @@ import java.util.List;
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class UserService {
+public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
 
@@ -74,5 +78,15 @@ public class UserService {
         }
 
         return checked;
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String id) throws UsernameNotFoundException {
+        User user = userRepository.allFindById(id);
+        if (user != null) {
+            return new UserDetailsConfig(user);
+        } else {
+            return null;
+        }
     }
 }
