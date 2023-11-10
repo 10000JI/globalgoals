@@ -79,7 +79,7 @@ public class UserController {
         return "redirect:../";
     }
 
-    @GetMapping("/myPage")
+    @GetMapping("/mypage")
     public String myPageForm(Model model) {
         model.addAttribute("userForm", new UserForm());
         return "users/myPage";
