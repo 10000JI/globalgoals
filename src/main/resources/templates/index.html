@@ -21,7 +21,7 @@
 <!--                                </div>-->
                             </div>
                         </div>
-                        <div class="col-xl-5 col-xxl-6 d-none d-xl-block text-center"><img class="img-fluid rounded-3 my-5" src="/img/main.png" alt="..." /></div>
+                        <div class="col-xl-5 col-xxl-6 d-none d-xl-block text-center"><img class="img-fluid rounded-3 my-5" src="/img/main5.jpg" alt="..." /></div>
                     </div>
                 </div>
             </header>
@@ -33,6 +33,14 @@
                             <div class="row gx-5 row-cols-1 row-cols-md-5">
                                 <div class="col mb-5 h-100">
                                     <div class="feature"><img class="img-fluid rounded-3 my-5" src="/img/TheGlobalGoals_Icons_Color_Goal_1.png" alt="..." /></div>
+                                    <!-- Assuming you have a UserDetails object available in your model -->
+                                    <div th:if="${#authorization.expression('hasRole(''ROLE_USER'')')}">
+                                        <p>User has ROLE_USER permission.</p>
+                                    </div>
+
+                                    <div th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}">
+                                        <p>User has ROLE_ADMIN permission.</p>
+                                    </div>
                                     <h2 class="fw-bolder h5">1. 빈곤종식</h2>
                                     <p class="mb-0">모든 형태의 빈곤을 모든 지역에서 종식</p>
                                     <p></p>

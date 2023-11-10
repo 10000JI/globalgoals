@@ -37,19 +37,19 @@ public class UserRepository {
                 .setParameter("id", id)
                 .getResultList();
 
-        User sample1 = null;
-        Authority sample2 = null;
-        for (Object[] row : rows) {
-            sample1 = (User) row[0];
-            sample2 = (Authority) row[1];
-        }
+        if (!rows.isEmpty()) {
+            Object[] row = rows.get(0);
+            User user = (User) row[0];
+            Authority authority = (Authority) row[1];
 
-        return User.builder()
-                .id(sample1.getId())
-                .password(sample1.getPassword())
-                .email(sample1.getEmail())
-                .name(sample1.getName())
-                .authorities(Collections.singleton(sample2))
-                .build();
+            return User.builder()
+                    .id(user.getId())
+                    .password(user.getPassword())
+                    .email(user.getEmail())
+                    .name(user.getName())
+                    .authorities(Collections.singleton(authority))
+                    .build();
+        }
+        return null;
     }
 }
