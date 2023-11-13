@@ -27,13 +27,15 @@ public class User {
     @Column(name = "email")
     private String email;
 
-    @OneToMany(mappedBy = "member")
-    private List<StampCard> stampCards = new ArrayList<>();
-
     @ManyToMany
     @JoinTable(
             name = "user_authority",
             joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "user_id")},
             inverseJoinColumns = {@JoinColumn(name = "authority_name", referencedColumnName = "authority_name")})
     private Set<Authority> authorities;
+
+    @OneToMany(mappedBy = "user")
+    private List<StampCard> stampCards = new ArrayList<>();
+
+
 }

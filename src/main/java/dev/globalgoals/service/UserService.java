@@ -1,5 +1,6 @@
 package dev.globalgoals.service;
 
+import dev.globalgoals.domain.StampCard;
 import dev.globalgoals.security.UserDetailsConfig;
 import dev.globalgoals.domain.Authority;
 import dev.globalgoals.domain.User;
@@ -16,6 +17,7 @@ import org.springframework.validation.BindingResult;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.IntStream;
 
 @Service
 @Transactional(readOnly = true)
@@ -46,6 +48,17 @@ public class UserService implements UserDetailsService {
                 .build();
 
         userRepository.save(user);
+
+        // 스탬프 판 17개 목표, 체크 0 으로 insert
+        IntStream.range(0, userRepository.findAllGoals().size())
+                .forEach(i -> {
+                    StampCard stampCard = StampCard.builder()
+                            .user(user)
+                            .goal(userRepository.findAllGoals().get(i))
+                            .checkNum(0)
+                            .build();
+                    userRepository.stampSave(stampCard);
+                });
         return user.getId();
     }
 

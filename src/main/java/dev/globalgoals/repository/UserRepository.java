@@ -1,6 +1,8 @@
 package dev.globalgoals.repository;
 
 import dev.globalgoals.domain.Authority;
+import dev.globalgoals.domain.Goal;
+import dev.globalgoals.domain.StampCard;
 import dev.globalgoals.domain.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
@@ -52,4 +54,11 @@ public class UserRepository {
         }
         return null;
     }
+
+    public List<Goal> findAllGoals() {
+        return em.createQuery("SELECT g FROM Goal g", Goal.class)
+                .getResultList();
+    }
+
+    public void stampSave(StampCard stampCard) {em.persist(stampCard);}
 }

@@ -1,6 +1,9 @@
 package dev.globalgoals.domain;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
@@ -13,16 +16,17 @@ public class StampCard {
 
     @Id
     @GeneratedValue
-    @Column(name = "card_id")
-    private Long id;
+    @Column(name = "stamp_id")
+    private long id;
 
     @ManyToOne
-    @JoinColumn(name="member_id")
-    private User member;
+    @JoinColumn(name = "user_id")
+    private User user;
 
-    @Column(name = "card_check")
-    private boolean check;
+    @ManyToOne
+    @JoinColumn(name = "goal_id")
+    private Goal goal;
 
-    @Enumerated(EnumType.STRING)
-    private StampName stampName;
+    @Column(name = "check_num")
+    private Integer checkNum;
 }

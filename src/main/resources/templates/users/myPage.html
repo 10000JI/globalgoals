@@ -69,11 +69,11 @@
                 </div>
             </div>
             <div class="col py-3" id="content-by">
-                <div class="small-rectangle">
+                <div class="small-rectangle shadow">
                     <img src="https://www.sdgbookclub.com/common/img/default_profile.png" alt="프로필 이미지"
                          class="rounded-circle profile-image">
                     <div class="greeting">
-                        <h5>김민지님 안녕하세요.</h5>
+                        <h5><span th:text="${#authentication.name}"></span>님 안녕하세요.</h5>
                         <p>누적 스탬프 : 0개</p>
                     </div>
                 </div>

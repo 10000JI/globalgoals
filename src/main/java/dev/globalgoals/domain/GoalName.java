@@ -1,5 +1,5 @@
 package dev.globalgoals.domain;
 
-public enum StampName {
+public enum GoalName {
     POVERTY, FAMINE, HEALTH, EDUCATION, GENDER, HYGIENE, ENERGY, JOB, INFRA, INEQUALITY, RESIDENCE, CONSUMPTION, CLIMATE, OCEAN, GROUND, PEACE, PARTNERSHIP
 }

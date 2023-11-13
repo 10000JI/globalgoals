@@ -3,8 +3,6 @@ package dev.globalgoals.domain;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Getter
@@ -18,10 +16,7 @@ public class Goal {
     @Column(name = "goal_id")
     private Long id;
 
-    @Enumerated(EnumType.STRING)
     @Column(name = "goal_title")
-    private StampName goalTitle;
+    private String goalTitle;
 
-    @OneToMany(mappedBy = "goal")
-    private List<GoalDetail> details = new ArrayList<>();
 }
