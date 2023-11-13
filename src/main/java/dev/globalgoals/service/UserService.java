@@ -4,7 +4,7 @@ import dev.globalgoals.domain.StampCard;
 import dev.globalgoals.security.UserDetailsConfig;
 import dev.globalgoals.domain.Authority;
 import dev.globalgoals.domain.User;
-import dev.globalgoals.form.UserForm;
+import dev.globalgoals.dto.UserDto;
 import dev.globalgoals.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 
+import java.security.Principal;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.IntStream;
@@ -32,7 +33,7 @@ public class UserService implements UserDetailsService {
      * 회원가입
      */
     @Transactional
-    public String join(UserForm form) {
+    public String join(UserDto userDto) {
 
         //Authority 객체를 생성하고, 권한 이름을 "ROLE_USER"로 설정
         Authority authority = Authority.builder()
@@ -40,13 +41,12 @@ public class UserService implements UserDetailsService {
                 .build();
 
         User user = User.builder()
-                .id(form.getId())
-                .password(passwordEncoder.encode(form.getPassword()))
-                .email(form.getEmail())
-                .name(form.getName())
+                .id(userDto.getId())
+                .password(passwordEncoder.encode(userDto.getPassword()))
+                .email(userDto.getEmail())
+                .name(userDto.getName())
                 .authorities(Collections.singleton(authority))
                 .build();
-
         userRepository.save(user);
 
         // 스탬프 판 17개 목표, 체크 0 으로 insert
@@ -62,7 +62,10 @@ public class UserService implements UserDetailsService {
         return user.getId();
     }
 
-    public boolean validateDuplicateMember(UserForm form, BindingResult bindingResult) {
+    /**
+     * 회원가입 검증
+     */
+    public boolean validateDuplicateMember(UserDto form, BindingResult bindingResult) {
 
         boolean checked = false;
         //checked가 true면 검증 발견
@@ -93,6 +96,9 @@ public class UserService implements UserDetailsService {
         return checked;
     }
 
+    /**
+     * UserDetailsService
+     */
     @Override
     public UserDetails loadUserByUsername(String id) throws UsernameNotFoundException {
         User user = userRepository.allFindById(id);
@@ -102,4 +108,5 @@ public class UserService implements UserDetailsService {
             return null;
         }
     }
+
 }

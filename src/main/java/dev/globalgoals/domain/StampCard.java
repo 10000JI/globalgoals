@@ -29,4 +29,6 @@ public class StampCard {
 
     @Column(name = "check_num")
     private Integer checkNum;
+
+
 }

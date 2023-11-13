@@ -1,12 +1,13 @@
 package dev.globalgoals.controller;
 
-import dev.globalgoals.domain.User;
-import dev.globalgoals.form.UserForm;
+import dev.globalgoals.domain.Goal;
+import dev.globalgoals.domain.StampCard;
+import dev.globalgoals.dto.StampCardWithGoalDto;
+import dev.globalgoals.dto.UserDto;
+import dev.globalgoals.repository.UserRepository;
 import dev.globalgoals.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextImpl;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -17,7 +18,10 @@ import javax.mail.MessagingException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.security.Principal;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Controller
@@ -28,15 +32,18 @@ public class UserController {
     private final UserService userService;
 
     private final MailManager mailManager;
+
+    private final UserRepository userRepository;
+
     @GetMapping("/join")
     public String joinForm(Model model) {
-        model.addAttribute("userForm", new UserForm());
+        model.addAttribute("userDto", new UserDto());
         return "users/join";
     }
 
     @PostMapping("/join")
-    public String addItem(@Validated @ModelAttribute UserForm form, BindingResult bindingResult) {
-        boolean checked = userService.validateDuplicateMember(form, bindingResult);
+    public String addItem(@Validated @ModelAttribute UserDto userDto, BindingResult bindingResult) {
+        boolean checked = userService.validateDuplicateMember(userDto, bindingResult);
 
         //검증에 실패하면 다시 입력 폼으로
         if (checked) {
@@ -44,7 +51,7 @@ public class UserController {
             return "users/join";
         }
 
-        userService.join(form);
+        userService.join(userDto);
         return "redirect:/";
     }
 
@@ -81,8 +88,19 @@ public class UserController {
 
     @GetMapping("/mypage")
     public String myPageForm(Model model) {
-        model.addAttribute("userForm", new UserForm());
+        model.addAttribute("userForm", new UserDto());
         return "users/myPage";
     }
 
+    @GetMapping("/mypage/stamp")
+    public String myStampForm(Principal principal, Model model) {
+        List<Object[]> result = userRepository.stampFindById(principal.getName());
+
+        List<StampCardWithGoalDto> stampCardWithGoals = result.stream()
+                .map(row -> new StampCardWithGoalDto((StampCard) row[0], (Goal) row[1]))
+                .collect(Collectors.toList());
+
+        model.addAttribute("stampCardWithGoals", stampCardWithGoals);
+        return "users/stamp";
+    }
 }

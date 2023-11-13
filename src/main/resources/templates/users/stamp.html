@@ -20,6 +20,18 @@
                             <p>누적 스탬프 : 0개</p>
                         </div>
                     </div>
+
+                    <table class="table table-bordered">
+                        <tbody>
+                        <!-- 4x5 테이블을 생성하는 Thymeleaf 반복문 -->
+                        <tr th:each="row, rowStat : ${stampCardWithGoals}">
+                            <!-- 각 행에 대한 Thymeleaf 반복문 -->
+                            <td th:each="item : ${row}">
+                                <span th:if="${item != null}" th:text="${item.goal.goalTitle}"></span>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
                 </div>
         </div>
     </div>

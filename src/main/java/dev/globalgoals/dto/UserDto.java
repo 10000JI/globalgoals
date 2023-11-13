@@ -1,15 +1,15 @@
-package dev.globalgoals.form;
+package dev.globalgoals.dto;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
-@Getter
-@Setter
-public class UserForm {
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class UserDto {
 
     @NotBlank(message = "아이디: 필수 정보입니다.")
     private String id;

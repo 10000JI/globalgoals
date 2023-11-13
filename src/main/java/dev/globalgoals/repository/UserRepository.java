@@ -54,11 +54,16 @@ public class UserRepository {
         }
         return null;
     }
-
     public List<Goal> findAllGoals() {
         return em.createQuery("SELECT g FROM Goal g", Goal.class)
                 .getResultList();
     }
 
     public void stampSave(StampCard stampCard) {em.persist(stampCard);}
+
+    public List<Object[]> stampFindById(String id) {
+        return em.createQuery("select s,g from User m join m.stampCards s join s.goal g where m.id= :id")
+                .setParameter("id", id)
+                .getResultList();
+    }
 }
