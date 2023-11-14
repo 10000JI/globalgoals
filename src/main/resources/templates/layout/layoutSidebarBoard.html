@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:fragment="boardSidebar_layout" class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-dark">
+    <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">
+        <a href="/" class="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+            <span class="fs-5 d-none d-sm-inline">게시판</span>
+        </a>
+        <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
+            <li class="nav-item">
+                <a href="#" class="nav-link px-0 align-middle text-white ">
+                    <i class="fs-4 bi bi-tv"></i> <span class="ms-1 d-none d-sm-inline">자유게시판</span> </a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link px-0 align-middle text-white ">
+                    <i class="fs-4 bi bi-grid"></i> <span class="ms-1 d-none d-sm-inline">실천 방법 등록</span> </a>
+            </li>
+            <li>
+                <a href="#" class="nav-link px-0 align-middle text-white ">
+                    <i class="fs-4 bi bi-bookmark-check-fill"></i> <span class="ms-1 d-none d-sm-inline">실천 등록</span> </a>
+            </li>
+            <li>
+                <a href="/users/mypage/stamp" class="nav-link px-0 align-middle text-white ">
+                    <i class="fs-4 bi bi-clipboard"></i> <span class="ms-1 d-none d-sm-inline">인기글</span> </a>
+            </li>
+            <li>
+                <a href="#" class="nav-link px-0 align-middle text-white ">
+                    <i class="fs-4 bi bi-search"></i> <span class="ms-1 d-none d-sm-inline">내소식</span> </a>
+            </li>
+            <li>
+                <a href="#" class="nav-link px-0 align-middle text-white ">
+                    <i class="fs-4 bi-chat"></i> <span class="ms-1 d-none d-sm-inline">채팅</span> </a>
+            </li>
+        </ul>
+        <hr>
+
+    </div>
+</div>
+</html>
