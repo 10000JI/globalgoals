@@ -1,16 +1,20 @@
 package dev.globalgoals.repository;
 
+import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import dev.globalgoals.domain.Board;
 import dev.globalgoals.domain.User;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.IntStream;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class BoardRepositoryTest {
@@ -49,5 +53,11 @@ class BoardRepositoryTest {
             board.changeContent("Changed Content...");
             boardRepository.save(board);
         }
+    }
+
+    @Test
+    public void testQuest1() {
+        Pageable pageable = PageRequest.of(0, 10, Sort.by("gno").descending());
+
     }
 }
