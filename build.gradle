@@ -1,7 +1,14 @@
+buildscript {
+	ext {
+		queryDslVersion = "5.0.0"
+	}
+}
+
 plugins {
 	id 'java'
 	id 'org.springframework.boot' version '2.7.16'
 	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+	id 'com.ewerk.gradle.plugins.querydsl' version '1.0.10'
 }
 
 group = 'dev'
@@ -24,23 +31,60 @@ repositories {
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
-	// 타임리프에서 스프링시큐리티의 문법이나 형식을 지원하는 확장팩 라이브러리
 	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+
+	implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
+	annotationProcessor "com.querydsl:querydsl-apt:${queryDslVersion}"
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
 	implementation 'org.springframework.boot:spring-boot-devtools'
 	compileOnly 'org.projectlombok:lombok'
-	runtimeOnly 'com.h2database:h2'
+//	runtimeOnly 'com.h2database:h2'
+	runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	/*// https://mvnrepository.com/artifact/com.oracle.database.jdbc/ojdbc8
-	implementation group: 'com.oracle.database.jdbc', name: 'ojdbc8', version: '21.6.0.0.1'*/
-
-
+	implementation group: 'org.thymeleaf.extras', name: 'thymeleaf-extras-java8time', version: '3.0.4.RELEASE'
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+// Querydsl 코드를 생성한 디렉토리 경로를 설정합니다.
+def querydslDir = "$buildDir/generated/querydsl"
+
+// Querydsl 플러그인 설정
+querydsl {
+	// JPA 엔터티를 기반으로 Querydsl 코드를 생성하도록 설정합니다.
+	jpa = true
+
+	// 생성된 Querydsl 코드를 저장할 디렉토리 경로를 지정합니다.
+	querydslSourcesDir = querydslDir
+}
+
+// 소스셋 설정
+sourceSets {
+	// 생성된 Querydsl 코드 디렉토리를 메인 소스 디렉토리로 추가합니다.
+	main.java.srcDir querydslDir
+}
+
+// 구성 설정
+configurations {
+	// Querydsl 의존성을 컴파일 의존성에 추가합니다.
+	querydsl.extendsFrom compileClasspath
+}
+
+// Querydsl 코드 컴파일 설정
+compileQuerydsl {
+	// 어노테이션 프로세서 경로를 Querydsl 의존성으로 설정합니다.
+	options.annotationProcessorPath = configurations.querydsl
+}
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+	querydsl.extendsFrom compileClasspath
 }
