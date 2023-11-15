@@ -22,7 +22,7 @@ public interface BoardService {
         return entity;
     }
 
-    default BoardDto boardDto(Board entity) {
+    default BoardDto entityToDto(Board entity) {
         BoardDto dto = BoardDto.builder()
                 .id(entity.getId())
                 .title(entity.getTitle())

@@ -9,10 +9,14 @@ import dev.globalgoals.repository.BoardRepository;
 import dev.globalgoals.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 
 @Service
 @Slf4j
@@ -42,6 +46,9 @@ public class BoardServiceImpl implements BoardService{
 
     @Override
     public PageResultDTO<BoardDto, Board> getList(PageRequestDTO requestDTO) {
-        return null;
+        Pageable pageable = requestDTO.getPageable(Sort.by("id").descending());
+        Page<Board> result = boardRepository.findAll(pageable);
+        Function<Board, BoardDto> fn = (entity -> entityToDto(entity));
+        return new PageResultDTO<>(result, fn);
     }
 }
