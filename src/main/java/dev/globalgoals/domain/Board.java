@@ -24,8 +24,8 @@ public class Board extends BaseEntity{
 //    private BoardCategory boardCategory;
 
     @ManyToOne
-    @JoinColumn(name="member_id")
-    private User member;
+    @JoinColumn(name="user_id")
+    private User user;
 
     @Column(name = "board_title", length = 50, nullable = false)
     private String title;

@@ -18,6 +18,7 @@ import org.springframework.validation.BindingResult;
 import java.security.Principal;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.IntStream;
 
 @Service
@@ -74,8 +75,8 @@ public class UserService implements UserDetailsService {
         checked = bindingResult.hasErrors();
 
         //id 중복 검증
-        List<User> findId = userRepository.findById(form.getId());
-        if (!findId.isEmpty()) {
+        Optional<User> byId = userRepository.findById(form.getId());
+        if (!byId.isEmpty()) {
             bindingResult.rejectValue("id", "user.id.notEqual");
             checked = true;
         }

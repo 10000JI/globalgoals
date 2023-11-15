@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import java.util.Collections;
 import java.util.List;
@@ -21,10 +22,15 @@ public class UserRepository {
 
     public void save(User user) {em.persist(user);}
 
-    public List<User> findById(String id) {
-        return em.createQuery("select m from User m where m.id=:id", User.class)
-                .setParameter("id", id)
-                .getResultList();
+    public Optional<User> findById(String id) {
+        try {
+            User user = em.createQuery("select m from User m where m.id=:id", User.class)
+                    .setParameter("id", id)
+                    .getSingleResult();
+            return Optional.ofNullable(user);
+        } catch (NoResultException e) {
+            return Optional.empty();
+        }
     }
 
     public List<User> findByEmail(String email) {
@@ -66,4 +72,5 @@ public class UserRepository {
                 .setParameter("id", id)
                 .getResultList();
     }
+
 }
