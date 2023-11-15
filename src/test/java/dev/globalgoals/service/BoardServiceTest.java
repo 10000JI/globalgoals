@@ -29,13 +29,11 @@ class BoardServiceTest {
 
     @Test
     public void testList() throws Exception{
-        PageRequestDTO pageRequestDTO = PageRequestDTO.builder()
-                .page(1)
-                .size(10)
-                .build();
+        PageRequestDTO pageRequestDTO = PageRequestDTO.builder().page(1).size(10).build();
         PageResultDTO<BoardDto, Board> resultDTO = service.getList(pageRequestDTO);
-        for (BoardDto boardDto : resultDTO.getDtoList()) {
-            System.out.println("boardDto = " + boardDto);
-        }
+//        for (BoardDto boardDto : resultDTO.getDtoList()) {
+//            System.out.println("boardDto = " + boardDto);
+//        }
+        System.out.println(resultDTO);
     }
 }

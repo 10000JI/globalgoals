@@ -36,19 +36,18 @@ public class PageResultDTO<DTO,EN>{
     // 페이지 번호 목록
     private  List<Integer> pageList;
 
-    // 매개변수에서 전달받은 함수 (fn) 를 이용해서 (Entity -> DTO) 결과를 매핑해주고 collect 로 모아서 dtoList로 처리
     public PageResultDTO(Page<EN> result, Function<EN, DTO> fn){
-        // result.stream(): 페이지의 엔티티 목록을 스트림으로 변환
-        // map(fn): Function<EN, DTO> fn 함수를 사용하여 각 엔티티를 DTO로 매핑
-        // collect(Collectors.toList()): 스트림을 리스트로 수집하여 DTO 목록을 생성
+        // 매개변수에서 전달받은 함수 (fn) 를 이용해서 (Entity -> DTO) 결과를 매핑해주고 collect 로 모아서 dtoList로 처리
         dtoList = result.stream().map(fn).collect(Collectors.toList());
-
+        // 총 페이지 수 설정
         totalPage = result.getTotalPages();
+        // 페이지 번호 목록 생성
+        makePageList(result.getPageable());
 
     }
 
     private void makePageList(Pageable pageable) {
-        this.page = pageable.getPageNumber() * 1;
+        this.page = pageable.getPageNumber() + 1; // 0부터 시작하므로 1 추가
         this.size = pageable.getPageSize();
 
         int tempEnd = (int) (Math.ceil(page / 10.0)) * 10;
@@ -57,6 +56,8 @@ public class PageResultDTO<DTO,EN>{
         end = totalPage > tempEnd ? tempEnd : totalPage;
         next = totalPage > tempEnd;
 
+        // 페이지 번호 목록 생성 (start부터 end까지)
+        /// boxed(): IntStream 을 Integer 로 변환하여 List<Integer> pageList 에 수집 가능하도록 래퍼 객체로 바꿔준다
         pageList = IntStream.rangeClosed(start, end).boxed().collect(Collectors.toList());
     }
 }
