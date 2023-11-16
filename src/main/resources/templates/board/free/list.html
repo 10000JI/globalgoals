@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html th:replace="~{layout/layoutFile :: layout(~{::title},~{::link},~{::main},~{::script})}" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <title>GoalGoals-SDGs</title>
+    <link/>
+</head>
+<body class="d-flex flex-column h-100">
+<main class="flex-shrink-0">
+    <!-- Navigation-->
+    <nav th:replace="layout/layoutNav :: nav_layout" class="navbar navbar-expand-lg navbar-dark bg-dark"></nav>
+    <div class="container-fluid">
+        <div class="row flex-nowrap">
+            <div th:replace="layout/layoutSidebarBoard :: boardSidebar_layout" class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-dark"/>
+            <div class="col py-5">
+                <div class="container">
+                    <div class="header">
+                        <h3 class="middle">자유 게시판</h3>
+                    </div>
+                    <div>
+                        <div>
+                            <form class="form-inlines">
+                                <div class="form-group mb-2">
+                                    <input type="text" class="form-board" placeholder="회원명" id="memberName" name="memberName" value="">
+                                </div>
+                                <div class="form-group mx-sm-1 mb-2">
+                                    <select class="form-board" id="orderStatus" name="orderStatus">
+                                        <option value="">주문상태</option>
+                                        <option value="ORDER" selected="selected">ORDER</option>
+                                        <option value="CANCLE">CANCLE</option>
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn btn-primary mb-2">검색</button>
+                            </form>
+                        </div>
+                        <table class="table table-bordered">
+                            <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th>제목</th>
+                                <th>작성자</th>
+                                <th>작성일</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="dto : ${result.dtoList}">
+                                <th scope="row">[[${dto.id}]]</th>
+                                <td>[[${dto.title}]]</td>
+                                <td>[[${dto.writer}]]</td>
+                                <td>[[${#temporals.format(dto.regDate,'yyyy/MM/dd')}]]</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <!--페이지 처리-->
+                        <ul class="pagination h-100 justify-content-center align-items-center">
+                            <li class="page-item" th:if="${result.prev}">
+                                <a class="page-link" th:href="@{/board/free/list(page = ${result.start - 1})}" tabindex="-1">Previous</a>
+                            </li>
+                            <li th:class="'page-item' +' '+ ${result.page == page ? 'active':''}" th:each="page : ${result.pageList}">
+                                <a class="page-link" th:href="@{/board/free/list(page = ${page})}">
+                                    [[${page}]]
+                                </a>
+                            </li>
+                            <li class="page-item" th:if="${result.next}">
+                                <a class="page-link" th:href="@{/board/free/list(page = ${result.end + 1})}">Next</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<script th:inline="javascript">
+
+    let msg = [[${msg}]];
+    console.log(msg);
+
+    if (msg) {
+        alert("등록 번호" + [[${msg}]])
+        console.log("모달 진입");
+        // 모달 열기
+        let modal = document.querySelector(".modal");
+        modal.classList.add("show");
+
+        // Close 버튼에 이벤트 리스너 추가
+        let closeModalButton = modal.querySelector(".btn-close");
+        closeModalButton.addEventListener("click", function() {
+            modal.classList.remove("show");
+        });
+
+        // Close 버튼 외의 부분을 클릭하면 모달 닫기
+        window.addEventListener("click", function(event) {
+            if (event.target === modal) {
+                modal.classList.remove("show");
+            }
+        });
+    }
+
+</script>
+</body>
+</html>
+
