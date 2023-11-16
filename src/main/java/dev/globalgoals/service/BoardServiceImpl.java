@@ -1,6 +1,9 @@
 package dev.globalgoals.service;
 
+import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import dev.globalgoals.domain.Board;
+import dev.globalgoals.domain.QBoard;
 import dev.globalgoals.domain.User;
 import dev.globalgoals.dto.BoardDTO;
 import dev.globalgoals.dto.PageRequestDTO;
@@ -46,9 +49,52 @@ public class BoardServiceImpl implements BoardService{
     @Override
     public PageResultDTO<BoardDTO, Board> getList(PageRequestDTO requestDTO) {
         Pageable pageable = requestDTO.getPageable(Sort.by("id").descending());
-        Page<Board> result = boardRepository.findAll(pageable);
+        
+        BooleanBuilder booleanBuilder = getSearch(requestDTO); // 검색 조건 처리
+        
+        Page<Board> result = boardRepository.findAll(booleanBuilder, pageable); // Querydsl 사용
+        
         Function<Board, BoardDTO> fn = (entity -> entityToDto(entity));
+        
         return new PageResultDTO<>(result, fn);
+    }
+
+    private BooleanBuilder getSearch(PageRequestDTO requestDTO) {
+
+        String type = requestDTO.getType(); // PageRequestDTO 에서 타입 정보를 얻어온다.
+
+        BooleanBuilder booleanBuilder = new BooleanBuilder(); // BooleanBuilder 객체 생성
+
+        if (type == null || type.trim().length() == 0) { // 검색 조건이 없는 경우
+            return booleanBuilder;
+        }
+
+        QBoard qBoard = QBoard.board; // Q도메인 객체 생성
+
+        String keyword = requestDTO.getKeyword(); // PageRequestDTO 에서 키워드 정보를 얻어온다.
+
+        BooleanExpression expression = qBoard.id.gt(0L); // id > 0 조건만 생성
+
+        booleanBuilder.and(expression); // BooleanBuilder에 조건 추가
+
+
+        // 검색 조건을 작성하기
+        BooleanBuilder conditionBuilder = new BooleanBuilder();
+
+        if (type.contains("t")) {
+            conditionBuilder.or(qBoard.title.contains(keyword));
+        }
+        if (type.contains("c")) {
+            conditionBuilder.or(qBoard.content.contains(keyword));
+        }
+        if (type.contains("w")) { //w -> writer(작성자)
+            conditionBuilder.or(qBoard.member.id.contains(keyword));
+        }
+
+        //모든 조건 통합
+        booleanBuilder.and(conditionBuilder);
+
+        return booleanBuilder;
     }
 
     @Override

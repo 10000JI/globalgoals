@@ -18,18 +18,23 @@
                     </div>
                     <div>
                         <div>
-                            <form class="form-inlines">
-                                <div class="form-group mb-2">
-                                    <input type="text" class="form-board" placeholder="회원명" id="memberName" name="memberName" value="">
-                                </div>
+                            <form action="/board/free/list" method="get" id="searchForm" class="form-inlines">
+                                <input type="hidden" name="page" value="1"/>
                                 <div class="form-group mx-sm-1 mb-2">
-                                    <select class="form-board" id="orderStatus" name="orderStatus">
-                                        <option value="">주문상태</option>
-                                        <option value="ORDER" selected="selected">ORDER</option>
-                                        <option value="CANCLE">CANCLE</option>
+                                    <select class="form-board" name="type">
+                                        <option th:selected="${pageRequestDTO.type == null}">------</option>
+                                        <option value="t" th:selected="${pageRequestDTO.type == 't'}">제목</option>
+                                        <option value="c" th:selected="${pageRequestDTO.type == 'c'}">내용</option>
+                                        <option value="w" th:selected="${pageRequestDTO.type == 'w'}">작성자</option>
+                                        <option value="tc" th:selected="${pageRequestDTO.type == 'tc'}">제목 + 내용</option>
+                                        <option value="tcw" th:selected="${pageRequestDTO.type == 'tcw'}">제목 + 내용 + 작성자</option>
                                     </select>
                                 </div>
-                                <button type="submit" class="btn btn-primary mb-2 search-btn">검색</button>
+                                <div class="form-group mb-2">
+                                    <input type="text" class="form-board" name="keyword" th:value="${pageRequestDTO.keyword}">
+                                </div>
+                                <button type="button" class="btn btn-primary mb-2 search-btn">검색</button>
+                                <button type="button" class="btn btn-primary mb-2 clear-btn">지우기</button>
                                 <a th:href="@{/board/free/register}">
                                     <button type="button" class="btn btn-primary mb-2">등록</button>
                                 </a>

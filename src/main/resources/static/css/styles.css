@@ -11000,6 +11000,6 @@ html {
   margin-bottom: 15px;
 }
 
-.search-btn {
+.search-btn, .clear-btn {
   margin-right: 5px;
 }
