@@ -1,6 +1,8 @@
 package dev.globalgoals.service;
 
+import dev.globalgoals.domain.Goal;
 import dev.globalgoals.domain.StampCard;
+import dev.globalgoals.dto.StampCardWithGoalDto;
 import dev.globalgoals.security.UserDetailsConfig;
 import dev.globalgoals.domain.Authority;
 import dev.globalgoals.domain.User;
@@ -15,9 +17,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 
+import java.security.Principal;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 @Service
@@ -107,6 +111,18 @@ public class UserService implements UserDetailsService {
         } else {
             return null;
         }
+    }
+
+    /**
+     * 마이페이지 스탬프판
+     */
+    public List<StampCardWithGoalDto> getStampCardWithGoalDtos(Principal principal) {
+        List<Object[]> result = userRepository.stampFindById(principal.getName());
+
+        List<StampCardWithGoalDto> stampCardWithGoals = result.stream()
+                .map(row -> new StampCardWithGoalDto((StampCard) row[0], (Goal) row[1]))
+                .collect(Collectors.toList());
+        return stampCardWithGoals;
     }
 
 }

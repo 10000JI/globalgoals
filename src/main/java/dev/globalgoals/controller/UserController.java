@@ -94,12 +94,7 @@ public class UserController {
 
     @GetMapping("/mypage/stamp")
     public String myStampForm(Principal principal, Model model) {
-        List<Object[]> result = userRepository.stampFindById(principal.getName());
-
-        List<StampCardWithGoalDto> stampCardWithGoals = result.stream()
-                .map(row -> new StampCardWithGoalDto((StampCard) row[0], (Goal) row[1]))
-                .collect(Collectors.toList());
-
+        List<StampCardWithGoalDto> stampCardWithGoals = userService.getStampCardWithGoalDtos(principal);
         model.addAttribute("stampCardWithGoals", stampCardWithGoals);
         return "users/stamp";
     }
