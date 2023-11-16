@@ -4,6 +4,7 @@ import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import dev.globalgoals.domain.Board;
 import dev.globalgoals.domain.QBoard;
+import dev.globalgoals.domain.QUser;
 import dev.globalgoals.domain.User;
 import dev.globalgoals.dto.BoardDTO;
 import dev.globalgoals.dto.PageRequestDTO;
@@ -61,38 +62,38 @@ public class BoardServiceImpl implements BoardService{
 
     private BooleanBuilder getSearch(PageRequestDTO requestDTO) {
 
+        // 검색 조건인, 타입이 없을 때 혹은 id>0인 조건 작성하기 (BooleanBuilder 객체 생성)
+        BooleanBuilder booleanBuilder = new BooleanBuilder();
+
         String type = requestDTO.getType(); // PageRequestDTO 에서 타입 정보를 얻어온다.
 
-        BooleanBuilder booleanBuilder = new BooleanBuilder(); // BooleanBuilder 객체 생성
-
-        if (type == null || type.trim().length() == 0) { // 검색 조건이 없는 경우
+        if (type == null || type.trim().length() == 0) { // 검색 타입 조건이 없는 경우
             return booleanBuilder;
         }
 
         QBoard qBoard = QBoard.board; // Q도메인 객체 생성
-
-        String keyword = requestDTO.getKeyword(); // PageRequestDTO 에서 키워드 정보를 얻어온다.
 
         BooleanExpression expression = qBoard.id.gt(0L); // id > 0 조건만 생성
 
         booleanBuilder.and(expression); // BooleanBuilder에 조건 추가
 
 
-        // 검색 조건을 작성하기
+        // 검색 조건인, 키워드 작성하기 (BooleanBuilder 객체 생성)
         BooleanBuilder conditionBuilder = new BooleanBuilder();
 
-        if (type.contains("t")) {
+        String keyword = requestDTO.getKeyword(); // PageRequestDTO 에서 키워드 정보를 얻어온다.
+
+        if (type.contains("t")) { // 타입이 동일하면, 필드에 키워드를 포함하여 BooleanBuilder에 추가
             conditionBuilder.or(qBoard.title.contains(keyword));
         }
         if (type.contains("c")) {
             conditionBuilder.or(qBoard.content.contains(keyword));
         }
         if (type.contains("w")) { //w -> writer(작성자)
-            conditionBuilder.or(qBoard.member.id.contains(keyword));
+            conditionBuilder.or(qBoard.user.id.contains(keyword));
         }
 
-        //모든 조건 통합
-        booleanBuilder.and(conditionBuilder);
+        booleanBuilder.and(conditionBuilder); //모든 조건 통합
 
         return booleanBuilder;
     }

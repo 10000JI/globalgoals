@@ -19,6 +19,8 @@
                     <div>
                         <form action="/guestbook/modify" method="post">
                             <input type="hidden" name="page" th:value="${requestDTO.page}">
+                            <input type="hidden" name="type" th:value="${requestDTO.type}">
+                            <input type="hidden" name="keyword" th:value="${requestDTO.keyword}">
 
                             <div class="form-group">
                                 <label >num</label>
@@ -61,6 +63,8 @@
     const actionForm = document.querySelector("form");
     const modifyBtn = document.querySelector(".modifyBtn");
     const pageInfo = document.querySelector("input[name='page']");  // 숨겨둔 페이지 값 선택
+    const typeInfo = document.querySelector("input[name='type']");
+    const keywordInfo = document.querySelector("input[name='keyword']");
     const listBtn = document.querySelector(".listBtn");
 
     removeBtn.addEventListener('click', function (){
@@ -81,6 +85,8 @@
     listBtn.addEventListener("click", function (){
         actionForm.innerHTML=""; //form 태그의 내용 삭제
         actionForm.append(pageInfo); // 목록에 필요한 페이지 값 추가
+        actionForm.append(typeInfo); // 목록에 필요한 타입 값 추가
+        actionForm.append(keywordInfo); // 목록에 필요한 키워드 값 추가
         actionForm.setAttribute("action", "/board/free/list") // 폼에 다시 값 추가
         actionForm.method = "get"; // 메서드 get
         actionForm.submit();

@@ -51,7 +51,7 @@
                             </thead>
                             <tbody>
                             <tr th:each="dto : ${result.dtoList}">
-                                <th scope="row"><a th:href="@{/board/free/read(id = ${dto.id}, page = ${result.page})}">[[${dto.id}]]</a></th>
+                                <th scope="row"><a th:href="@{/board/free/read(id = ${dto.id}, page = ${result.page},type = ${pageRequestDTO.type},keyword =${pageRequestDTO.keyword})}">[[${dto.id}]]</a></th>
                                 <td>[[${dto.title}]]</td>
                                 <td>[[${dto.writer}]]</td>
                                 <td>[[${#temporals.format(dto.regDate,'yyyy/MM/dd')}]]</td>
@@ -61,15 +61,15 @@
                         <!--페이지 처리-->
                         <ul class="pagination h-100 justify-content-center align-items-center">
                             <li class="page-item" th:if="${result.prev}">
-                                <a class="page-link" th:href="@{/board/free/list(page = ${result.start - 1})}" tabindex="-1">Previous</a>
+                                <a class="page-link" th:href="@{/board/free/list(page = ${result.start - 1}, type = ${pageRequestDTO.type},keyword =${pageRequestDTO.keyword})}" tabindex="-1">Previous</a>
                             </li>
                             <li th:class="'page-item' +' '+ ${result.page == page ? 'active':''}" th:each="page : ${result.pageList}">
-                                <a class="page-link" th:href="@{/board/free/list(page = ${page})}">
+                                <a class="page-link" th:href="@{/board/free/list(page = ${page}, type = ${pageRequestDTO.type},keyword =${pageRequestDTO.keyword})}">
                                     [[${page}]]
                                 </a>
                             </li>
                             <li class="page-item" th:if="${result.next}">
-                                <a class="page-link" th:href="@{/board/free/list(page = ${result.end + 1})}">Next</a>
+                                <a class="page-link" th:href="@{/board/free/list(page = ${result.end + 1}, type = ${pageRequestDTO.type},keyword =${pageRequestDTO.keyword})}">Next</a>
                             </li>
                         </ul>
                     </div>
@@ -103,6 +103,19 @@
             }
         });
     }
+
+    const searchForm = document.querySelector("#searchForm");
+    const btnSearch = document.querySelector(".search-btn");
+    const btnClear = document.querySelector(".clear-btn");
+    const inputSearch = document.querySelector("input[name='keyword']");
+    btnSearch.addEventListener("click", function (){
+        searchForm.submit();
+    });
+
+    btnClear.addEventListener("click",function (){
+        inputSearch.value = "";
+        searchForm.submit();
+    });
 
 </script>
 </body>
