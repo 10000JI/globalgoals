@@ -29,7 +29,10 @@
                                         <option value="CANCLE">CANCLE</option>
                                     </select>
                                 </div>
-                                <button type="submit" class="btn btn-primary mb-2">검색</button>
+                                <button type="submit" class="btn btn-primary mb-2 search-btn">검색</button>
+                                <a th:href="@{/board/free/register}">
+                                    <button type="button" class="btn btn-primary mb-2">등록</button>
+                                </a>
                             </form>
                         </div>
                         <table class="table table-bordered">
@@ -43,7 +46,7 @@
                             </thead>
                             <tbody>
                             <tr th:each="dto : ${result.dtoList}">
-                                <th scope="row">[[${dto.id}]]</th>
+                                <th scope="row"><a th:href="@{/board/free/read(id = ${dto.id}, page = ${result.page})}">[[${dto.id}]]</a></th>
                                 <td>[[${dto.title}]]</td>
                                 <td>[[${dto.writer}]]</td>
                                 <td>[[${#temporals.format(dto.regDate,'yyyy/MM/dd')}]]</td>

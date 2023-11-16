@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html th:replace="~{layout/layoutFile :: layout(~{::title},~{::link},~{::main},~{::script})}" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <title>GoalGoals-SDGs</title>
+    <link/>
+</head>
+<body class="d-flex flex-column h-100">
+<main class="flex-shrink-0">
+    <!-- Navigation-->
+    <nav th:replace="layout/layoutNav :: nav_layout" class="navbar navbar-expand-lg navbar-dark bg-dark"></nav>
+    <div class="container-fluid">
+        <div class="row flex-nowrap">
+            <div th:replace="layout/layoutSidebarBoard :: boardSidebar_layout" class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-dark"/>
+            <div class="col py-5">
+                <div class="container">
+                    <div class="header">
+                        <h3 class="middle">자유게시판</h3>
+                    </div>
+                    <div>
+                        <form action="/guestbook/modify" method="post">
+                            <input type="hidden" name="page" th:value="${requestDTO.page}">
+
+                            <div class="form-group">
+                                <label >num</label>
+                                <input type="text" class="form-control" name="id" th:value="${dto.id}" readonly >
+                            </div>
+
+                            <div class="form-group">
+                                <label >Title</label>
+                                <input type="text" class="form-control" name="title" th:value="${dto.title}">
+                            </div>
+                            <div class="form-group">
+                                <label >Content</label>
+                                <textarea class="form-control" rows="5" name="content">[[${dto.content}]]</textarea>
+                            </div>
+                            <div class="form-group">
+                                <label >Writer</label>
+                                <input type="text" class="form-control" name="writer" th:value="${dto.writer}" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label >RegDate</label>
+                                <input type="text" class="form-control" th:value="${#temporals.format(dto.regDate, 'yyyy/MM/dd HH:mm:ss')}" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label >ModDate</label>
+                                <input type="text" class="form-control" th:value="${#temporals.format(dto.modDate, 'yyyy/MM/dd HH:mm:ss')}" readonly>
+                            </div>
+                        </form>
+
+                        <button type="button" class="btn btn-primary modifyBtn">Modify</button>
+                        <button type="button" class="btn btn-info listBtn">List</button>
+                        <button type="button" class="btn btn-danger removeBtn">Remove</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<script th:inline="javascript">
+    const removeBtn = document.querySelector(".removeBtn");
+    const actionForm = document.querySelector("form");
+    const modifyBtn = document.querySelector(".modifyBtn");
+    const pageInfo = document.querySelector("input[name='page']");  // 숨겨둔 페이지 값 선택
+    const listBtn = document.querySelector(".listBtn");
+
+    removeBtn.addEventListener('click', function (){
+        actionForm.setAttribute("action","/board/free/remove")
+        actionForm.method = "post";
+        actionForm.submit();
+    });
+
+    modifyBtn.addEventListener('click', function (){
+        if(!confirm("수정하시겠습니까?")){
+            return;
+        }
+        actionForm.setAttribute("action", "/board/free/modify")
+        actionForm.method = "post"
+        actionForm.submit();
+    });
+
+    listBtn.addEventListener("click", function (){
+        actionForm.innerHTML=""; //form 태그의 내용 삭제
+        actionForm.append(pageInfo); // 목록에 필요한 페이지 값 추가
+        actionForm.setAttribute("action", "/board/free/list") // 폼에 다시 값 추가
+        actionForm.method = "get"; // 메서드 get
+        actionForm.submit();
+    });
+
+</script>
+</body>
+</html>

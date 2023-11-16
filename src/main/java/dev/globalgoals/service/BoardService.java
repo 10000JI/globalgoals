@@ -2,16 +2,22 @@ package dev.globalgoals.service;
 
 import dev.globalgoals.domain.Board;
 import dev.globalgoals.domain.User;
-import dev.globalgoals.dto.BoardDto;
+import dev.globalgoals.dto.BoardDTO;
 import dev.globalgoals.dto.PageRequestDTO;
 import dev.globalgoals.dto.PageResultDTO;
 
 public interface BoardService {
-    Long register(BoardDto boardDto);
+    Long register(BoardDTO boardDto);
 
-    PageResultDTO<BoardDto, Board> getList(PageRequestDTO requestDTO);
+    PageResultDTO<BoardDTO, Board> getList(PageRequestDTO requestDTO);
 
-    default Board dtoToEntity(BoardDto dto, User user) {
+    BoardDTO read(Long id);
+
+    void modify(BoardDTO dto);
+
+    void remove(Long id);
+
+    default Board dtoToEntity(BoardDTO dto, User user) {
         Board entity = Board.builder()
                 .id(dto.getId())
                 .title(dto.getTitle())
@@ -22,8 +28,8 @@ public interface BoardService {
         return entity;
     }
 
-    default BoardDto entityToDto(Board entity) {
-        BoardDto dto = BoardDto.builder()
+    default BoardDTO entityToDto(Board entity) {
+        BoardDTO dto = BoardDTO.builder()
                 .id(entity.getId())
                 .title(entity.getTitle())
                 .content(entity.getContent())

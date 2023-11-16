@@ -3,7 +3,7 @@ package dev.globalgoals.controller;
 import dev.globalgoals.domain.Goal;
 import dev.globalgoals.domain.StampCard;
 import dev.globalgoals.dto.StampCardWithGoalDto;
-import dev.globalgoals.dto.UserDto;
+import dev.globalgoals.dto.UserDTO;
 import dev.globalgoals.repository.UserRepository;
 import dev.globalgoals.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -37,13 +37,13 @@ public class UserController {
 
     @GetMapping("/join")
     public String joinForm(Model model) {
-        model.addAttribute("userDto", new UserDto());
+        model.addAttribute("userDTO", new UserDTO());
         return "users/join";
     }
 
     @PostMapping("/join")
-    public String addItem(@Validated @ModelAttribute UserDto userDto, BindingResult bindingResult) {
-        boolean checked = userService.validateDuplicateMember(userDto, bindingResult);
+    public String addItem(@Validated @ModelAttribute UserDTO userDTO, BindingResult bindingResult) {
+        boolean checked = userService.validateDuplicateMember(userDTO, bindingResult);
 
         //검증에 실패하면 다시 입력 폼으로
         if (checked) {
@@ -51,7 +51,7 @@ public class UserController {
             return "users/join";
         }
 
-        userService.join(userDto);
+        userService.join(userDTO);
         return "redirect:/";
     }
 
@@ -88,7 +88,7 @@ public class UserController {
 
     @GetMapping("/mypage")
     public String myPageForm(Model model) {
-        model.addAttribute("userForm", new UserDto());
+        model.addAttribute("userForm", new UserDTO());
         return "users/myPage";
     }
 

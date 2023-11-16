@@ -10999,3 +10999,7 @@ html {
 .form-group {
   margin-bottom: 15px;
 }
+
+.search-btn {
+  margin-right: 5px;
+}

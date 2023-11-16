@@ -4,7 +4,7 @@ import dev.globalgoals.domain.StampCard;
 import dev.globalgoals.security.UserDetailsConfig;
 import dev.globalgoals.domain.Authority;
 import dev.globalgoals.domain.User;
-import dev.globalgoals.dto.UserDto;
+import dev.globalgoals.dto.UserDTO;
 import dev.globalgoals.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 
-import java.security.Principal;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -34,7 +33,7 @@ public class UserService implements UserDetailsService {
      * 회원가입
      */
     @Transactional
-    public String join(UserDto userDto) {
+    public String join(UserDTO userDto) {
 
         //Authority 객체를 생성하고, 권한 이름을 "ROLE_USER"로 설정
         Authority authority = Authority.builder()
@@ -66,7 +65,7 @@ public class UserService implements UserDetailsService {
     /**
      * 회원가입 검증
      */
-    public boolean validateDuplicateMember(UserDto form, BindingResult bindingResult) {
+    public boolean validateDuplicateMember(UserDTO form, BindingResult bindingResult) {
 
         boolean checked = false;
         //checked가 true면 검증 발견

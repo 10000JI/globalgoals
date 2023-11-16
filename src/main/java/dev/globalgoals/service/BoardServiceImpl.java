@@ -2,7 +2,7 @@ package dev.globalgoals.service;
 
 import dev.globalgoals.domain.Board;
 import dev.globalgoals.domain.User;
-import dev.globalgoals.dto.BoardDto;
+import dev.globalgoals.dto.BoardDTO;
 import dev.globalgoals.dto.PageRequestDTO;
 import dev.globalgoals.dto.PageResultDTO;
 import dev.globalgoals.repository.BoardRepository;
@@ -14,7 +14,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
@@ -27,7 +26,7 @@ public class BoardServiceImpl implements BoardService{
     private final UserRepository userRepository;
 
     @Override
-    public Long register(BoardDto dto) {
+    public Long register(BoardDTO dto) {
         log.info("DTO-------------------------");
         log.info(String.valueOf(dto));
         Optional<User> userOptional = userRepository.findById(dto.getWriter());
@@ -45,10 +44,37 @@ public class BoardServiceImpl implements BoardService{
     }
 
     @Override
-    public PageResultDTO<BoardDto, Board> getList(PageRequestDTO requestDTO) {
+    public PageResultDTO<BoardDTO, Board> getList(PageRequestDTO requestDTO) {
         Pageable pageable = requestDTO.getPageable(Sort.by("id").descending());
         Page<Board> result = boardRepository.findAll(pageable);
-        Function<Board, BoardDto> fn = (entity -> entityToDto(entity));
+        Function<Board, BoardDTO> fn = (entity -> entityToDto(entity));
         return new PageResultDTO<>(result, fn);
     }
+
+    @Override
+    public BoardDTO read(Long id) {
+        Optional<Board> result = boardRepository.findById(id);
+        return result.isPresent() ? entityToDto(result.get()) : null;
+    }
+
+    @Override
+    public void modify(BoardDTO dto) {
+        // 업데이트 하는 항목은 '제목', '내용'
+        Optional<Board> result = boardRepository.findById(dto.getId());
+        if (result.isPresent()) {
+            Board entity = result.get();
+
+            entity.changeTitle(dto.getTitle());
+            entity.changeContent(dto.getContent());
+
+            boardRepository.save(entity);
+        }
+    }
+
+    @Override
+    public void remove(Long id) {
+        boardRepository.deleteById(id);
+    }
+
+
 }

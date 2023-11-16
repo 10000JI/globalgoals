@@ -9,7 +9,7 @@ import javax.validation.constraints.Pattern;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDto {
+public class UserDTO {
 
     @NotBlank(message = "아이디: 필수 정보입니다.")
     private String id;
