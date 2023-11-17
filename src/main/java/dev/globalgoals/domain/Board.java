@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @DynamicInsert
+@ToString(exclude = "user")
 public class Board extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

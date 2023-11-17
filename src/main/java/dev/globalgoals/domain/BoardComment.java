@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 public class BoardComment extends BaseEntity {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "comment_num")
     private Long id;
 
