@@ -16,7 +16,7 @@ public class GoalDetail {
     @Column(name = "goaldetail_id")
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="goal_id")
     private Goal goal;
 

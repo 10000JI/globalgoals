@@ -33,8 +33,6 @@ public class UserController {
 
     private final MailManager mailManager;
 
-    private final UserRepository userRepository;
-
     @GetMapping("/join")
     public String joinForm(Model model) {
         model.addAttribute("userDTO", new UserDTO());

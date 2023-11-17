@@ -10,20 +10,18 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class BoardComment {
+public class BoardComment extends BaseEntity {
 
     @Id
     @GeneratedValue
     @Column(name = "comment_num")
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="board_id")
     private Board board;
 
     private String comments;
-
-    private LocalDateTime regDate;
 
     private String writer;
 }

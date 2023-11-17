@@ -19,11 +19,11 @@ public class Board extends BaseEntity{
     @Column(name = "board_id")
     private Long id;
 //
-//    @ManyToOne
+//    @ManyToOne(fetch = FetchType.LAZY)
 //    @JoinColumn(name="cate_id")
 //    private BoardCategory boardCategory;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="user_id")
     private User user;
 

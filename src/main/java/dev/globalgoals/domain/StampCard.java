@@ -19,11 +19,11 @@ public class StampCard {
     @Column(name = "stamp_id")
     private long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "goal_id")
     private Goal goal;
 

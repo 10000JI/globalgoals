@@ -3,6 +3,7 @@ package dev.globalgoals.service;
 import dev.globalgoals.domain.Goal;
 import dev.globalgoals.domain.StampCard;
 import dev.globalgoals.dto.StampCardWithGoalDto;
+import dev.globalgoals.repository.StampCardRepository;
 import dev.globalgoals.security.UserDetailsConfig;
 import dev.globalgoals.domain.Authority;
 import dev.globalgoals.domain.User;
@@ -33,6 +34,8 @@ public class UserService implements UserDetailsService {
 
     private final PasswordEncoder passwordEncoder;
 
+    private final StampCardRepository stampCardRepository;
+
     /**
      * 회원가입
      */
@@ -54,15 +57,15 @@ public class UserService implements UserDetailsService {
         userRepository.save(user);
 
         // 스탬프 판 17개 목표, 체크 0 으로 insert
-        IntStream.range(0, userRepository.findAllGoals().size())
-                .forEach(i -> {
-                    StampCard stampCard = StampCard.builder()
-                            .user(user)
-                            .goal(userRepository.findAllGoals().get(i))
-                            .checkNum(0)
-                            .build();
-                    userRepository.stampSave(stampCard);
-                });
+        List<Goal> goals = userRepository.findAllGoals();
+        goals.forEach(goal -> {
+            StampCard stampCard = StampCard.builder()
+                    .user(userRepository.findById(user.getId()).orElseThrow()) // 영속 상태의 User를 참조
+                    .goal(goal)
+                    .checkNum(0)
+                    .build();
+            stampCardRepository.save(stampCard);
+        });;
         return user.getId();
     }
 
