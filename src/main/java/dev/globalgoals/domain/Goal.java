@@ -21,6 +21,6 @@ public class Goal {
     @Column(name = "goal_title")
     private String goalTitle;
 
-    @OneToMany(mappedBy = "goal")
-    private List<StampCard> stampCards = new ArrayList<>();
+//    @OneToMany(mappedBy = "goal")
+//    private List<StampCard> stampCards = new ArrayList<>();
 }

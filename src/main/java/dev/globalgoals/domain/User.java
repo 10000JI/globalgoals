@@ -12,6 +12,7 @@ import java.util.Set;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class User {
 
     @Id
@@ -34,8 +35,8 @@ public class User {
             inverseJoinColumns = {@JoinColumn(name = "authority_name", referencedColumnName = "authority_name")})
     private Set<Authority> authorities;
 
-    @OneToMany(mappedBy = "user")
-    private List<StampCard> stampCards = new ArrayList<>();
+//    @OneToMany(mappedBy = "user")
+//    private List<StampCard> stampCards = new ArrayList<>();
 
 
 }

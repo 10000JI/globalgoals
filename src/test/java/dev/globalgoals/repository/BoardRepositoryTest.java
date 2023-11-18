@@ -12,7 +12,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.IntStream;
@@ -85,4 +87,39 @@ class BoardRepositoryTest {
             System.out.println(boardbook);
         });
     }
+
+    @Test
+    public void testReadWithUser(){
+        //given
+        Object result = boardRepository.getBoardWithUser(100L);
+
+        //when
+        Object[] arr = (Object[]) result;
+
+        //then
+        System.out.println(Arrays.toString(arr));
+    }
+
+    @Test
+    public void testGetBoardWithComment(){
+        //given
+        List<Object[]> result = boardRepository.getBoardWithComment(103L);
+
+        //when
+        for (Object[] arr : result) {
+            System.out.println(Arrays.toString(arr));
+        }
+    }
+
+    @Test
+    @Transactional
+    public void testWithCommentCount() {
+        Pageable pageable = PageRequest.of(0, 10, Sort.by("id").descending());
+        Page<Object[]> result = boardRepository.getBoardWithCommentCount(pageable);
+        result.get().forEach(row -> {
+            Object[] arr = (Object[])row;
+            System.out.println(Arrays.toString(arr));
+        });
+    }
+
 }

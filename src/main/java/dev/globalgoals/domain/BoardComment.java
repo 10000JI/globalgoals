@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString(exclude = "board")
 public class BoardComment extends BaseEntity {
 
     @Id
