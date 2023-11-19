@@ -18,4 +18,7 @@ public class BoardDTO {
     private String writer;
     private Long hit;
     private LocalDateTime regDate, modDate;
+
+    //댓글 추가
+    private int commentCount; //해당 게시글의 댓글 수
 }

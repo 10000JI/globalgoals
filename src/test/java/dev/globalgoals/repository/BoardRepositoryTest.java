@@ -122,4 +122,17 @@ class BoardRepositoryTest {
         });
     }
 
+
+    @Test
+    @Transactional
+    public void testRead3() {
+
+        Object result = boardRepository.getBoardById(103L);
+
+        Object[] arr = (Object[])result;
+
+        System.out.println(Arrays.toString(arr));
+    }
+
+
 }

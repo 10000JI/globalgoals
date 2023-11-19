@@ -24,4 +24,11 @@ public interface BoardRepository extends JpaRepository<Board, Long>, QuerydslPre
             " left join BoardComment bc on bc.board = b" +
             " group by b", countQuery = "select count(b) from Board b")
     Page<Object[]> getBoardWithCommentCount(Pageable pageable);
+
+    @Query("SELECT b, u, count(bc) " +
+            " FROM Board b LEFT JOIN b.user u " +
+            " LEFT OUTER JOIN BoardComment bc ON bc.board = b" +
+            " WHERE b.id = :id")
+    Object getBoardById(@Param("id") Long id);
+
 }
