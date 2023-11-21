@@ -21,7 +21,6 @@
                             <input type="hidden" name="page" th:value="${requestDTO.page}">
                             <input type="hidden" name="type" th:value="${requestDTO.type}">
                             <input type="hidden" name="keyword" th:value="${requestDTO.keyword}">
-
                             <div class="form-group">
                                 <label >num</label>
                                 <input type="text" class="form-control" name="id" th:value="${dto.id}" readonly >
@@ -48,7 +47,6 @@
                                 <input type="text" class="form-control" th:value="${#temporals.format(dto.modDate, 'yyyy/MM/dd HH:mm:ss')}" readonly>
                             </div>
                         </form>
-
                         <button type="button" class="btn btn-primary modifyBtn">Modify</button>
                         <button type="button" class="btn btn-info listBtn">List</button>
                         <button type="button" class="btn btn-danger removeBtn">Remove</button>
