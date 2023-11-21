@@ -49,8 +49,13 @@ public class BoardServiceImpl implements BoardService{
         Function<Object[], BoardDTO> fn = (en -> entityToDto((Board)en[0],(User)en[1],(Long)en[2]));
         //Fuction은 함수이기 때문에 순서와는 무관함 (하단에 상세 내용)
 
-        Page<Object[]> result = boardRepository.getBoardWithCommentCount(
-                pageRequestDTO.getPageable(Sort.by("id").descending())  );
+//        Page<Object[]> result = boardRepository.getBoardWithCommentCount(
+//                pageRequestDTO.getPageable(Sort.by("id").descending())  );
+        Page<Object[]> result = boardRepository.searchPage(
+                pageRequestDTO.getType(),
+                pageRequestDTO.getKeyword(),
+                pageRequestDTO.getPageable(Sort.by("id").descending())
+        );
 
         return new PageResultDTO<>(result, fn);
     }
@@ -68,9 +73,10 @@ public class BoardServiceImpl implements BoardService{
     @Override
     public void removeWithComments(Long id) {
         //댓글 부터 삭제
-        commentRepository.deleteById(id); //댓글은 JPQL 사용
+        commentRepository.deleteByBno(id);//댓글은 JPQL 사용
 
-        boardRepository.deleteByBno(id);//게시글은 Spring data jpa 사용
+        boardRepository.deleteById(id); //게시글은 Spring data jpa 사용
+
     }
 
     @Transactional

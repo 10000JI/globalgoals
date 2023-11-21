@@ -55,38 +55,6 @@ class BoardRepositoryTest {
         }
     }
 
-    @Test
-    public void testQuest1() {
-        Pageable pageable = PageRequest.of(0, 10, Sort.by("id").descending());
-        QBoard qBoard = QBoard.board;
-        BooleanBuilder booleanBuilder = new BooleanBuilder();
-        BooleanExpression expression = qBoard.title.contains("1");
-        booleanBuilder.and(expression);
-        Page<Board> result = boardRepository.findAll(booleanBuilder, pageable);
-        result.forEach(boardbook -> {
-            System.out.println(boardbook);
-        });
-    }
-    @Test
-    public void testQuest2() {
-        Pageable pageable = PageRequest.of(0, 10, Sort.by("id").descending());
-
-        QBoard qBoard = QBoard.board;
-
-        BooleanBuilder booleanBuilder = new BooleanBuilder();
-
-        BooleanExpression expression = qBoard.title.contains("1");
-        BooleanExpression exAll = expression.or(qBoard.content.contains("1"));
-
-        booleanBuilder.and(exAll);
-        booleanBuilder.and(qBoard.id.gt(0L));
-
-        Page<Board> result = boardRepository.findAll(booleanBuilder, pageable);
-
-        result.forEach(boardbook -> {
-            System.out.println(boardbook);
-        });
-    }
 
     @Test
     public void testReadWithUser(){
@@ -132,6 +100,26 @@ class BoardRepositoryTest {
         Object[] arr = (Object[])result;
 
         System.out.println(Arrays.toString(arr));
+    }
+
+    @Test
+    public void testSearch1() {
+
+        boardRepository.search1();
+
+    }
+
+    @Test
+    @Transactional
+    public void testSearchPage() {
+
+        Pageable pageable =
+                PageRequest.of(0,10,
+                        Sort.by("id").descending()
+                                .and(Sort.by("title").ascending()));
+
+        Page<Object[]> result = boardRepository.searchPage("t", "1", pageable);
+
     }
 
 

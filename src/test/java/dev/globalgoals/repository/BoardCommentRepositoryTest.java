@@ -66,4 +66,14 @@ class BoardCommentRepositoryTest {
         }
     }
 
+
+    @Test
+    public void testListByBoard() {
+
+        List<BoardComment> replyList = boardCommentRepository.getBoardCommentByBoardOrderById(
+                Board.builder().id(100L).build());
+
+        replyList.forEach(reply -> System.out.println(reply));
+    }
+
 }
