@@ -45,7 +45,7 @@ public class BoardController {
         return "redirect:/board/free/list";
     }
 
-    //자유 게시판 디테일
+    //자유 게시판 조회
     @GetMapping({"/free/read", "/free/modify"})
     public void read(Long id, @ModelAttribute("requestDTO") PageRequestDTO pageRequestDTO, Model model) {
 
