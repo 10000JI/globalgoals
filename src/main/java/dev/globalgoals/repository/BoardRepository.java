@@ -4,6 +4,7 @@ import dev.globalgoals.domain.Board;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.data.repository.query.Param;
@@ -30,5 +31,9 @@ public interface BoardRepository extends JpaRepository<Board, Long>, QuerydslPre
             " LEFT OUTER JOIN BoardComment bc ON bc.board = b" +
             " WHERE b.id = :id")
     Object getBoardById(@Param("id") Long id);
+
+    @Modifying
+    @Query("delete from BoardComment r where r.board.id =:id ")
+    void deleteByBno(@Param("id") Long id);
 
 }

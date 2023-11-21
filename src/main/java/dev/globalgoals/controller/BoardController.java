@@ -39,9 +39,9 @@ public class BoardController {
         log.info("dto...." + dto);
 
         //새로 추가된 엔티티의 번호
-        Long gno = boardService.register(dto);
+        Long id = boardService.register(dto);
 
-        redirectAttributes.addFlashAttribute("msg", gno);
+        redirectAttributes.addFlashAttribute("msg", id);
         return "redirect:/board/free/list";
     }
 
@@ -51,7 +51,7 @@ public class BoardController {
 
         log.info("id" + id);
 
-        BoardDTO dto = boardService.read(id);
+        BoardDTO dto = boardService.get(id);
 
         model.addAttribute("dto", dto);
     }
@@ -75,7 +75,7 @@ public class BoardController {
     @PostMapping("/free/remove")
     public String remove(Long id, RedirectAttributes redirectAttributes) {
         log.info("id: " + id);
-        boardService.remove(id);
+        boardService.removeWithComments(id);
 
         redirectAttributes.addAttribute("msg", id);
 

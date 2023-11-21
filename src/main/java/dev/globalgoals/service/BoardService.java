@@ -9,15 +9,18 @@ import dev.globalgoals.dto.PageResultDTO;
 public interface BoardService {
     Long register(BoardDTO boardDto);
 
-    PageResultDTO<BoardDTO, Board> getList(PageRequestDTO requestDTO);
+    PageResultDTO<BoardDTO, Object[]> getList(PageRequestDTO pageRequestDTO);
 
-    BoardDTO read(Long id);
+    BoardDTO get(Long id);
+
+    void removeWithComments(Long id);
 
     void modify(BoardDTO dto);
 
-    void remove(Long id);
+    default Board dtoToEntity(BoardDTO dto) {
 
-    default Board dtoToEntity(BoardDTO dto, User user) {
+        User user = User.builder().id(dto.getWriter()).build();
+
         Board entity = Board.builder()
                 .id(dto.getId())
                 .title(dto.getTitle())
@@ -28,15 +31,17 @@ public interface BoardService {
         return entity;
     }
 
-    default BoardDTO entityToDto(Board entity) {
+    default BoardDTO entityToDto(Board board, User user, Long commentCount) {
         BoardDTO dto = BoardDTO.builder()
-                .id(entity.getId())
-                .title(entity.getTitle())
-                .content(entity.getContent())
-                .hit(entity.getHit())
-                .regDate(entity.getRegDate())
-                .modDate(entity.getModDate())
-                .writer(entity.getUser().getId())
+                .id(board.getId())
+                .title(board.getTitle())
+                .content(board.getContent())
+                .hit(board.getHit())
+                .regDate(board.getRegDate())
+                .modDate(board.getModDate())
+                .writer(user.getId())
+                .writerEmail(user.getEmail())
+                .commentCount(commentCount.intValue())
                 .build();
         return dto;
     }

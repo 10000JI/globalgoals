@@ -25,13 +25,4 @@ class BoardServiceTest {
         System.out.println(service.register(boardDto));
     }
 
-    @Test
-    public void testList() throws Exception{
-        PageRequestDTO pageRequestDTO = PageRequestDTO.builder().page(1).size(10).build();
-        PageResultDTO<BoardDTO, Board> resultDTO = service.getList(pageRequestDTO);
-//        for (BoardDto boardDto : resultDTO.getDtoList()) {
-//            System.out.println("boardDto = " + boardDto);
-//        }
-        System.out.println(resultDTO);
-    }
 }
