@@ -22,12 +22,12 @@ public class BoardCommentController {
 
     private final BoardCommentService commentService;
 
-    @GetMapping(value = "/{bno}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<BoardCommentDTO>> getListByBoard(@PathVariable("id") Long bno ){
+    @GetMapping(value = "/board/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<BoardCommentDTO>> getListByBoard(@PathVariable("id") Long id ){
 
-        log.info("bno: " + bno);
+        log.info("id: " + id);
 
-        return new ResponseEntity<>( commentService.getList(bno), HttpStatus.OK);
+        return new ResponseEntity<>( commentService.getList(id), HttpStatus.OK);
 
     }
 }
