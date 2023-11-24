@@ -127,8 +127,7 @@
         );
     }
     // 특정 게시물의 댓글을 처리하는 함수
-    document.querySelector(".boardCommentCount").addEventListener('click', function () {
-
+    function loadJSONData() {
         fetch('/boardComment/board/' + id)
             .then(function (response) {
                 return response.json();
@@ -154,7 +153,8 @@
             .catch(function (error) {
                 console.error('Fetch 오류:', error);
             });
-    });
+    }
+    document.querySelector(".boardCommentCount").addEventListener('click', loadJSONData);
 
     // 모달 초기화 및 버튼 표시
     document.querySelector(".addBoardComment").addEventListener('click', function () {
@@ -180,6 +180,40 @@
     document.querySelector(".replyClose").addEventListener('click', function () {
         modal.hide();
     })
+
+    // 모달 댓글 저장
+    document.querySelector('.replySave').addEventListener('click', function () {
+        let reply = {
+            bno: id,
+            comments: document.querySelector('input[name="replyText"]').value,
+            replyer: document.querySelector('input[name="replyer"]').value
+        };
+
+        console.log(reply);
+
+        fetch('/boardComment/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json; charset=utf-8'
+            },
+            body: JSON.stringify(reply)
+        })
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (data) {
+                console.log(data);
+
+                let newRno = parseInt(data);
+
+                alert(newRno +"번 댓글이 등록되었습니다.");
+                modal.hide();
+                loadJSONData();
+            })
+            .catch(function (error) {
+                console.error('Fetch 오류:', error);
+            });
+    });
 
 </script>
 </body>
