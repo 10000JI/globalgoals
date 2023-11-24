@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html th:replace="~{layout/layoutFile :: layout(~{::title},~{::link},~{::main},~{::script})}" xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html th:replace="~{layout/layoutFile :: layout(~{::title},~{::link},~{::main},~{::script})}" xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>GoalGoals-SDGs</title>
     <link/>
@@ -64,7 +63,6 @@
                                     </button>
                                 </h5>
                                 <h5 >
-<!--                                    <span class="badge bg-secondary boardCommentCount"> Reply Count  [[${dto.commentCount}]]</span> -->
                                     <button type="button" class="badge bg-secondary boardCommentCount">
                                         Reply Count [[${dto.commentCount}]]
                                     </button>
@@ -89,7 +87,7 @@
                                             <input class="form-control"  type="text" name="replyText" placeholder="Reply Text...">
                                         </div>
                                         <div class="form-group">
-                                            <input class="form-control"  type="text" name="replyer" placeholder="Replyer" >
+                                            <input class="form-control"  type="text" name="replyer"  th:value="${#authentication.name}" readonly>
                                             <input type="hidden" name="rno" >
                                         </div>
                                     </div>
@@ -162,7 +160,6 @@
         modal.show();
         // 댓글 입력하는 부분 초기화
         document.querySelector('input[name="replyText"]').value = '';
-        document.querySelector('input[name="replyer"]').value = '';
 
         // 모든 버튼을 숨김
         let buttons = document.querySelectorAll('.modal-footer .btn');
