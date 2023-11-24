@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html th:replace="~{layout/layoutFile :: layout(~{::title},~{::link},~{::main},~{::script})}" xmlns:th="http://www.thymeleaf.org" >
+<html th:replace="~{layout/layoutFile :: layout(~{::title},~{::link},~{::main},~{::script})}" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <title>GoalGoals-SDGs</title>
     <link/>
@@ -88,7 +89,7 @@
                                             <input class="form-control"  type="text" name="replyText" placeholder="Reply Text...">
                                         </div>
                                         <div class="form-group">
-                                            <input class="form-control"  type="text" name="replyer" placeholder="Replyer">
+                                            <input class="form-control"  type="text" name="replyer" placeholder="Replyer" >
                                             <input type="hidden" name="rno" >
                                         </div>
                                     </div>
