@@ -53,7 +53,7 @@
                             <tr th:each="dto : ${result.dtoList}">
                                 <th scope="row"><a th:href="@{/board/free/read(id = ${dto.id}, page = ${result.page},type = ${pageRequestDTO.type},keyword =${pageRequestDTO.keyword})}">[[${dto.id}]]</a></th>
                                 <td>[[${dto.title}]]----------------  [<b th:text="${dto.commentCount}"></b>]</td>
-                                <td>[[${dto.writer}]]<small>[[${dto.writerEmail}]]</small> </td>
+                                <td>[[${dto.writer}]]<small>  [[${dto.writerEmail}]]</small> </td>
                                 <td>[[${#temporals.format(dto.regDate,'yyyy/MM/dd')}]]</td>
                             </tr>
                             </tbody>
