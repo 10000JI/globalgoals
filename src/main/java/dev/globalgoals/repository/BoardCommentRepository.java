@@ -13,7 +13,11 @@ public interface BoardCommentRepository extends JpaRepository<BoardComment, Long
 
     @Modifying
     @Query("delete from BoardComment r where r.board.id =:id ")
-    void deleteByBno(@Param("id") Long id);
+    void deleteByBno(@Param("id") Long id); //Board 삭제 시에 댓글들 삭제
 
-    List<BoardComment> getBoardCommentByBoardOrderById(Board board);
+    List<BoardComment> getBoardCommentByBoardOrderById(Board board); //게시물로 댓글 리스트 가져오기
+    //SELECT *
+    //FROM reply
+    //WHERE board_id = ?
+    //ORDER BY rno;
 }

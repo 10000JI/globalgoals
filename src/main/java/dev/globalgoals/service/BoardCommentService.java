@@ -16,7 +16,7 @@ public interface BoardCommentService {
 
     void remove(Long rno); //댓글 삭제
 
-    //ReplyDTO를 Reply객체로 변환 Board객체의 처리가 수반됨
+    //BoardCommentDTO를 BoardComment객체로 변환 Board객체의 처리가 수반됨
     default BoardComment dtoToEntity(BoardCommentDTO commentDTO){
 
         Board board = Board.builder().id(commentDTO.getBno()).build();
@@ -31,7 +31,7 @@ public interface BoardCommentService {
         return comment;
     }
 
-    //Reply객체를 ReplyDTO로 변환 Board 객체가 필요하지 않으므로 게시물 번호만
+    //BoardComment객체를 BoardCommentDTO로 변환 Board 객체가 필요하지 않으므로 게시물 번호만
     default BoardCommentDTO entityToDTO(BoardComment comment){
 
         BoardCommentDTO dto = BoardCommentDTO.builder()

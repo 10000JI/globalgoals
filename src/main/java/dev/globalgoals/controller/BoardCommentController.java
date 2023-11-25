@@ -13,19 +13,19 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Slf4j
-@Controller
+@RestController
 @RequestMapping("/boardComment")
 @RequiredArgsConstructor
 public class BoardCommentController {
 
     private final BoardCommentService commentService;
 
-    @GetMapping(value = "/board/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<BoardCommentDTO>> getListByBoard(@PathVariable("id") Long id ){
+    @GetMapping(value = "/board/{bno}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<BoardCommentDTO>> getListByBoard(@PathVariable("bno") Long bno ){
 
-        log.info("id: " + id);
+        log.info("bno: " + bno);
 
-        return new ResponseEntity<>( commentService.getList(id), HttpStatus.OK);
+        return new ResponseEntity<>( commentService.getList(bno), HttpStatus.OK);
 
     }
     @PostMapping("")
@@ -37,4 +37,26 @@ public class BoardCommentController {
 
         return new ResponseEntity<>(rno, HttpStatus.OK);
     }
+
+    @DeleteMapping("/{rno}")
+    public ResponseEntity<String> remove(@PathVariable("rno") Long rno) {
+
+        log.info("rno:" + rno );
+
+        commentService.remove(rno);
+
+        return new ResponseEntity<>("success", HttpStatus.OK);
+
+    }
+    @PutMapping("/{rno}")
+    public ResponseEntity<String> modify(@RequestBody BoardCommentDTO commentDTO) {
+
+        log.info("commentDTO" + commentDTO);
+
+        commentService.modify(commentDTO);
+
+        return new ResponseEntity<>("success", HttpStatus.OK);
+
+    }
+
 }
