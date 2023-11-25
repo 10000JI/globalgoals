@@ -19,15 +19,15 @@
                     <div>
                         <form th:action="@{/board/free/register}" th:method="post">
                             <div class="form-group">
-                                <label>Title</label>
+                                <label>제목</label>
                                 <input type="text" class="form-control" name="title" placeholder="Enter Title">
                             </div>
                             <div class="form-group">
-                                <label>Content</label>
+                                <label>내용</label>
                                 <textarea class="form-control" rows="5" name="content"></textarea>
                             </div>
                             <div class="form-group">
-                                <label>Writer</label>
+                                <label>작성자</label>
                                 <input th:value="${#authentication.name}" type="text" class="form-control" name="writer" placeholder="Enter Writer"readonly>
                             </div>
                             <button type="submit" class="btn btn-primary">Submit</button>
