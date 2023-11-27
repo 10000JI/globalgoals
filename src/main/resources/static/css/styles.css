@@ -4204,6 +4204,7 @@ textarea.form-control-lg {
   flex: 1 1 auto;
   padding: var(--bs-card-spacer-y) var(--bs-card-spacer-x);
   color: var(--bs-card-color);
+  margin: 10px 0;
 }
 
 .card-title {
@@ -10888,83 +10889,6 @@ html {
   margin: 0; /* 기본 마진 제거 */
 }
 
-
-
-/*!* Space out content a bit *!*/
-/*body {*/
-/*  padding-top: 20px;*/
-/*  padding-bottom: 20px;*/
-/*}*/
-/*!* Everything but the jumbotron gets side spacing for mobile first views *!*/
-/*.header,*/
-/*.marketing,*/
-/*.footer {*/
-/*  padding-left: 15px;*/
-/*  padding-right: 15px;*/
-/*}*/
-/*!* Custom page header *!*/
-/*.header {*/
-/*  border-bottom: 1px solid #e5e5e5;*/
-/*}*/
-/* Make the masthead heading the same height as the navigation */
-/*.header h3 {*/
-/*  margin-top: 0;*/
-/*  margin-bottom: 0;*/
-/*  line-height: 40px;*/
-/*  padding-bottom: 19px;*/
-/*}*/
-/*!*!* Custom page footer *!*!*/
-/*!*.footer {*!*/
-/*!*  padding-top: 19px;*!*/
-/*!*  color: #777;*!*/
-/*!*  border-top: 1px solid #e5e5e5;*!*/
-/*!*}*!*/
-/*!* Customize container *!*/
-/*@media (min-width: 768px) {*/
-/*  .container {*/
-/*    max-width: 730px;*/
-/*  }*/
-/*}*/
-/*.container-narrow > hr {*/
-/*  margin: 30px 0;*/
-/*}*/
-/*!* Main marketing message and sign up button *!*/
-/*.jumbotron {*/
-/*  text-align: center;*/
-/*  border-bottom: 1px solid #e5e5e5;*/
-/*}*/
-/*.jumbotron .btn {*/
-/*  font-size: 21px;*/
-/*  padding: 14px 24px;*/
-/*}*/
-/*!* Supporting marketing content *!*/
-/*.marketing {*/
-/*  margin: 40px 0;*/
-/*}*/
-/*.marketing p + h4 {*/
-/*  margin-top: 28px;*/
-/*}*/
-/*!* Responsive: Portrait tablets and up *!*/
-/*@media screen and (min-width: 768px) {*/
-/*  !* Remove the padding we set earlier *!*/
-/*  .header,*/
-/*  .marketing,*/
-/*  .footer {*/
-/*    padding-left: 0;*/
-/*    padding-right: 0;*/
-/*  }*/
-/*  !* Space out the masthead *!*/
-/*  .header {*/
-/*    margin-bottom: 30px;*/
-/*  }*/
-/*  !* Remove the bottom border on the jumbotron for visual effect *!*/
-/*  .jumbotron {*/
-/*    border-bottom: 0;*/
-/*  }*/
-/*}*/
-
-
-
 .form-board{
   display: block;
   padding: 0.375rem 0.75rem;
@@ -11003,3 +10927,9 @@ html {
 .search-btn, .clear-btn {
   margin-right: 5px;
 }
+
+#titleLink {
+  text-decoration: none;
+  /*title a태그 css 제거*/
+}
+

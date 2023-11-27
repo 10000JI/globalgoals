@@ -47,24 +47,24 @@
 
                         <!--        <a th:href="@{/guestbook/list(page=${requestDTO.page})}"><button type="button" class="btn btn-info">List</button></a>-->
 
-                        <a th:href="@{/board/free/modify(id = ${dto.id}, page=${requestDTO.page}, type=${requestDTO.type}, keyword =${requestDTO.keyword})}">
-                            <button type="button" class="btn btn-primary">Modify</button>
+                        <a th:if="${#authentication.name eq dto.writer}" th:href="@{/board/free/modify(id=${dto.id}, page=${requestDTO.page}, type=${requestDTO.type}, keyword=${requestDTO.keyword})}">
+                            <button type="button" class="btn btn-primary">수정</button>
                         </a>
 
                         <a th:href="@{/board/free/list(page=${requestDTO.page}, type=${requestDTO.type}, keyword =${requestDTO.keyword})}">
-                            <button type="button" class="btn btn-info">List</button>
+                            <button type="button" class="btn btn-info">목록</button>
                         </a>
 
                         <div>
                             <div class="mt-4">
                                 <h5 >
                                     <button type="button" class="badge bg-secondary addBoardComment" data-bs-toggle="modal" data-bs-target="#addModal">
-                                        Add Reply
+                                        댓글 쓰기
                                     </button>
                                 </h5>
                                 <h5 >
                                     <button type="button" class="badge bg-secondary boardCommentCount">
-                                        Reply Count [[${dto.commentCount}]]
+                                        댓글 개수 : [[${dto.commentCount}]] (더보기)
                                     </button>
                                 </h5>
                             </div>
@@ -92,10 +92,10 @@
                                         </div>
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-danger replyRemove">Remove</button>
-                                        <button type="button" class="btn btn-warning replyModify">Modify</button>
-                                        <button type="button" class="btn btn-primary replySave">Save</button>
-                                        <button type="button" class="btn btn-outline-secondary replyClose">Close</button>
+                                        <button type="button" class="btn btn-danger replyRemove">삭제</button>
+                                        <button type="button" class="btn btn-warning replyModify">수정</button>
+                                        <button type="button" class="btn btn-primary replySave">저장</button>
+                                        <button type="button" class="btn btn-outline-secondary replyClose">닫기</button>
                                     </div>
                                 </div>
                             </div>
@@ -110,6 +110,7 @@
 <script th:inline="javascript">
 
     const bno = [[${dto.id}]];
+    const authenticatedUser = [[${#authentication.name}]];
     const listGroup = document.querySelector(".boardCommentList");
     const modal = new bootstrap.Modal(document.getElementById('addModal'));
     let replyRemoveButton = document.querySelector('.replyRemove');
@@ -140,11 +141,14 @@
 
                 let str = "";
 
-                document.querySelector('.boardCommentCount').innerHTML = " Reply Count " + arr.length;
+                document.querySelector('.boardCommentCount').innerHTML = " 댓글 개수 : " + arr.length +" (더보기)";
 
                 arr.forEach(function (boardComment) {
                     console.log(boardComment);
-                    str += ' <div class="card-body" data-rno="' + boardComment.rno + '"><b>' + boardComment.rno + '</b>';
+                    str += ' <div class="card-body" data-rno="' + boardComment.rno + '"><b>' + boardComment.rno + '</b> &nbsp';
+                    if(authenticatedUser == boardComment.replyer) {
+                        str += '<button class="edit btn btn-secondary btn-sm" th:if="${#authentication.name eq  boardComment.replyer}">편집</button>';
+                    }
                     str += ' <h5 class="card-title">' + boardComment.comments + '</h5>';
                     str += ' <h6 class="card-subtitle mb-2 text-muted">' + boardComment.replyer + '</h6>';
                     str += ' <p class="card-text">' + formatTime(boardComment.modDate) + '</p>';
@@ -217,13 +221,14 @@
 
     //모달에 댓글 내용 불러오기
     document.querySelector('.boardCommentList').addEventListener('click', function (event) {
-        // 클릭된 요소가 card-body 클래스를 포함하는지 확인
-        if (event.target.classList.contains('card-body')) {
-            let rno = event.target.dataset.rno;
+        // 클릭된 요소가 edit 클래스를 포함하는지 확인
+        if (event.target.classList.contains('edit')) {
+            let rno = event.target.parentElement.dataset.rno;
 
             // 댓글 입력 부분 초기화
-            let replyText = event.target.querySelector('.card-title').innerHTML;
-            let replyer = event.target.querySelector('.card-subtitle').innerHTML;
+            let replyText = event.target.parentElement.querySelector('.card-title').innerHTML;
+            let replyer = event.target.parentElement.querySelector('.card-subtitle').innerHTML;
+            //parentElement 쓰는 이유: 이벤트가 발생한 요소가 실제로 버튼 자체가 아닌 버튼을 감싸고 있는 부모 요소인 div.card-body일 때, 해당 부모 요소에서 필요한 정보를 추출하기 위함
 
             document.querySelector('input[name="replyText"]').value = replyText;
             document.querySelector('input[name="replyer"]').value = replyer;

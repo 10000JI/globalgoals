@@ -47,9 +47,9 @@
                                 <input type="text" class="form-control" th:value="${#temporals.format(dto.modDate, 'yyyy/MM/dd HH:mm:ss')}" readonly>
                             </div>
                         </form>
-                        <button type="button" class="btn btn-primary modifyBtn">Modify</button>
-                        <button type="button" class="btn btn-info listBtn">List</button>
-                        <button type="button" class="btn btn-danger removeBtn">Remove</button>
+                        <button th:if="${#authentication.name eq dto.writer}" type="button" class="btn btn-primary modifyBtn">수정</button>
+                        <button type="button" class="btn btn-info listBtn">목록</button>
+                        <button th:if="${#authentication.name eq dto.writer}" type="button" class="btn btn-danger removeBtn">삭제</button>
                     </div>
                 </div>
             </div>
