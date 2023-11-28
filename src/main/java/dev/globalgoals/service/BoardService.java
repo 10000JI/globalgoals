@@ -6,8 +6,10 @@ import dev.globalgoals.dto.BoardDTO;
 import dev.globalgoals.dto.PageRequestDTO;
 import dev.globalgoals.dto.PageResultDTO;
 
+import java.io.IOException;
+
 public interface BoardService {
-    Long register(BoardDTO boardDto);
+    Long register(BoardDTO boardDto) throws IOException;
 
     PageResultDTO<BoardDTO, Object[]> getList(PageRequestDTO pageRequestDTO);
 

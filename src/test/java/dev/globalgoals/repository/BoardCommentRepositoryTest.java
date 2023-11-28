@@ -43,8 +43,8 @@ class BoardCommentRepositoryTest {
     }
     @Test
     public void insertBoardComment_i(){
-        int numberOfComments = 321;
-        for (int i = 299; i < numberOfComments; i++) {
+        int numberOfComments = 300;
+        for (int i = 1; i < numberOfComments; i++) {
             if (i % 2 == 0) {
                 insertBoardComment_o(i);
             }

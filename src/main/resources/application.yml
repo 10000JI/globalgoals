@@ -39,3 +39,6 @@ logging:
     me.silvernine: DEBUG
     org.hibernate.SQL: debug
     org.hibernate.type: trace
+
+file:
+  dir: C:/SpringStudy/file/

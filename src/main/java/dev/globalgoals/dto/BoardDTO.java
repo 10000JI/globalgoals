@@ -4,8 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -22,4 +24,8 @@ public class BoardDTO {
 
     //댓글 추가
     private int commentCount; //해당 게시글의 댓글 수
+
+    //이미지 다중 업로드
+    private Long imgId;
+    private List<MultipartFile> imageFiles;
 }

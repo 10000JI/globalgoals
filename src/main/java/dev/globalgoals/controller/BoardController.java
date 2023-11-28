@@ -1,7 +1,11 @@
 package dev.globalgoals.controller;
 
+import dev.globalgoals.domain.Board;
+import dev.globalgoals.domain.BoardImage;
 import dev.globalgoals.dto.BoardDTO;
 import dev.globalgoals.dto.PageRequestDTO;
+import dev.globalgoals.file.FileStore;
+import dev.globalgoals.file.UploadFile;
 import dev.globalgoals.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,6 +17,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.IOException;
+import java.util.List;
+
 @Slf4j
 @Controller
 @RequestMapping("/board")
@@ -20,6 +27,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class BoardController {
 
     private final BoardService boardService;
+    private final FileStore fileStore;
 
     // 자유 게시판 리스트
     @GetMapping("/free/list")
@@ -35,9 +43,7 @@ public class BoardController {
 
     // 자유 게시판 등록
     @PostMapping("/free/register")
-    public String registerPost(BoardDTO dto, RedirectAttributes redirectAttributes) {
-        log.info("dto...." + dto);
-
+    public String registerPost(BoardDTO dto, RedirectAttributes redirectAttributes) throws IOException {
         //새로 추가된 엔티티의 번호
         Long id = boardService.register(dto);
 

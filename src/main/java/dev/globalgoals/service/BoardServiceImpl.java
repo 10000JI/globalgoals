@@ -2,14 +2,14 @@ package dev.globalgoals.service;
 
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.dsl.BooleanExpression;
-import dev.globalgoals.domain.Board;
-import dev.globalgoals.domain.QBoard;
-import dev.globalgoals.domain.QUser;
-import dev.globalgoals.domain.User;
+import dev.globalgoals.domain.*;
 import dev.globalgoals.dto.BoardDTO;
 import dev.globalgoals.dto.PageRequestDTO;
 import dev.globalgoals.dto.PageResultDTO;
+import dev.globalgoals.file.FileStore;
+import dev.globalgoals.file.UploadFile;
 import dev.globalgoals.repository.BoardCommentRepository;
+import dev.globalgoals.repository.BoardImageRepository;
 import dev.globalgoals.repository.BoardRepository;
 import dev.globalgoals.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,10 +20,13 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
 @Service
+@Transactional(readOnly = true)
 @Slf4j
 @RequiredArgsConstructor
 public class BoardServiceImpl implements BoardService{
@@ -32,13 +35,35 @@ public class BoardServiceImpl implements BoardService{
 
     private final BoardCommentRepository commentRepository;
 
-    @Override
-    public Long register(BoardDTO dto) {
-        log.info("DTO-------------------------");
+    private final BoardImageRepository boardImageRepository;
 
+    private final FileStore fileStore;
+
+    @Override
+    @Transactional
+    public Long register(BoardDTO dto) throws IOException {
         Board entity = dtoToEntity(dto);
 
         boardRepository.save(entity);
+
+        //파일은 데이터베이스가 아닌 스토리지에 저장
+        //aws s3 같은 곳에 저장 클라우드에 올린 것을 어느 대의 컴퓨터건 볼 수 있게 할 수도 있다.
+        List<UploadFile> storeImageFiles = fileStore.storeFiles(dto.getImageFiles());
+
+        if(!storeImageFiles.isEmpty()){
+            for (UploadFile storeImageFile : storeImageFiles) {
+
+                BoardImage boardImage = BoardImage.builder()
+                        .id(dto.getImgId())
+                        .board(entity)
+                        .oriName(storeImageFile.getUploadFileName())
+                        .saveName(storeImageFile.getStoreFileName())
+                        .build();
+
+                boardImageRepository.save(boardImage);
+            }
+        }
+
 
         return entity.getId();
     }

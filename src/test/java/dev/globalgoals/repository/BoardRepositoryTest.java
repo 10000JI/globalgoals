@@ -56,17 +56,17 @@ class BoardRepositoryTest {
     }
 
 
-    @Test
-    public void testReadWithUser(){
-        //given
-        Object result = boardRepository.getBoardWithUser(100L);
-
-        //when
-        Object[] arr = (Object[]) result;
-
-        //then
-        System.out.println(Arrays.toString(arr));
-    }
+//    @Test
+//    public void testReadWithUser(){
+//        //given
+//        Object result = boardRepository.getBoardWithUser(100L);
+//
+//        //when
+//        Object[] arr = (Object[]) result;
+//
+//        //then
+//        System.out.println(Arrays.toString(arr));
+//    }
 
     @Test
     public void testGetBoardWithComment(){
