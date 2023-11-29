@@ -9,15 +9,15 @@ import dev.globalgoals.file.UploadFile;
 import dev.globalgoals.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.List;
 
 @Slf4j
@@ -28,7 +28,6 @@ public class BoardController {
 
     private final BoardService boardService;
     private final FileStore fileStore;
-
     // 자유 게시판 리스트
     @GetMapping("/free/list")
     public void mainList(PageRequestDTO requestDTO, Model model) {
@@ -59,7 +58,17 @@ public class BoardController {
 
         BoardDTO dto = boardService.get(id);
 
+        List<UploadFile> images = boardService.getImage(id);
+
         model.addAttribute("dto", dto);
+        model.addAttribute("images", images);
+    }
+
+    @ResponseBody
+    @GetMapping("/images/{filename}")
+    public Resource downloadImage(@PathVariable String filename) throws MalformedURLException {
+        //"file:C:/SpringStudy/file/8f9764ed-7bfb-40a2-80a4-b1c3162ba5ef.jpg"
+        return new UrlResource("file:" + fileStore.getFullPath(filename)); //경로에 있는 파일에 접근하여 Stream으로 반환
     }
 
     @PostMapping("/free/modify")

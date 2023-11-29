@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -93,6 +94,17 @@ public class BoardServiceImpl implements BoardService{
 
         return entityToDto((Board)arr[0], (User)arr[1], (Long)arr[2]);
     }
+
+    @Override
+    public List<UploadFile> getImage(Long id) {
+        List<BoardImage> boardImageByBoard = boardImageRepository.getBoardImageByBoard(Board.builder().id(id).build());
+        List<UploadFile> uploadFileList = boardImageByBoard.stream()
+                .map(boardImage -> UploadFile.builder()
+                        .uploadFileName(boardImage.getOriName())
+                        .storeFileName(boardImage.getSaveName()).build())
+                .collect(Collectors.toList());
+        return uploadFileList;
+   }
 
     @Transactional
     @Override

@@ -1,12 +1,15 @@
 package dev.globalgoals.service;
 
 import dev.globalgoals.domain.Board;
+import dev.globalgoals.domain.BoardImage;
 import dev.globalgoals.domain.User;
 import dev.globalgoals.dto.BoardDTO;
 import dev.globalgoals.dto.PageRequestDTO;
 import dev.globalgoals.dto.PageResultDTO;
+import dev.globalgoals.file.UploadFile;
 
 import java.io.IOException;
+import java.util.List;
 
 public interface BoardService {
     Long register(BoardDTO boardDto) throws IOException;
@@ -14,6 +17,8 @@ public interface BoardService {
     PageResultDTO<BoardDTO, Object[]> getList(PageRequestDTO pageRequestDTO);
 
     BoardDTO get(Long id);
+
+    List<UploadFile> getImage(Long id);
 
     void removeWithComments(Long id);
 
