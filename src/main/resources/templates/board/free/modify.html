@@ -17,7 +17,7 @@
                         <h3 class="middle">자유게시판</h3>
                     </div>
                     <div>
-                        <form action="/guestbook/modify" method="post">
+                        <form action="/guestbook/modify" method="post" enctype="multipart/form-data">
                             <input type="hidden" name="page" th:value="${requestDTO.page}">
                             <input type="hidden" name="type" th:value="${requestDTO.type}">
                             <input type="hidden" name="keyword" th:value="${requestDTO.keyword}">
@@ -33,6 +33,19 @@
                             <div class="form-group">
                                 <label >내용</label>
                                 <textarea class="form-control" rows="5" name="content">[[${dto.content}]]</textarea>
+                            </div>
+                            <div class="form-group">
+                                <label>첨부파일</label>
+                                <input type="file" class="form-control" multiple="multiple" name="imageFiles">
+                            </div>
+                            <div class="form-group">
+                                <div th:each="image, status : ${images}">
+                                    <div class="image-container" th:fragment="imageContainer"  th:id="'imageContainer-' + ${image.getStoreFileName()}">
+                                        <span th:text="${image.getUploadFileName()}"></span>
+                                        <button type="button" class="btn btn-outline-secondary btn-sm delete-btn" th:data-image="${image.getStoreFileName()}">X</button>
+                                        <input type="hidden" th:id="'imageToDelete-' + ${image.getStoreFileName()}" name="imagesToDelete" th:value="${image.getStoreFileName()}">
+                                    </div>
+                                </div>
                             </div>
                             <div class="form-group">
                                 <label >작성자</label>
@@ -60,36 +73,85 @@
     const removeBtn = document.querySelector(".removeBtn");
     const actionForm = document.querySelector("form");
     const modifyBtn = document.querySelector(".modifyBtn");
-    const pageInfo = document.querySelector("input[name='page']");  // 숨겨둔 페이지 값 선택
+    const pageInfo = document.querySelector("input[name='page']");
     const typeInfo = document.querySelector("input[name='type']");
     const keywordInfo = document.querySelector("input[name='keyword']");
     const listBtn = document.querySelector(".listBtn");
 
-    removeBtn.addEventListener('click', function (){
-        actionForm.setAttribute("action","/board/free/remove")
+    // 선택한 이미지 파일 이름을 담을 배열
+    const selectedImages = [];
+
+    document.addEventListener('DOMContentLoaded', function () {
+        // 삭제 버튼에 이벤트 핸들러 등록
+        const deleteBtns = document.querySelectorAll('.delete-btn');
+        deleteBtns.forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                const imageFileName = btn.getAttribute('data-image');
+                toggleDeletion(imageFileName);
+            });
+        });
+    });
+
+    // 이미지 삭제를 위한 함수
+    function toggleDeletion(imageFileName) {
+        // 선택한 이미지의 부모 div를 찾아 숨기기
+        const selectedDiv = document.getElementById("imageContainer-"+imageFileName);
+        if (selectedDiv) {
+            // 부모 엘리먼트에서 제거
+            selectedDiv.parentNode.removeChild(selectedDiv);
+
+            // 배열에 이미지 파일 이름 추가
+            selectedImages.push(imageFileName);
+        } else {
+            console.error("엘리먼트를 찾을 수 없습니다: " + imageFileName);
+        }
+    }
+
+    removeBtn.addEventListener('click', function () {
+        actionForm.setAttribute("action", "/board/free/remove");
         actionForm.method = "post";
         actionForm.submit();
     });
 
-    modifyBtn.addEventListener('click', function (){
-        if(!confirm("수정하시겠습니까?")){
+    modifyBtn.addEventListener('click', function () {
+        if (!confirm("수정하시겠습니까?")) {
             return;
         }
-        actionForm.setAttribute("action", "/board/free/modify")
-        actionForm.method = "post"
+
+        // // 모든 이미지 파일 이름을 숨겨진 input으로 추가
+        // const allImages = document.querySelectorAll("input[name='imagesToDelete']");
+        // allImages.forEach(function (image) {
+        //     image.remove();
+        // });
+
+        // 이미지 파일 이름을 전송할 숨겨진 입력(input) 요소를 담을 컨테이너
+        const hiddenInputContainer = document.createElement("div");
+
+        // 선택한 이미지 파일 이름만을 hidden input으로 추가
+        for (const imageName of selectedImages) {
+            const hiddenInput = document.createElement("input");
+            hiddenInput.setAttribute("type", "hidden");
+            hiddenInput.setAttribute("name", "storeFileNames");
+            hiddenInput.setAttribute("value", imageName);
+            hiddenInputContainer.appendChild(hiddenInput);
+        }
+
+        // 숨겨진 입력 컨테이너를 form에 추가
+        actionForm.appendChild(hiddenInputContainer);
+        actionForm.setAttribute("action", "/board/free/modify");
+        actionForm.method = "post";
         actionForm.submit();
     });
 
-    listBtn.addEventListener("click", function (){
-        actionForm.innerHTML=""; //form 태그의 내용 삭제
-        actionForm.append(pageInfo); // 목록에 필요한 페이지 값 추가
-        actionForm.append(typeInfo); // 목록에 필요한 타입 값 추가
-        actionForm.append(keywordInfo); // 목록에 필요한 키워드 값 추가
-        actionForm.setAttribute("action", "/board/free/list") // 폼에 다시 값 추가
-        actionForm.method = "get"; // 메서드 get
+    listBtn.addEventListener("click", function () {
+        actionForm.innerHTML = "";
+        actionForm.append(pageInfo);
+        actionForm.append(typeInfo);
+        actionForm.append(keywordInfo);
+        actionForm.setAttribute("action", "/board/free/list");
+        actionForm.method = "get";
         actionForm.submit();
     });
-
 </script>
 </body>
 </html>

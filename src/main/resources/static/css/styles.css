@@ -10933,3 +10933,7 @@ html {
   /*title a태그 css 제거*/
 }
 
+.hide {
+  display: none;
+}
+

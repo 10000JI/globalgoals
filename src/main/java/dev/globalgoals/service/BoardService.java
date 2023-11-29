@@ -22,7 +22,7 @@ public interface BoardService {
 
     void removeWithComments(Long id);
 
-    void modify(BoardDTO dto);
+    void modify(BoardDTO dto, String[] storeFileNames) throws IOException;
 
     default Board dtoToEntity(BoardDTO dto) {
 

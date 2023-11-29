@@ -47,6 +47,14 @@ public class BoardServiceImpl implements BoardService{
 
         boardRepository.save(entity);
 
+        extracted(dto, entity);
+
+
+        return entity.getId();
+    }
+
+    //dto->entity 이미지 저장 로직
+    private void extracted(BoardDTO dto, Board entity) throws IOException {
         //파일은 데이터베이스가 아닌 스토리지에 저장
         //aws s3 같은 곳에 저장 클라우드에 올린 것을 어느 대의 컴퓨터건 볼 수 있게 할 수도 있다.
         List<UploadFile> storeImageFiles = fileStore.storeFiles(dto.getImageFiles());
@@ -64,16 +72,13 @@ public class BoardServiceImpl implements BoardService{
                 boardImageRepository.save(boardImage);
             }
         }
-
-
-        return entity.getId();
     }
 
     @Override
     public PageResultDTO<BoardDTO, Object[]> getList(PageRequestDTO pageRequestDTO) {
 
         Function<Object[], BoardDTO> fn = (en -> entityToDto((Board)en[0],(User)en[1],(Long)en[2]));
-        //Fuction은 함수이기 때문에 순서와는 무관함 (하단에 상세 내용)
+        //Fuction은 함수이기 때문에 순서와는 무관함
 
 //        Page<Object[]> result = boardRepository.getBoardWithCommentCount(
 //                pageRequestDTO.getPageable(Sort.by("id").descending())  );
@@ -118,14 +123,22 @@ public class BoardServiceImpl implements BoardService{
 
     @Transactional
     @Override
-    public void modify(BoardDTO boardDTO) {
+    public void modify(BoardDTO boardDTO, String[] storeFileNames) throws IOException {
 
         Board board = boardRepository.getOne(boardDTO.getId());
 
         board.changeTitle(boardDTO.getTitle());
         board.changeContent(boardDTO.getContent());
 
+        if (storeFileNames != null) {
+            for (String storeFileName : storeFileNames) {
+                boardImageRepository.deleteBySaveName(storeFileName);
+            }
+        }
+
         // repository.save(board);
+
+        extracted(boardDTO, board);
     }
 
 

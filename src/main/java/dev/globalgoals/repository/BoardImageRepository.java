@@ -11,4 +11,9 @@ public interface BoardImageRepository extends JpaRepository<BoardImage, Long> {
     //SELECT *
     //FROM board_image
     //WHERE board_id = ?
+
+    void deleteBySaveName(String saveName);
+    //delete
+    //from board_image
+    //where save_name =?
 }

@@ -72,12 +72,17 @@ public class BoardController {
     }
 
     @PostMapping("/free/modify")
-    public String modify(BoardDTO dto, @ModelAttribute("requestDTO") PageRequestDTO requestDTO,
-                         RedirectAttributes redirectAttributes) {
+    public String modify(BoardDTO dto,String[] storeFileNames, @ModelAttribute("requestDTO") PageRequestDTO requestDTO,
+                         RedirectAttributes redirectAttributes) throws IOException {
         log.info("post modify...............");
         log.info("dto: " + dto);
+        if (storeFileNames != null) {
+            for (String storeFileName : storeFileNames) {
+                log.info("storeFileName: " + storeFileName);
+            }
+        }
 
-        boardService.modify(dto);
+        boardService.modify(dto,storeFileNames);
 
         redirectAttributes.addAttribute("page",requestDTO.getPage());
         redirectAttributes.addAttribute("type",requestDTO.getType());
