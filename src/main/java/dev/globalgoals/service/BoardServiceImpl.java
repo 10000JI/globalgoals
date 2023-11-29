@@ -114,8 +114,11 @@ public class BoardServiceImpl implements BoardService{
     @Transactional
     @Override
     public void removeWithComments(Long id) {
-        //댓글 부터 삭제
-        commentRepository.deleteByBno(id);//댓글은 JPQL 사용
+        //댓글부터 삭제
+        commentRepository.deleteByBno(id);//게시판의 댓글 삭제는 JPQL 사용
+
+        //이미지부터 삭제
+        boardImageRepository.deleteByBno(id); //게시판의 이미지 삭제는 JPQL 사용
 
         boardRepository.deleteById(id); //게시글은 Spring data jpa 사용
 
