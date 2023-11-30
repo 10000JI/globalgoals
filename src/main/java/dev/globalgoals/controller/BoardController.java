@@ -1,10 +1,7 @@
 package dev.globalgoals.controller;
 
-import dev.globalgoals.domain.Board;
-import dev.globalgoals.domain.BoardImage;
 import dev.globalgoals.dto.BoardDTO;
 import dev.globalgoals.dto.PageRequestDTO;
-import dev.globalgoals.dto.PageResultDTO;
 import dev.globalgoals.file.FileStore;
 import dev.globalgoals.file.UploadFile;
 import dev.globalgoals.service.BoardService;
@@ -34,7 +31,7 @@ public class BoardController {
     public String mainList(PageRequestDTO requestDTO, Model model, @PathVariable String cate) {
         model.addAttribute("result", boardService.getList(requestDTO, cate));
         model.addAttribute("cate", cate);
-        return "board/free/list";
+        return "board/list";
     }
 
     // 자유 게시판 등록 페이지
@@ -43,7 +40,7 @@ public class BoardController {
         log.info("register get....");
         model.addAttribute("cate", cate);
         model.addAttribute("dto", dto);
-        return "board/free/register";
+        return "board/register";
     }
 
     // 자유 게시판 등록
@@ -58,7 +55,7 @@ public class BoardController {
     }
 
     //자유 게시판 조회
-    @GetMapping({"/{cate}/read", "/{cate}/modify"})
+    @GetMapping("/{cate}/read")
     public String read(Long id, @ModelAttribute("requestDTO") PageRequestDTO pageRequestDTO, Model model, @PathVariable String cate) {
 
         log.info("id" + id);
@@ -71,7 +68,23 @@ public class BoardController {
         model.addAttribute("dto", dto);
         model.addAttribute("images", images);
 
-        return "board/free/read";
+        return "board/read";
+    }
+    //자유 게시판 조회
+    @GetMapping("/{cate}/modify")
+    public String modify(Long id, @ModelAttribute("requestDTO") PageRequestDTO pageRequestDTO, Model model, @PathVariable String cate) {
+
+        log.info("id" + id);
+
+        BoardDTO dto = boardService.get(id);
+
+        List<UploadFile> images = boardService.getImage(id);
+
+        model.addAttribute("cate", cate);
+        model.addAttribute("dto", dto);
+        model.addAttribute("images", images);
+
+        return "board/modify";
     }
 
     @ResponseBody
@@ -81,9 +94,9 @@ public class BoardController {
         return new UrlResource("file:" + fileStore.getFullPath(filename)); //경로에 있는 파일에 접근하여 Stream으로 반환
     }
 
-    @PostMapping("/free/modify")
+    @PostMapping("/{cate}/modify")
     public String modify(BoardDTO dto,String[] storeFileNames, @ModelAttribute("requestDTO") PageRequestDTO requestDTO,
-                         RedirectAttributes redirectAttributes) throws IOException {
+                         RedirectAttributes redirectAttributes,  @PathVariable String cate) throws IOException {
         log.info("post modify...............");
         log.info("dto: " + dto);
         if (storeFileNames != null) {
@@ -99,7 +112,7 @@ public class BoardController {
         redirectAttributes.addAttribute("keyword",requestDTO.getKeyword());
         redirectAttributes.addAttribute("id", dto.getId());
 
-        return "redirect:/board/free/read";
+        return "redirect:/board/{cate}/read";
     }
 
     @PostMapping("/free/remove")
