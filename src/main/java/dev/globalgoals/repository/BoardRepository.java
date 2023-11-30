@@ -1,6 +1,7 @@
 package dev.globalgoals.repository;
 
 import dev.globalgoals.domain.Board;
+import dev.globalgoals.domain.BoardCategory;
 import dev.globalgoals.repository.search.SearchBoardRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -31,5 +32,10 @@ public interface BoardRepository extends JpaRepository<Board, Long>, SearchBoard
             " LEFT OUTER JOIN BoardComment bc ON bc.board = b" +
             " WHERE b.id = :id")
     Object getBoardById(@Param("id") Long id);
+
+//    Board getBoardByBoardCategory_Id(Long cateNum);
+//    //SELECT *
+//    //FROM board
+//    //WHERE cate_name = ?
 
 }

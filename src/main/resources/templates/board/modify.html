@@ -14,10 +14,12 @@
             <div class="col py-5">
                 <div class="container">
                     <div class="header">
-                        <h3 class="middle">자유게시판</h3>
+                        <h3 class="middle" th:if="${cate == 'free'}" >자유 게시판</h3>
+                        <h3 class="middle" th:if="${cate == 'manner'}" >실천 방법 등록</h3>
+                        <h3 class="middle" th:if="${cate == 'fulfill'}" >실천 등록</h3>
                     </div>
                     <div>
-                        <form action="/guestbook/modify" method="post" enctype="multipart/form-data">
+                        <form th:action="@{/board/{cate}/modify(cate=${cate})}" th:method="post" enctype="multipart/form-data">
                             <input type="hidden" name="page" th:value="${requestDTO.page}">
                             <input type="hidden" name="type" th:value="${requestDTO.type}">
                             <input type="hidden" name="keyword" th:value="${requestDTO.keyword}">
@@ -25,7 +27,14 @@
                                 <label >번호</label>
                                 <input type="text" class="form-control" name="id" th:value="${dto.id}" readonly >
                             </div>
-
+                            <div class="form-group">
+                                <label>카테고리</label>
+                                <select class="form-select" aria-label="Default select example" th:field="${dto.category}" name="category" id="categorySelect">
+                                    <option value="free">자유 게시판</option>
+                                    <option value="manner">실천 등록 방법</option>
+                                    <option value="fulfill">실천 등록</option>
+                                </select>
+                            </div>
                             <div class="form-group">
                                 <label >제목</label>
                                 <input type="text" class="form-control" name="title" th:value="${dto.title}">
@@ -107,12 +116,14 @@
         }
     }
 
+    //게시물 삭제
     removeBtn.addEventListener('click', function () {
         actionForm.setAttribute("action", "/board/free/remove");
         actionForm.method = "post";
         actionForm.submit();
     });
 
+    //게시물 수정
     modifyBtn.addEventListener('click', function () {
         if (!confirm("수정하시겠습니까?")) {
             return;
@@ -130,13 +141,18 @@
             hiddenInputContainer.appendChild(hiddenInput);
         }
 
+        //선택한 카테고리
+        const categoryValue = document.getElementById('categorySelect').value;
+
         // 숨겨진 입력 컨테이너를 form에 추가
         actionForm.appendChild(hiddenInputContainer);
-        actionForm.setAttribute("action", "/board/free/modify");
+
+        actionForm.setAttribute("action", "/board/"+categoryValue+"/modify");
         actionForm.method = "post";
         actionForm.submit();
     });
 
+    //목록
     listBtn.addEventListener("click", function () {
         actionForm.innerHTML = "";
         actionForm.append(pageInfo);

@@ -17,4 +17,5 @@ public class BoardCategory {
 
     @Column(name = "cate_name")
     private String categoryName;
+
 }

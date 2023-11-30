@@ -12,4 +12,5 @@ public interface BoardCategoryRepository extends JpaRepository<BoardCategory, Lo
     //SELECT *
     //FROM board_category
     //WHERE cate_name = ?
+
 }

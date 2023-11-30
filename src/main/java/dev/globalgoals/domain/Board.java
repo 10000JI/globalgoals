@@ -47,4 +47,9 @@ public class Board extends BaseEntity{
     public void changeContent(String content) {
         this.content = content;
     }
+
+    public void changeBoardCategory(BoardCategory boardCategory){
+        this.boardCategory = boardCategory;
+    }
+
 }

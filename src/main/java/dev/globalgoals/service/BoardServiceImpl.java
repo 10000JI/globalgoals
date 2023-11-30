@@ -131,10 +131,16 @@ public class BoardServiceImpl implements BoardService{
     @Override
     public void modify(BoardDTO boardDTO, String[] storeFileNames) throws IOException {
 
+        //게시물 제목, 내용 수정
         Board board = boardRepository.getOne(boardDTO.getId());
 
         board.changeTitle(boardDTO.getTitle());
         board.changeContent(boardDTO.getContent());
+
+        //게시물 카테고리 수정
+        BoardCategory category = boardCategoryRepository.getBoardCategoriesByCategoryName(boardDTO.getCategory());
+
+        board.changeBoardCategory(category);
 
         if (storeFileNames != null) {
             for (String storeFileName : storeFileNames) {
