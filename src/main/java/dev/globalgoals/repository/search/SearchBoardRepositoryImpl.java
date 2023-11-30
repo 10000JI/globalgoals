@@ -7,10 +7,7 @@ import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.jpa.JPQLQuery;
-import dev.globalgoals.domain.Board;
-import dev.globalgoals.domain.QBoard;
-import dev.globalgoals.domain.QBoardComment;
-import dev.globalgoals.domain.QUser;
+import dev.globalgoals.domain.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -54,24 +51,31 @@ public class SearchBoardRepositoryImpl extends QuerydslRepositorySupport impleme
     }
 
     @Override
-    public Page<Object[]> searchPage(String type, String keyword, Pageable pageable) {
+    public Page<Object[]> searchPage(String type, String keyword, Pageable pageable, String param) {
         log.info("searchPage.............................");
 
         QBoard board = QBoard.board;
         QBoardComment boardComment = QBoardComment.boardComment;
         QUser user = QUser.user;
+        QBoardCategory category = QBoardCategory.boardCategory;
 
         JPQLQuery<Board> jpqlQuery = from(board);
         jpqlQuery.leftJoin(user).on(board.user.eq(user));
+        jpqlQuery.leftJoin(category).on(board.boardCategory.eq(category));
         jpqlQuery.leftJoin(boardComment).on(boardComment.board.eq(board));
 
-        //SELECT b, w, count(r) FROM Board b
-        //LEFT JOIN b.writer w LEFT JOIN Reply r ON r.board = b
-        JPQLQuery<Tuple> tuple = jpqlQuery.select(board, user, boardComment.count());
+        //SELECT b, w, count(r), bcy FROM Board b
+        //LEFT JOIN b.writer w LEFT JOIN b.boardCateroy bcy LEFT JOIN Reply r ON r.board = b
+        JPQLQuery<Tuple> tuple = jpqlQuery.select(board, user, boardComment.count(), category);
 
+        //where 조건
         BooleanBuilder booleanBuilder = new BooleanBuilder();
+        if (param.equals("free")) {
+            booleanBuilder.and(board.boardCategory.id.eq(1L));
+        } else if(param.equals("manner")){
+            booleanBuilder.and(board.boardCategory.id.eq(2L));
+        }
         BooleanExpression expression = board.id.gt(0L);
-
         booleanBuilder.and(expression);
 
         if(type != null){

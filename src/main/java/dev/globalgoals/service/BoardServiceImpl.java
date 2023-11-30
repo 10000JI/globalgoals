@@ -8,10 +8,7 @@ import dev.globalgoals.dto.PageRequestDTO;
 import dev.globalgoals.dto.PageResultDTO;
 import dev.globalgoals.file.FileStore;
 import dev.globalgoals.file.UploadFile;
-import dev.globalgoals.repository.BoardCommentRepository;
-import dev.globalgoals.repository.BoardImageRepository;
-import dev.globalgoals.repository.BoardRepository;
-import dev.globalgoals.repository.UserRepository;
+import dev.globalgoals.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -38,11 +35,16 @@ public class BoardServiceImpl implements BoardService{
 
     private final BoardImageRepository boardImageRepository;
 
+    private final BoardCategoryRepository boardCategoryRepository;
+
     private final FileStore fileStore;
 
     @Override
     @Transactional
     public Long register(BoardDTO dto) throws IOException {
+        BoardCategory category = boardCategoryRepository.getBoardCategoriesByCategoryName(dto.getCategory());
+        dto.setCateNum(category.getId());
+
         Board entity = dtoToEntity(dto);
 
         boardRepository.save(entity);
@@ -75,9 +77,9 @@ public class BoardServiceImpl implements BoardService{
     }
 
     @Override
-    public PageResultDTO<BoardDTO, Object[]> getList(PageRequestDTO pageRequestDTO) {
+    public PageResultDTO<BoardDTO, Object[]> getList(PageRequestDTO pageRequestDTO, String param) {
 
-        Function<Object[], BoardDTO> fn = (en -> entityToDto((Board)en[0],(User)en[1],(Long)en[2]));
+        Function<Object[], BoardDTO> fn = (en -> entityToDto((Board)en[0],(User)en[1],(Long)en[2],(BoardCategory)en[3]));
         //Fuction은 함수이기 때문에 순서와는 무관함
 
 //        Page<Object[]> result = boardRepository.getBoardWithCommentCount(
@@ -85,7 +87,8 @@ public class BoardServiceImpl implements BoardService{
         Page<Object[]> result = boardRepository.searchPage(
                 pageRequestDTO.getType(),
                 pageRequestDTO.getKeyword(),
-                pageRequestDTO.getPageable(Sort.by("id").descending())
+                pageRequestDTO.getPageable(Sort.by("id").descending()),
+                param
         );
 
         return new PageResultDTO<>(result, fn);
@@ -97,7 +100,7 @@ public class BoardServiceImpl implements BoardService{
 
         Object[] arr = (Object[])result;
 
-        return entityToDto((Board)arr[0], (User)arr[1], (Long)arr[2]);
+        return entityToDto((Board)arr[0], (User)arr[1], (Long)arr[2],(BoardCategory) arr[3]);
     }
 
     @Override

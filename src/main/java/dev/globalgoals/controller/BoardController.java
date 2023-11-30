@@ -4,6 +4,7 @@ import dev.globalgoals.domain.Board;
 import dev.globalgoals.domain.BoardImage;
 import dev.globalgoals.dto.BoardDTO;
 import dev.globalgoals.dto.PageRequestDTO;
+import dev.globalgoals.dto.PageResultDTO;
 import dev.globalgoals.file.FileStore;
 import dev.globalgoals.file.UploadFile;
 import dev.globalgoals.service.BoardService;
@@ -28,31 +29,37 @@ public class BoardController {
 
     private final BoardService boardService;
     private final FileStore fileStore;
-    // 자유 게시판 리스트
-    @GetMapping("/free/list")
-    public void mainList(PageRequestDTO requestDTO, Model model) {
-        model.addAttribute("result", boardService.getList(requestDTO));
+    // 자유 & 실천 방법 등록 & 실천 등록 게시판 리스트
+    @GetMapping("/{cate}/list")
+    public String mainList(PageRequestDTO requestDTO, Model model, @PathVariable String cate) {
+        model.addAttribute("result", boardService.getList(requestDTO, cate));
+        model.addAttribute("cate", cate);
+        return "board/free/list";
     }
 
     // 자유 게시판 등록 페이지
-    @GetMapping("/free/register")
-    public void register() {
+    @GetMapping("/{cate}/register")
+    public String register(Model model ,@PathVariable String cate, BoardDTO dto) {
         log.info("register get....");
+        model.addAttribute("cate", cate);
+        model.addAttribute("dto", dto);
+        return "board/free/register";
     }
 
     // 자유 게시판 등록
-    @PostMapping("/free/register")
+    @PostMapping("/{cate}/register")
     public String registerPost(BoardDTO dto, RedirectAttributes redirectAttributes) throws IOException {
+        log.error("category={}", dto.getCategory());
         //새로 추가된 엔티티의 번호
         Long id = boardService.register(dto);
 
         redirectAttributes.addFlashAttribute("msg", id);
-        return "redirect:/board/free/list";
+        return "redirect:/board/{cate}/list";
     }
 
     //자유 게시판 조회
-    @GetMapping({"/free/read", "/free/modify"})
-    public void read(Long id, @ModelAttribute("requestDTO") PageRequestDTO pageRequestDTO, Model model) {
+    @GetMapping({"/{cate}/read", "/{cate}/modify"})
+    public String read(Long id, @ModelAttribute("requestDTO") PageRequestDTO pageRequestDTO, Model model, @PathVariable String cate) {
 
         log.info("id" + id);
 
@@ -60,8 +67,11 @@ public class BoardController {
 
         List<UploadFile> images = boardService.getImage(id);
 
+        model.addAttribute("cate", cate);
         model.addAttribute("dto", dto);
         model.addAttribute("images", images);
+
+        return "board/free/read";
     }
 
     @ResponseBody

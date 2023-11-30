@@ -14,11 +14,12 @@
             <div class="col py-5">
                 <div class="container">
                     <div class="header">
-                        <h3 class="middle">자유 게시판</h3>
+                        <h3 class="middle" th:if="${cate == 'free'}" >자유 게시판</h3>
+                        <h3 class="middle" th:if="${cate == 'manner'}" >실천 방법 등록</h3>
                     </div>
                     <div>
                         <div>
-                            <form action="/board/free/list" method="get" id="searchForm" class="form-inlines">
+                            <form th:action="@{/board/{cate}/list(cate = ${cate})}" th:method="get" id="searchForm" class="form-inlines">
                                 <input type="hidden" name="page" value="1"/>
                                 <div class="form-group mx-sm-1 mb-2">
                                     <select class="form-board" name="type">
@@ -35,7 +36,7 @@
                                 </div>
                                 <button type="button" class="btn btn-primary mb-2 search-btn">검색</button>
                                 <button type="button" class="btn btn-primary mb-2 clear-btn">지우기</button>
-                                <a th:href="@{/board/free/register}">
+                                <a th:href="@{/board/{cate}/register(cate = ${cate})}">
                                     <button type="button" class="btn btn-primary mb-2">등록</button>
                                 </a>
                             </form>
@@ -51,8 +52,8 @@
                             </thead>
                             <tbody>
                             <tr th:each="dto : ${result.dtoList}">
-                                <th scope="row"><a th:href="@{/board/free/read(id = ${dto.id}, page = ${result.page},type = ${pageRequestDTO.type},keyword =${pageRequestDTO.keyword})}">[[${dto.id}]]</a></th>
-                                <td><a id="titleLink" th:href="@{/board/free/read(id = ${dto.id}, page = ${result.page},type = ${pageRequestDTO.type},keyword =${pageRequestDTO.keyword})}">[[${dto.title}]]----------------  [<b th:text="${dto.commentCount}"></b>]</a></td>
+                                <th scope="row"><a th:href="@{/board/{cate}/read(cate = ${cate}, id = ${dto.id}, page = ${result.page},type = ${pageRequestDTO.type},keyword =${pageRequestDTO.keyword})}">[[${dto.id}]]</a></th>
+                                <td><a id="titleLink" th:href="@{/board/{cate}/read(cate = ${cate}, id = ${dto.id}, page = ${result.page},type = ${pageRequestDTO.type},keyword =${pageRequestDTO.keyword})}">[[${dto.title}]]----------------  [<b th:text="${dto.commentCount}"></b>]</a></td>
                                 <td>[[${dto.writer}]]<small>  [[${dto.writerEmail}]]</small> </td>
                                 <td>[[${#temporals.format(dto.regDate,'yyyy/MM/dd')}]]</td>
                             </tr>
@@ -61,15 +62,15 @@
                         <!--페이지 처리-->
                         <ul class="pagination h-100 justify-content-center align-items-center">
                             <li class="page-item" th:if="${result.prev}">
-                                <a class="page-link" th:href="@{/board/free/list(page = ${result.start - 1}, type = ${pageRequestDTO.type},keyword =${pageRequestDTO.keyword})}" tabindex="-1">Previous</a>
+                                <a class="page-link" th:href="@{/board/{cate}/list(cate = ${cate}, page = ${result.start - 1}, type = ${pageRequestDTO.type},keyword =${pageRequestDTO.keyword})}" tabindex="-1">Previous</a>
                             </li>
                             <li th:class="'page-item' +' '+ ${result.page == page ? 'active':''}" th:each="page : ${result.pageList}">
-                                <a class="page-link" th:href="@{/board/free/list(page = ${page}, type = ${pageRequestDTO.type},keyword =${pageRequestDTO.keyword})}">
+                                <a class="page-link" th:href="@{/board/{cate}/list(cate = ${cate}, page = ${page}, type = ${pageRequestDTO.type},keyword =${pageRequestDTO.keyword})}">
                                     [[${page}]]
                                 </a>
                             </li>
                             <li class="page-item" th:if="${result.next}">
-                                <a class="page-link" th:href="@{/board/free/list(page = ${result.end + 1}, type = ${pageRequestDTO.type},keyword =${pageRequestDTO.keyword})}">Next</a>
+                                <a class="page-link" th:href="@{/board/{cate}/list(cate = ${cate}, page = ${result.end + 1}, type = ${pageRequestDTO.type},keyword =${pageRequestDTO.keyword})}">Next</a>
                             </li>
                         </ul>
                     </div>

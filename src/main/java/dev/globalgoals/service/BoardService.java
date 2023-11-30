@@ -1,6 +1,7 @@
 package dev.globalgoals.service;
 
 import dev.globalgoals.domain.Board;
+import dev.globalgoals.domain.BoardCategory;
 import dev.globalgoals.domain.BoardImage;
 import dev.globalgoals.domain.User;
 import dev.globalgoals.dto.BoardDTO;
@@ -14,7 +15,7 @@ import java.util.List;
 public interface BoardService {
     Long register(BoardDTO boardDto) throws IOException;
 
-    PageResultDTO<BoardDTO, Object[]> getList(PageRequestDTO pageRequestDTO);
+    PageResultDTO<BoardDTO, Object[]> getList(PageRequestDTO pageRequestDTO, String param);
 
     BoardDTO get(Long id);
 
@@ -28,17 +29,20 @@ public interface BoardService {
 
         User user = User.builder().id(dto.getWriter()).build();
 
+        BoardCategory category = BoardCategory.builder().id(dto.getCateNum()).build();
+
         Board entity = Board.builder()
                 .id(dto.getId())
                 .title(dto.getTitle())
                 .content(dto.getContent())
                 .hit(dto.getHit())
                 .user(user)
+                .boardCategory(category)
                 .build();
         return entity;
     }
 
-    default BoardDTO entityToDto(Board board, User user, Long commentCount) {
+    default BoardDTO entityToDto(Board board, User user, Long commentCount, BoardCategory boardCategory) {
         BoardDTO dto = BoardDTO.builder()
                 .id(board.getId())
                 .title(board.getTitle())
@@ -49,6 +53,7 @@ public interface BoardService {
                 .writer(user.getId())
                 .writerEmail(user.getEmail())
                 .commentCount(commentCount.intValue())
+                .category(boardCategory.getCategoryName())
                 .build();
         return dto;
     }

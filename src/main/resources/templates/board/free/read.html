@@ -14,14 +14,22 @@
             <div class="col py-5">
                 <div class="container">
                     <div class="header">
-                        <h3 class="middle">자유 게시판</h3>
+                        <h3 class="middle" th:if="${cate == 'free'}" >자유 게시판</h3>
+                        <h3 class="middle" th:if="${cate == 'manner'}" >실천 방법 등록</h3>
                     </div>
                     <div>
                         <div class="form-group">
                             <label >번호</label>
                             <input type="text" class="form-control" name="id" th:value="${dto.id}" readonly >
                         </div>
-
+                        <div class="form-group">
+                            <label>카테고리</label>
+                            <select class="form-select" aria-label="Default select example" th:field="${dto.category}" id="categorySelect">
+                                <option value="free">자유 게시판</option>
+                                <option value="manner">실천 등록 방법</option>
+                                <option value="fulfill">실천 등록</option>
+                            </select>
+                        </div>
                         <div class="form-group">
                             <label >제목</label>
                             <input type="text" class="form-control" name="title" th:value="${dto.title}" readonly >
@@ -314,6 +322,9 @@
             });
     });
 
+    document.getElementById('categorySelect').addEventListener('change', function () {
+        this.value = [[${dto.category}]]; // 원래 값으로 변경
+    });
 
 </script>
 </body>

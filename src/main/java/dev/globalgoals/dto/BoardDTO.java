@@ -28,4 +28,8 @@ public class BoardDTO {
     //이미지 다중 업로드
     private Long imgId;
     private List<MultipartFile> imageFiles;
+
+    //카테고리
+    private String category;
+    private Long cateNum;
 }

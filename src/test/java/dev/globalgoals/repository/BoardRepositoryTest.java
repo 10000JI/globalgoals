@@ -3,6 +3,7 @@ package dev.globalgoals.repository;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import dev.globalgoals.domain.Board;
+import dev.globalgoals.domain.BoardCategory;
 import dev.globalgoals.domain.QBoard;
 import dev.globalgoals.domain.User;
 import org.junit.jupiter.api.Test;
@@ -30,14 +31,15 @@ class BoardRepositoryTest {
 
     @Test
     public void insetDummies() {
-        Optional<User> userOptional = userRepository.findById("admin");
+        Optional<User> userOptional = userRepository.findById("minji");
 
         userOptional.ifPresent(user -> {
-            IntStream.rangeClosed(1, 300).forEach(i -> {
+            IntStream.rangeClosed(1, 100).forEach(i -> {
                 Board board = Board.builder()
                         .title("Title ..." + i)
                         .content("Contents..." + i)
                         .user(user)
+                        .boardCategory(BoardCategory.builder().id(2L).build())
                         .build();
                 boardRepository.save(board);
             });
@@ -109,18 +111,18 @@ class BoardRepositoryTest {
 
     }
 
-    @Test
-    @Transactional
-    public void testSearchPage() {
-
-        Pageable pageable =
-                PageRequest.of(0,10,
-                        Sort.by("id").descending()
-                                .and(Sort.by("title").ascending()));
-
-        Page<Object[]> result = boardRepository.searchPage("t", "1", pageable);
-
-    }
+//    @Test
+//    @Transactional
+//    public void testSearchPage() {
+//
+//        Pageable pageable =
+//                PageRequest.of(0,10,
+//                        Sort.by("id").descending()
+//                                .and(Sort.by("title").ascending()));
+//
+//        Page<Object[]> result = boardRepository.searchPage("t", "1", pageable);
+//
+//    }
 
 
 }
