@@ -14,9 +14,9 @@
             <div class="col py-5">
                 <div class="container">
                     <div class="header">
-                        <h3 class="middle" th:if="${cate == 'free'}" >자유 게시판</h3>
-                        <h3 class="middle" th:if="${cate == 'manner'}" >실천 방법 등록</h3>
-                        <h3 class="middle" th:if="${cate == 'fulfill'}" >실천 등록</h3>
+                        <h3 class="middle" th:if="${dto.category == 'free'}" >자유 게시판</h3>
+                        <h3 class="middle" th:if="${dto.category == 'manner'}" >실천 방법 등록</h3>
+                        <h3 class="middle" th:if="${dto.category == 'fulfill'}" >실천 등록</h3>
                     </div>
                     <div>
                         <form th:action="@{/board/{cate}/modify(cate=${cate})}" th:method="post" enctype="multipart/form-data">
@@ -31,7 +31,7 @@
                                 <label>카테고리</label>
                                 <select class="form-select" aria-label="Default select example" th:field="${dto.category}" name="category" id="categorySelect">
                                     <option value="free">자유 게시판</option>
-                                    <option value="manner">실천 등록 방법</option>
+                                    <option value="manner">실천 방법 등록</option>
                                     <option value="fulfill">실천 등록</option>
                                 </select>
                             </div>
@@ -118,7 +118,7 @@
 
     //게시물 삭제
     removeBtn.addEventListener('click', function () {
-        actionForm.setAttribute("action", "/board/free/remove");
+        actionForm.setAttribute("action", "/board/"+[[${cate}]]+"/remove");
         actionForm.method = "post";
         actionForm.submit();
     });
@@ -158,7 +158,7 @@
         actionForm.append(pageInfo);
         actionForm.append(typeInfo);
         actionForm.append(keywordInfo);
-        actionForm.setAttribute("action", "/board/free/list");
+        actionForm.setAttribute("action", "/board/"+[[${cate}]]+"/list");
         actionForm.method = "get";
         actionForm.submit();
     });

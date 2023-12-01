@@ -12,10 +12,10 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">게시판</a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownBlog">
+                        <li><a class="dropdown-item" href="/board/main/list">전체 글보기</a></li>
                         <li><a class="dropdown-item" href="/board/free/list">자유 게시판</a></li>
                         <li><a class="dropdown-item" href="/board/manner/list">실천 방법 등록</a></li>
                         <li><a class="dropdown-item" href="/board/fulfill/list">실천 등록</a></li>
-                        <li><a class="dropdown-item" href="#">인기글</a></li>
                     </ul>
                 </li>
                 <li class="nav-item" sec:authorize="isAuthenticated()"><a class="nav-link" href="/users/mypage">마이페이지</a></li>

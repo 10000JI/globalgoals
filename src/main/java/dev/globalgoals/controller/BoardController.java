@@ -126,13 +126,13 @@ public class BoardController {
         return "redirect:/board/{cate}/read";
     }
 
-    @PostMapping("/free/remove")
-    public String remove(Long id, RedirectAttributes redirectAttributes) {
+    @PostMapping("/{cate}/remove")
+    public String remove(Long id, RedirectAttributes redirectAttributes, @PathVariable String cate) {
         log.info("id: " + id);
         boardService.removeWithComments(id);
 
         redirectAttributes.addAttribute("msg", id);
 
-        return "redirect:/board/free/list";
+        return "redirect:/board/{cate}/list";
     }
 }

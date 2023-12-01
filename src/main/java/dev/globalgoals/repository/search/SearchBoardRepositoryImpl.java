@@ -5,7 +5,9 @@ import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.PathBuilder;
+import com.querydsl.core.types.dsl.StringExpression;
 import com.querydsl.jpa.JPQLQuery;
 import dev.globalgoals.domain.*;
 import lombok.extern.slf4j.Slf4j;
@@ -98,6 +100,9 @@ public class SearchBoardRepositoryImpl extends QuerydslRepositorySupport impleme
                     case "c":
                         conditionBuilder.or(board.content.contains(keyword));
                         break;
+                    case "l":
+                        conditionBuilder.or(replaceCategoryName(category.categoryName).contains(keyword));
+                        break;
                 }
             }
             booleanBuilder.and(conditionBuilder);
@@ -136,5 +141,14 @@ public class SearchBoardRepositoryImpl extends QuerydslRepositorySupport impleme
                 result.stream().map(t -> t.toArray()).collect(Collectors.toList()),
                 pageable,
                 count);
+    }
+
+    // categoryName을 대체하는 메서드 추가 (categoryName이 free일 땐 "자유 게시판" / manner일 땐 "실천 방법 등록" / fulfill일 땐 "실천 등록")
+    private StringExpression replaceCategoryName(StringExpression categoryName) {
+        return categoryName
+                .when("free").then("자유 게시판")
+                .when("manner").then("실천 방법 등록")
+                .when("fulfill").then("실천 등록")
+                .otherwise(categoryName);
     }
 }
