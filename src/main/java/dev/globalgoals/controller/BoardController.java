@@ -26,11 +26,22 @@ public class BoardController {
 
     private final BoardService boardService;
     private final FileStore fileStore;
+
+//    // 전체 글보기 (글쓰기 x)
+//    @GetMapping("/list")
+//    public String mainList(PageRequestDTO requestDTO, Model model) {
+//        String cate = "main";
+//        model.addAttribute("result", boardService.getList(requestDTO, ));
+//        return "board/mainList";
+//    }
     // 자유 & 실천 방법 등록 & 실천 등록 게시판 리스트
     @GetMapping("/{cate}/list")
-    public String mainList(PageRequestDTO requestDTO, Model model, @PathVariable String cate) {
+    public String list(PageRequestDTO requestDTO, Model model, @PathVariable String cate) {
         model.addAttribute("result", boardService.getList(requestDTO, cate));
         model.addAttribute("cate", cate);
+        if (cate.equals("main")) {
+            return "board/mainList";
+        }
         return "board/list";
     }
 

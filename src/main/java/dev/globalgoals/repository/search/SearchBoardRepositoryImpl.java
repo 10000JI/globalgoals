@@ -76,6 +76,8 @@ public class SearchBoardRepositoryImpl extends QuerydslRepositorySupport impleme
             booleanBuilder.and(board.boardCategory.id.eq(2L));
         }else if(param.equals("fulfill")){
             booleanBuilder.and(board.boardCategory.id.eq(3L));
+        } else {
+            booleanBuilder.and(board.boardCategory.id.gt(0L));
         }
         BooleanExpression expression = board.id.gt(0L);
         booleanBuilder.and(expression);
