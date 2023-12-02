@@ -52,4 +52,8 @@ public class Board extends BaseEntity{
         this.boardCategory = boardCategory;
     }
 
+    public void plusHit() {
+        hit++;
+    }
+
 }

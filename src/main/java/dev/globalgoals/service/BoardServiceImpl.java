@@ -95,12 +95,18 @@ public class BoardServiceImpl implements BoardService{
     }
 
     @Override
+    @Transactional
     public BoardDTO get(Long id) {
+
         Object result = boardRepository.getBoardById(id);
 
         Object[] arr = (Object[])result;
 
-        return entityToDto((Board)arr[0], (User)arr[1], (Long)arr[2],(BoardCategory) arr[3]);
+        Board board = (Board) arr[0];
+
+        board.plusHit();
+
+        return entityToDto(board, (User)arr[1], (Long)arr[2],(BoardCategory) arr[3]);
     }
 
     @Override
