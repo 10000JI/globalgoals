@@ -14,7 +14,8 @@
             <div class="col py-5">
                 <div class="container">
                     <div class="header">
-                        <h3 class="middle">전체 글보기</h3>
+                        <h3 class="middle" th:if="${cate == 'main'}" >전체 글보기</h3>
+                        <h3 class="middle" th:if="${cate == 'popularity'}" >인기글</h3>
                     </div>
                     <div>
                         <div>

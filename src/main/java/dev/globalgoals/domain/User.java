@@ -35,6 +35,14 @@ public class User {
             inverseJoinColumns = {@JoinColumn(name = "authority_name", referencedColumnName = "authority_name")})
     private Set<Authority> authorities;
 
+
+    @ManyToMany
+    @JoinTable(
+            name = "board_scrap",
+            joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "user_id")},
+            inverseJoinColumns = {@JoinColumn(name = "board_id", referencedColumnName = "board_id")})
+    private Set<Board> scrap;
+
 //    @OneToMany(mappedBy = "user")
 //    private List<StampCard> stampCards = new ArrayList<>();
 

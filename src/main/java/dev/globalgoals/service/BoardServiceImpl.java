@@ -82,12 +82,21 @@ public class BoardServiceImpl implements BoardService{
         Function<Object[], BoardDTO> fn = (en -> entityToDto((Board)en[0],(User)en[1],(Long)en[2],(BoardCategory)en[3]));
         //Fuction은 함수이기 때문에 순서와는 무관함
 
-//        Page<Object[]> result = boardRepository.getBoardWithCommentCount(
-//                pageRequestDTO.getPageable(Sort.by("id").descending())  );
+        // Pageable 및 Sort 생성
+        Pageable pageable;
+        if (param.equals("popularity")) { //인기글
+            pageable = pageRequestDTO.getPageable(Sort.by(
+                    Sort.Order.desc("hit"),
+                    Sort.Order.desc("id")
+            ));
+        } else { //인기글 외 다른 글
+            pageable = pageRequestDTO.getPageable(Sort.by("id").descending());
+        }
+
         Page<Object[]> result = boardRepository.searchPage(
                 pageRequestDTO.getType(),
                 pageRequestDTO.getKeyword(),
-                pageRequestDTO.getPageable(Sort.by("id").descending()),
+                pageable,
                 param
         );
 

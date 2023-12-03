@@ -32,7 +32,7 @@ public class BoardController {
     public String list(PageRequestDTO requestDTO, Model model, @PathVariable String cate) {
         model.addAttribute("result", boardService.getList(requestDTO, cate));
         model.addAttribute("cate", cate);
-        if (cate.equals("main")) {
+        if (cate.equals("main") || cate.equals("popularity")) {
             return "board/mainList";
         }
         return "board/list";

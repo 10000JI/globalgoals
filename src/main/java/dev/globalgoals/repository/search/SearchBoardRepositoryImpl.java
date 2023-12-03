@@ -91,16 +91,16 @@ public class SearchBoardRepositoryImpl extends QuerydslRepositorySupport impleme
 
             for (String t:typeArr) {
                 switch (t){
-                    case "t":
+                    case "t": //제목
                         conditionBuilder.or(board.title.contains(keyword));
                         break;
-                    case "w":
+                    case "w": //작성자
                         conditionBuilder.or(user.id.contains(keyword));
                         break;
-                    case "c":
+                    case "c": //내용
                         conditionBuilder.or(board.content.contains(keyword));
                         break;
-                    case "l":
+                    case "l": //카테고리
                         conditionBuilder.or(replaceCategoryName(category.categoryName).contains(keyword));
                         break;
                 }
@@ -111,16 +111,16 @@ public class SearchBoardRepositoryImpl extends QuerydslRepositorySupport impleme
         tuple.where(booleanBuilder);
 
         //order by
-        Sort sort = pageable.getSort();
+        Sort sort = pageable.getSort(); //pageable은 파라미터로 받아 정렬 정보를 가져옴
 
-        //tuple.orderBy(board.bno.desc());
+        //tuple.orderBy(board.bno.desc()); //예시: 직접 코드로 처리하면
 
-        sort.stream().forEach(order -> {
-            Order direction = order.isAscending()? Order.ASC: Order.DESC;
-            String prop = order.getProperty();
+        sort.stream().forEach(order -> { //정렬 정보를 순회
+            Order direction = order.isAscending()? Order.ASC: Order.DESC; //현재 정렬 항목이 오름차순인지 내림차순인지에 따라 Order 객체 생성 (isAscending(): 현재 정렬이 오름차순인지 여부 반환)
+            String prop = order.getProperty(); //현재 정렬 항목의 속성(ex>필드명)을 가져온다. 각 정렬 항목은 bno, title 등을 가지고 있어 쿼리 정렬 기준으로 사용
 
-            PathBuilder orderByExpression = new PathBuilder(Board.class, "board");
-            tuple.orderBy(new OrderSpecifier(direction, orderByExpression.get(prop)));
+            PathBuilder orderByExpression = new PathBuilder(Board.class, "board"); //Querydsl에서 사용하는 PathBuilder를 생성한다. 여기서는 Board 엔티티를 기준으로 한다.
+            tuple.orderBy(new OrderSpecifier(direction, orderByExpression.get(prop))); //Querydsl의 JPQLQuery<Tuple>에 정렬 정보를 추가
 
         });
         tuple.groupBy(board);
