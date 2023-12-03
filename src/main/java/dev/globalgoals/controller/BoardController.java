@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +18,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.security.Principal;
 import java.util.List;
 
 @Slf4j
@@ -127,5 +130,16 @@ public class BoardController {
         redirectAttributes.addAttribute("msg", id);
 
         return "redirect:/board/{cate}/list";
+    }
+
+    @PostMapping("/scrap/{bno}")
+    public ResponseEntity<String> remove(@PathVariable("bno") Long bno, Principal principal) {
+
+        log.info("rno:" + bno );
+
+        boardService.saveScrap(bno, principal);
+
+        return new ResponseEntity<>("success", HttpStatus.OK);
+
     }
 }

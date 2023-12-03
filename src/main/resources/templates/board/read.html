@@ -70,6 +70,8 @@
                             <button type="button" class="btn btn-info">목록</button>
                         </a>
 
+                        <button type="button" class="btn btn-success scrapBtn">스크랩</button>
+
                         <div>
                             <div class="mt-4">
                                 <h5 >
@@ -235,7 +237,7 @@
     });
 
     //모달에 댓글 내용 불러오기
-    document.querySelector('.boardCommentList').addEventListener('click', function (event) {
+    listGroup.addEventListener('click', function (event) {
         // 클릭된 요소가 edit 클래스를 포함하는지 확인
         if (event.target.classList.contains('edit')) {
             let rno = event.target.parentElement.dataset.rno;
@@ -266,7 +268,7 @@
     });
 
     //모달에서 삭제
-    document.querySelector(".replyRemove").addEventListener("click", function () {
+    replyRemoveButton.addEventListener("click", function () {
         let rno = document.querySelector("input[name='rno']").value;
 
         fetch('/boardComment/' + rno, {
@@ -292,7 +294,7 @@
     });
 
     //모달에서 수정
-    document.querySelector(".replyModify").addEventListener("click", function () {
+    replyModifyButton.addEventListener("click", function () {
         let rno = document.querySelector("input[name='rno']").value;
 
         let reply = {
@@ -326,8 +328,32 @@
             });
     });
 
+    //조회에서 카테고리 변경 불가능하게 설정
     document.getElementById('categorySelect').addEventListener('change', function () {
         this.value = [[${dto.category}]]; // 원래 값으로 변경
+    });
+
+    document.querySelector('.scrapBtn').addEventListener('click', function () {
+
+        fetch('/board/scrap/' + bno, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json; charset=utf-8'
+            }
+        })
+            .then(function(response) {
+                return response.text();
+            })
+            .then(function(result) {
+                console.log("result: " + result);
+                if (result === 'success') {
+                    alert("스크랩이 완료되었습니다.");
+                    modal.hide();
+                }
+            })
+            .catch(function(error) {
+                console.error('Fetch 오류:', error);
+            });
     });
 
 </script>

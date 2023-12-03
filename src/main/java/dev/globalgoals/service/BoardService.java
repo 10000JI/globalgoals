@@ -10,6 +10,7 @@ import dev.globalgoals.dto.PageResultDTO;
 import dev.globalgoals.file.UploadFile;
 
 import java.io.IOException;
+import java.security.Principal;
 import java.util.List;
 
 public interface BoardService {
@@ -24,6 +25,8 @@ public interface BoardService {
     void removeWithComments(Long id);
 
     void modify(BoardDTO dto, String[] storeFileNames) throws IOException;
+
+    void saveScrap(Long id, Principal principal);
 
     default Board dtoToEntity(BoardDTO dto) {
 

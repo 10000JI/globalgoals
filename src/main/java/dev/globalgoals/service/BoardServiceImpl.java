@@ -18,8 +18,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.security.Principal;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -36,6 +39,8 @@ public class BoardServiceImpl implements BoardService{
     private final BoardImageRepository boardImageRepository;
 
     private final BoardCategoryRepository boardCategoryRepository;
+
+    private final UserRepository userRepository;
 
     private final FileStore fileStore;
 
@@ -168,6 +173,17 @@ public class BoardServiceImpl implements BoardService{
         extracted(boardDTO, board);
     }
 
+    @Transactional
+
+    @Override
+    public void saveScrap(Long id, Principal principal) {
+
+        Board board = Board.builder().id(id).build();
+
+        User user = User.builder().id(principal.getName()).scrap(Collections.singleton(board)).build();
+
+        userRepository.save(user);
+    }
 
 
 }
