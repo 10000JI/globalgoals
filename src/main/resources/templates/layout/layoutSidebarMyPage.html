@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <div th:fragment="sidebar_layout" class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-dark">
     <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">
-        <a href="/" class="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+        <a href="/users/mypage" class="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-white text-decoration-none">
             <span class="fs-5 d-none d-sm-inline">마이페이지</span>
         </a>
         <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
@@ -11,15 +11,15 @@
                     <i class="fs-4 bi-search"></i><span class="ms-1 d-none d-sm-inline">게시판</span> </a>
                 <ul class="collapse show nav flex-column ms-1" id="submenu1" data-bs-parent="#menu">
                     <li class="w-100">
-                        <a href="/board/mine/list" class="nav-link px-0 text-white bi bi-arrow-right"> <span class="d-none d-sm-inline">내가 쓴 글</span></a>
+                        <a href="/users/mine/list" class="nav-link px-0 text-white bi bi-arrow-right"> <span class="d-none d-sm-inline">내가 쓴 글</span></a>
                     </li>
                     <li>
-                        <a href="/board/comment/list" class="nav-link px-0 text-white bi bi-arrow-right"> <span class="d-none d-sm-inline">내가 쓴 댓글</span></a>
+                        <a href="/users/comment/list" class="nav-link px-0 text-white bi bi-arrow-right"> <span class="d-none d-sm-inline">내가 쓴 댓글</span></a>
                     </li>
                 </ul>
             </li>
             <li>
-                <a href="#" class="nav-link px-0 align-middle text-white ">
+                <a href="/users/scrap/list" class="nav-link px-0 align-middle text-white ">
                     <i class="fs-4 bi bi-bookmark-check-fill"></i> <span class="ms-1 d-none d-sm-inline">스크랩</span> </a>
             </li>
             <li>

@@ -2,9 +2,11 @@ package dev.globalgoals.controller;
 
 import dev.globalgoals.domain.Goal;
 import dev.globalgoals.domain.StampCard;
+import dev.globalgoals.dto.PageRequestDTO;
 import dev.globalgoals.dto.StampCardWithGoalDto;
 import dev.globalgoals.dto.UserDTO;
 import dev.globalgoals.repository.UserRepository;
+import dev.globalgoals.service.BoardService;
 import dev.globalgoals.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,6 +34,8 @@ public class UserController {
     private final UserService userService;
 
     private final MailManager mailManager;
+
+    private final BoardService boardService;
 
     @GetMapping("/join")
     public String joinForm(Model model) {
@@ -95,5 +99,13 @@ public class UserController {
         List<StampCardWithGoalDto> stampCardWithGoals = userService.getStampCardWithGoalDtos(principal);
         model.addAttribute("stampCardWithGoals", stampCardWithGoals);
         return "users/stamp";
+    }
+
+    // 자유 게시판 & 실천 방법 등록 & 실천 등록 & 전체 글보기 리스트
+    @GetMapping("/{cate}/list")
+    public String list(PageRequestDTO requestDTO, Model model, @PathVariable String cate, Principal principal) {
+        model.addAttribute("result", boardService.getList(requestDTO, cate, principal));
+        model.addAttribute("cate", cate);
+        return "users/mainList";
     }
 }

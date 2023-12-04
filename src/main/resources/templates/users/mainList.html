@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html th:replace="~{layout/layoutFile :: layout(~{::title},~{::link},~{::main},~{::script})}" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <title>GoalGoals-SDGs</title>
+    <link/>
+</head>
+<body class="d-flex flex-column h-100">
+<main class="flex-shrink-0">
+    <!-- Navigation-->
+    <nav th:replace="layout/layoutNav :: nav_layout" class="navbar navbar-expand-lg navbar-dark bg-dark"></nav>
+    <div class="container-fluid">
+        <div class="row flex-nowrap">
+            <div th:replace="layout/layoutSidebarMyPage :: sidebar_layout" class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-dark"></div>
+            <div class="col py-5">
+                <div class="container">
+                    <div class="header">
+                        <h3 class="middle" th:if="${cate == 'mine'}" >내가 쓴 글</h3>
+                        <h3 class="middle" th:if="${cate == 'comment'}" >내가 쓴 댓글</h3>
+                        <h3 class="middle" th:if="${cate == 'scrap'}" >스크랩</h3>
+
+                    </div>
+                    <div>
+                        <div>
+                            <form th:action="@{/board/{cate}/list(cate = ${cate})}" th:method="get" id="searchForm" class="form-inlines">
+                                <input type="hidden" name="page" value="1"/>
+                                <div class="form-group mx-sm-1 mb-2">
+                                    <select class="form-board" name="type">
+                                        <option th:selected="${pageRequestDTO.type == null}">------</option>
+                                        <option value="t" th:selected="${pageRequestDTO.type == 't'}">제목</option>
+                                        <option value="c" th:selected="${pageRequestDTO.type == 'c'}">내용</option>
+                                        <option value="w" th:selected="${pageRequestDTO.type == 'w'}">작성자</option>
+                                        <option value="l" th:selected="${pageRequestDTO.type == 'l'}">카테고리</option>
+                                        <option value="tc" th:selected="${pageRequestDTO.type == 'tc'}">제목 + 내용</option>
+                                        <option value="tcw" th:selected="${pageRequestDTO.type == 'tcw'}">제목 + 내용 + 작성자</option>
+                                        <option value="tcwl" th:selected="${pageRequestDTO.type == 'tcwl'}">제목 + 내용 + 작성자 + 카테고리</option>
+                                    </select>
+                                </div>
+                                <div class="form-group mb-2">
+                                    <input type="text" class="form-board" name="keyword" th:value="${pageRequestDTO.keyword}">
+                                </div>
+                                <button type="button" class="btn btn-primary mb-2 search-btn">검색</button>
+                                <button type="button" class="btn btn-primary mb-2 clear-btn">지우기</button>
+                            </form>
+                        </div>
+                        <table class="table table-bordered">
+                            <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th th:if="${cate != 'comment'}">제목</th>
+                                <th th:if="${cate != 'comment'}">작성자</th>
+                                <th th:if="${cate != 'comment'}">작성일</th>
+                                <th th:if="${cate == 'comment'}">댓글 내용</th>
+                                <th th:if="${cate == 'comment'}">댓글 작성자</th>
+                                <th th:if="${cate == 'comment'}">작성일</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="dto : ${result.dtoList}">
+                                <th scope="row"  th:if="${dto.category == 'free'}"><small> 자유 게시판</small></th>
+                                <th scope="row"  th:if="${dto.category == 'manner'}"><small>실천 방법 등록</small></th>
+                                <th scope="row"  th:if="${dto.category == 'fulfill'}"><small>실천 등록</small></th>
+                                <td th:if="${cate != 'comment'}"><a id="titleLink" th:href="@{/board/{cate}/read(cate = ${cate}, id = ${dto.id}, page = ${result.page},type = ${pageRequestDTO.type},keyword =${pageRequestDTO.keyword})}">[[${dto.title}]]----------------  [<b th:text="${dto.commentCount}"></b>]</a></td>
+                                <td th:if="${cate != 'comment'}" >[[${dto.writer}]]<small>  [[${dto.writerEmail}]]</small> </td>
+                                <td th:if="${cate != 'comment'}" >[[${#temporals.format(dto.regDate,'yyyy/MM/dd')}]]</td>
+                                <td th:if="${cate == 'comment'}"><a th:href="@{/board/{cate}/read(cate = ${cate}, id = ${dto.id}, page = ${result.page},type = ${pageRequestDTO.type},keyword =${pageRequestDTO.keyword})}">[[${dto.comments}]]</a><small> [[${dto.title}]] </small>[<small>[[${dto.commentCount}]]</small>]</td>
+                                <td th:if="${cate == 'comment'}">[[${dto.replyer}]]</td>
+                                <td th:if="${cate == 'comment'}">[[${#temporals.format(dto.commentModDate,'yyyy/MM/dd')}]]</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <!--페이지 처리-->
+                        <ul class="pagination h-100 justify-content-center align-items-center">
+                            <li class="page-item" th:if="${result.prev}">
+                                <a class="page-link" th:href="@{/board/{cate}/list(cate = ${cate}, page = ${result.start - 1}, type = ${pageRequestDTO.type},keyword =${pageRequestDTO.keyword})}" tabindex="-1">Previous</a>
+                            </li>
+                            <li th:class="'page-item' +' '+ ${result.page == page ? 'active':''}" th:each="page : ${result.pageList}">
+                                <a class="page-link" th:href="@{/board/{cate}/list(cate = ${cate}, page = ${page}, type = ${pageRequestDTO.type},keyword =${pageRequestDTO.keyword})}">
+                                    [[${page}]]
+                                </a>
+                            </li>
+                            <li class="page-item" th:if="${result.next}">
+                                <a class="page-link" th:href="@{/board/{cate}/list(cate = ${cate}, page = ${result.end + 1}, type = ${pageRequestDTO.type},keyword =${pageRequestDTO.keyword})}">Next</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<script th:inline="javascript">
+    let msg = [[${msg}]];
+    console.log(msg);
+
+    if (msg) {
+        alert("등록 번호" + [[${msg}]])
+        console.log("모달 진입");
+        // 모달 열기
+        let modal = document.querySelector(".modal");
+        modal.classList.add("show");
+
+        // Close 버튼에 이벤트 리스너 추가
+        let closeModalButton = modal.querySelector(".btn-close");
+        closeModalButton.addEventListener("click", function() {
+            modal.classList.remove("show");
+        });
+
+        // Close 버튼 외의 부분을 클릭하면 모달 닫기
+        window.addEventListener("click", function(event) {
+            if (event.target === modal) {
+                modal.classList.remove("show");
+            }
+        });
+    }
+
+    const searchForm = document.querySelector("#searchForm");
+    const btnSearch = document.querySelector(".search-btn");
+    const btnClear = document.querySelector(".clear-btn");
+    const inputSearch = document.querySelector("input[name='keyword']");
+    btnSearch.addEventListener("click", function (){
+        searchForm.submit();
+    });
+
+    btnClear.addEventListener("click",function (){
+        inputSearch.value = "";
+        searchForm.submit();
+    });
+</script>
+</body>
+</html>
+

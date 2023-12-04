@@ -8,6 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @NoArgsConstructor
@@ -37,4 +38,5 @@ public class BoardDTO {
     private String comments;
     private String replyer;
     private LocalDateTime commentModDate; //댓글 최신 수정일로만 가져옴
+
 }

@@ -66,6 +66,9 @@ public class SearchBoardRepositoryImpl extends QuerydslRepositorySupport impleme
         jpqlQuery.leftJoin(user).on(board.user.eq(user));
         jpqlQuery.leftJoin(category).on(board.boardCategory.eq(category));
         jpqlQuery.leftJoin(boardComment).on(boardComment.board.eq(board));
+        if (param.equals("scrap")) {
+            jpqlQuery.leftJoin(user.scrap, board);
+        }
 
         JPQLQuery<Tuple> tuple;
 
@@ -97,7 +100,7 @@ public class SearchBoardRepositoryImpl extends QuerydslRepositorySupport impleme
         }
 
         if (param.equals("mine")) {
-            booleanBuilder.and(board.user.id.eq(principal.getName())); //게시글 작성자와 동일한 사용자라면 '내가 쓴 글' 리스트에 나타냄
+            booleanBuilder.and(board.user.id.eq(principal.getName())); //게시글 작성자와 동일한 사용자라면 '내가 쓴 글' 리스트에 나타냄, 스크랩한 목록 리스트
         }
 
         if (param.equals("comment")) {
