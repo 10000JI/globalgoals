@@ -174,15 +174,20 @@ public class BoardServiceImpl implements BoardService{
     }
 
     @Transactional
-
     @Override
     public void saveScrap(Long id, Principal principal) {
 
+        // 기존 사용자 정보 가져오기
+        User existingUser = userRepository.findById(principal.getName()).orElseThrow();
+
+        // 새로운 Board 생성
         Board board = Board.builder().id(id).build();
 
-        User user = User.builder().id(principal.getName()).scrap(Collections.singleton(board)).build();
+        // 기존 사용자 정보에 새로운 스크랩 정보 추가
+        existingUser.getScrap().add(board);
 
-        userRepository.save(user);
+        // 사용자 정보 저장 (기존 정보는 변경되지 않음)
+        userRepository.save(existingUser);
     }
 
 
