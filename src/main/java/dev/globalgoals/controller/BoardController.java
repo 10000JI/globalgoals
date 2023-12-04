@@ -32,10 +32,10 @@ public class BoardController {
 
     // 자유 게시판 & 실천 방법 등록 & 실천 등록 & 전체 글보기 리스트
     @GetMapping("/{cate}/list")
-    public String list(PageRequestDTO requestDTO, Model model, @PathVariable String cate) {
-        model.addAttribute("result", boardService.getList(requestDTO, cate));
+    public String list(PageRequestDTO requestDTO, Model model, @PathVariable String cate, Principal principal) {
+        model.addAttribute("result", boardService.getList(requestDTO, cate, principal));
         model.addAttribute("cate", cate);
-        if (cate.equals("main") || cate.equals("popularity")) {
+        if (cate.equals("main") || cate.equals("popularity") || cate.equals("mine") || cate.equals("comment")) {
             return "board/mainList";
         }
         return "board/list";
@@ -137,9 +137,9 @@ public class BoardController {
 
         log.info("rno:" + bno );
 
-        boardService.saveScrap(bno, principal);
+        String result = boardService.saveScrap(bno, principal);
 
-        return new ResponseEntity<>("success", HttpStatus.OK);
+        return new ResponseEntity<>(result, HttpStatus.OK);
 
     }
 }

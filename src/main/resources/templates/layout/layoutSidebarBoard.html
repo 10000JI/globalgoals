@@ -31,8 +31,16 @@
                     <i class="fs-4 bi bi-clipboard"></i> <span class="ms-1 d-none d-sm-inline">인기글</span> </a>
             </li>
             <li>
-                <a href="/board/popularity/list" class="nav-link px-0 align-middle text-white ">
-                    <i class="fs-4 bi bi-search"></i> <span class="ms-1 d-none d-sm-inline">내소식</span> </a>
+                <a href="#submenu1" data-bs-toggle="collapse" class="nav-link px-0 align-middle text-white ">
+                    <i class="fs-4 bi-search"></i><span class="ms-1 d-none d-sm-inline">내소식</span> </a>
+                <ul class="collapse show nav flex-column ms-1" id="submenu1" data-bs-parent="#menu">
+                    <li class="w-100">
+                        <a href="/board/mine/list" class="nav-link px-0 text-white bi bi-arrow-right"> <span class="d-none d-sm-inline">내가 쓴 글</span></a>
+                    </li>
+                    <li>
+                        <a href="/board/comment/list" class="nav-link px-0 text-white bi bi-arrow-right"> <span class="d-none d-sm-inline">내가 쓴 댓글</span></a>
+                    </li>
+                </ul>
             </li>
             <li>
                 <a href="#" class="nav-link px-0 align-middle text-white ">

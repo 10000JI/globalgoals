@@ -32,4 +32,9 @@ public class BoardDTO {
     //카테고리
     private String category;
     private Long cateNum;
+
+    //댓글 정보 추가
+    private String comments;
+    private String replyer;
+    private LocalDateTime commentModDate; //댓글 최신 수정일로만 가져옴
 }

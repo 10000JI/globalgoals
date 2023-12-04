@@ -6,20 +6,15 @@
             <span class="fs-5 d-none d-sm-inline">마이페이지</span>
         </a>
         <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
-            <li class="nav-item">
-                <a href="#" class="nav-link px-0 align-middle text-white ">
-                    <i class="fs-4 bi bi-grid"></i> <span class="ms-1 d-none d-sm-inline">최근 활동</span> </a>
-            </li>
-
             <li>
                 <a href="#submenu1" data-bs-toggle="collapse" class="nav-link px-0 align-middle text-white ">
-                    <i class="fs-4 bi-clipboard-plus"></i><span class="ms-1 d-none d-sm-inline">게시판</span> </a>
+                    <i class="fs-4 bi-search"></i><span class="ms-1 d-none d-sm-inline">게시판</span> </a>
                 <ul class="collapse show nav flex-column ms-1" id="submenu1" data-bs-parent="#menu">
                     <li class="w-100">
-                        <a href="#" class="nav-link px-0 text-white "> <span class="d-none d-sm-inline">Item</span> 1 </a>
+                        <a href="/board/mine/list" class="nav-link px-0 text-white bi bi-arrow-right"> <span class="d-none d-sm-inline">내가 쓴 글</span></a>
                     </li>
                     <li>
-                        <a href="#" class="nav-link px-0 text-white "> <span class="d-none d-sm-inline">Item</span> 2 </a>
+                        <a href="/board/comment/list" class="nav-link px-0 text-white bi bi-arrow-right"> <span class="d-none d-sm-inline">내가 쓴 댓글</span></a>
                     </li>
                 </ul>
             </li>

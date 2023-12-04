@@ -1,9 +1,7 @@
 package dev.globalgoals.service;
 
-import dev.globalgoals.domain.Board;
-import dev.globalgoals.domain.BoardCategory;
-import dev.globalgoals.domain.BoardImage;
-import dev.globalgoals.domain.User;
+import dev.globalgoals.domain.*;
+import dev.globalgoals.dto.BoardCommentDTO;
 import dev.globalgoals.dto.BoardDTO;
 import dev.globalgoals.dto.PageRequestDTO;
 import dev.globalgoals.dto.PageResultDTO;
@@ -16,7 +14,7 @@ import java.util.List;
 public interface BoardService {
     Long register(BoardDTO boardDto) throws IOException;
 
-    PageResultDTO<BoardDTO, Object[]> getList(PageRequestDTO pageRequestDTO, String param);
+    PageResultDTO<BoardDTO, Object[]> getList(PageRequestDTO pageRequestDTO, String param, Principal principal);
 
     BoardDTO get(Long id);
 
@@ -26,7 +24,7 @@ public interface BoardService {
 
     void modify(BoardDTO dto, String[] storeFileNames) throws IOException;
 
-    void saveScrap(Long id, Principal principal);
+    String saveScrap(Long id, Principal principal);
 
     default Board dtoToEntity(BoardDTO dto) {
 
@@ -60,4 +58,19 @@ public interface BoardService {
                 .build();
         return dto;
     }
+
+    default BoardDTO entityToDtoBC(Board board, BoardComment boardComment,  Long commentCount, BoardCategory boardCategory) {
+        BoardDTO dto = BoardDTO.builder()
+                .id(board.getId())
+                .title(board.getTitle())
+                .comments(boardComment.getComments())
+                .replyer(boardComment.getWriter())
+                .commentModDate(boardComment.getModDate())
+                .commentCount(commentCount.intValue())
+                .category(boardCategory.getCategoryName())
+                .build();
+        return dto;
+    }
+
+
 }

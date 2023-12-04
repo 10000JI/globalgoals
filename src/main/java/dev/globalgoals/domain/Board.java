@@ -57,4 +57,17 @@ public class Board extends BaseEntity{
         hit++;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true; //객체가 자기 자신인지 확인
+        if (o == null || getClass() != o.getClass()) return false; //객체가 null 이거나 클래스가 다르다면 두 객체는 동일하지 않음
+        Board board = (Board) o; // 형변환을 통해 비교할 객체로 변환
+        return id != null && id.equals(board.id); /// id가 null이 아니고, 두 객체의 id가 같다면 두 객체는 동일
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode(); //클래스의 hashCode를 반환합니다.
+    }
+
 }

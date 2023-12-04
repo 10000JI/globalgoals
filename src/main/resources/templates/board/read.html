@@ -349,6 +349,9 @@
                 if (result === 'success') {
                     alert("스크랩이 완료되었습니다.");
                     modal.hide();
+                }else if (result === 'fail') {
+                    alert("이미 스크랩 되어 있습니다.");
+                    modal.hide();
                 }
             })
             .catch(function(error) {

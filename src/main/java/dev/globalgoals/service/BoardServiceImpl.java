@@ -82,10 +82,16 @@ public class BoardServiceImpl implements BoardService{
     }
 
     @Override
-    public PageResultDTO<BoardDTO, Object[]> getList(PageRequestDTO pageRequestDTO, String param) {
+    public PageResultDTO<BoardDTO, Object[]> getList(PageRequestDTO pageRequestDTO, String param, Principal principal) {
 
-        Function<Object[], BoardDTO> fn = (en -> entityToDto((Board)en[0],(User)en[1],(Long)en[2],(BoardCategory)en[3]));
-        //Fuction은 함수이기 때문에 순서와는 무관함
+        Function<Object[], BoardDTO> fn;
+
+        if (param.equals("comment")) { //내가 쓴 댓글 리스트 볼 시에 불러올 dto
+            fn = (en -> entityToDtoBC((Board) en[0], (BoardComment) en[1],(Long)en[2], (BoardCategory)en[3]));
+        }else{ //그 외의 경우
+            fn = (en -> entityToDto((Board)en[0],(User)en[1],(Long)en[2],(BoardCategory)en[3]));
+            //Fuction은 함수이기 때문에 순서와는 무관함
+        }
 
         // Pageable 및 Sort 생성
         Pageable pageable;
@@ -102,7 +108,8 @@ public class BoardServiceImpl implements BoardService{
                 pageRequestDTO.getType(),
                 pageRequestDTO.getKeyword(),
                 pageable,
-                param
+                param,
+                principal
         );
 
         return new PageResultDTO<>(result, fn);
@@ -175,7 +182,7 @@ public class BoardServiceImpl implements BoardService{
 
     @Transactional
     @Override
-    public void saveScrap(Long id, Principal principal) {
+    public String saveScrap(Long id, Principal principal) {
 
         // 기존 사용자 정보 가져오기
         User existingUser = userRepository.findById(principal.getName()).orElseThrow();
@@ -183,12 +190,18 @@ public class BoardServiceImpl implements BoardService{
         // 새로운 Board 생성
         Board board = Board.builder().id(id).build();
 
-        // 기존 사용자 정보에 새로운 스크랩 정보 추가
-        existingUser.getScrap().add(board);
+        // 이미 스크랩된 게시물인지 확인
+        if (!existingUser.getScrap().contains(board)) { //contains 메서드가 호출되면, Set은 내부적으로 equals 메서드를 사용하여 중복 여부를 판단
+            // 스크랩 정보 추가
+            existingUser.getScrap().add(board);
 
-        // 사용자 정보 저장 (기존 정보는 변경되지 않음)
-        userRepository.save(existingUser);
+            // 사용자 정보 저장 (기존 정보는 변경되지 않음)
+            userRepository.save(existingUser);
+
+            return "success";
+        } else {
+            return "fail";
+        }
     }
-
 
 }
