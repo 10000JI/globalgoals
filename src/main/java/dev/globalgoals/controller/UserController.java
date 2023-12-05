@@ -1,11 +1,6 @@
 package dev.globalgoals.controller;
 
-import dev.globalgoals.domain.Goal;
-import dev.globalgoals.domain.StampCard;
-import dev.globalgoals.dto.PageRequestDTO;
-import dev.globalgoals.dto.StampCardWithGoalDto;
-import dev.globalgoals.dto.UserDTO;
-import dev.globalgoals.repository.UserRepository;
+import dev.globalgoals.dto.*;
 import dev.globalgoals.service.BoardService;
 import dev.globalgoals.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +18,6 @@ import javax.servlet.http.HttpSession;
 import java.security.Principal;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Controller
@@ -89,17 +83,18 @@ public class UserController {
     }
 
     @GetMapping("/mypage")
-    public String myPageForm(Model model) {
-        model.addAttribute("userForm", new UserDTO());
+    public String myPageForm(Principal principal, Model model) {
+        List<StampCardWithGoalDTO> stampCardWithGoals = userService.getStampCardWithGoal(principal);
+        model.addAttribute("stampCardWithGoals", stampCardWithGoals);
         return "users/myPage";
     }
-
-    @GetMapping("/mypage/stamp")
-    public String myStampForm(Principal principal, Model model) {
-        List<StampCardWithGoalDto> stampCardWithGoals = userService.getStampCardWithGoalDtos(principal);
-        model.addAttribute("stampCardWithGoals", stampCardWithGoals);
-        return "users/stamp";
-    }
+//
+//    @GetMapping("/mypage/stamp")
+//    public String myStampForm(Principal principal, Model model) {
+//        List<StampCardWithGoalDTO> stampCardWithGoals = userService.getStampCardWithGoal(principal);
+//        model.addAttribute("stampCardWithGoals", stampCardWithGoals);
+//        return "users/stamp";
+//    }
 
     // 자유 게시판 & 실천 방법 등록 & 실천 등록 & 전체 글보기 리스트
     @GetMapping("/{cate}/list")

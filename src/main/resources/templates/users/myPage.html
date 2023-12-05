@@ -4,23 +4,58 @@
     <title>GoalGoals-SDGs</title>
     <link/>
 </head>
-<body class="d-flex flex-column h-100">
+<body class="d-flex flex-column min-vh-100">
 <main class="flex-shrink-0">
     <!-- Navigation-->
     <nav th:replace="layout/layoutNav :: nav_layout" class="navbar navbar-expand-lg navbar-dark bg-dark"></nav>
     <div class="container-fluid">
         <div class="row flex-nowrap">
             <div th:replace="layout/layoutSidebarMyPage :: sidebar_layout" class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-dark"></div>
-                <div class="col py-3" id="content-by">
-                    <div class="small-rectangle shadow">
+            <div class="col py-3" id="content-by">
+                <div class="card" style="margin-top: 20px;">
+                    <div class="card-body" style="font-weight: bold;">
                         <img src="https://www.sdgbookclub.com/common/img/default_profile.png" alt="프로필 이미지"
                              class="rounded-circle profile-image">
-                        <div class="greeting">
-                            <h5><span th:text="${#authentication.name}"></span>님 안녕하세요.</h5>
-                            <p>누적 스탬프 : 0개</p>
-                        </div>
+                        <span th:text="${#authentication.name}"></span><b style="margin-top: 20px;">님 안녕하세요, 누적 스탬프: 0</b>
                     </div>
                 </div>
+
+                <table class="table table-bordered" style="margin-top: 30px;">
+                    <tbody >
+                    <!-- 4x5 테이블을 생성하는 Thymeleaf 반복문 -->
+                    <tr>
+                        <!-- 각 행에 대한 Thymeleaf 반복문 -->
+                        <td th:each="dto : ${stampCardWithGoals}" th:if="${dto.goalId <= 4}" >
+                            <span th:text="${dto.goalTitle}"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <!-- Thymeleaf loop for each row -->
+                        <td th:each="dto, rowStat : ${stampCardWithGoals}" th:if="${dto.goalId > 4 and dto.goalId <= 8}">
+                            <span th:text="${dto.goalTitle}"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <!-- Thymeleaf loop for each row -->
+                        <td th:each="dto, rowStat : ${stampCardWithGoals}" th:if="${dto.goalId > 8 and dto.goalId <= 12}">
+                            <span th:text="${dto.goalTitle}"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <!-- Thymeleaf loop for each row -->
+                        <td th:each="dto, rowStat : ${stampCardWithGoals}" th:if="${dto.goalId > 12 and dto.goalId <= 16}">
+                            <span th:text="${dto.goalTitle}"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <!-- Thymeleaf loop for each row -->
+                        <td th:each="dto, rowStat : ${stampCardWithGoals}" th:if="${dto.goalId == 17}">
+                            <span th:text="${dto.goalTitle}"></span>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </main>

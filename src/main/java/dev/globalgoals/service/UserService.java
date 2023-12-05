@@ -1,131 +1,46 @@
 package dev.globalgoals.service;
 
-import dev.globalgoals.domain.Goal;
-import dev.globalgoals.domain.StampCard;
-import dev.globalgoals.dto.StampCardWithGoalDto;
-import dev.globalgoals.repository.StampCardRepository;
-import dev.globalgoals.security.UserDetailsConfig;
-import dev.globalgoals.domain.Authority;
-import dev.globalgoals.domain.User;
-import dev.globalgoals.dto.UserDTO;
-import dev.globalgoals.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import dev.globalgoals.domain.*;
+import dev.globalgoals.dto.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 
 import java.security.Principal;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
-@Service
-@Transactional(readOnly = true)
-@RequiredArgsConstructor
-public class UserService implements UserDetailsService {
+public interface UserService {
+    String join (UserDTO userDto);
 
-    private final UserRepository userRepository;
+    List<StampCardWithGoalDTO> getStampCardWithGoal(Principal principal);
 
-    private final PasswordEncoder passwordEncoder;
+    boolean validateDuplicateMember(UserDTO form, BindingResult bindingResult);
 
-    private final StampCardRepository stampCardRepository;
-
-    /**
-     * 회원가입
-     */
-    @Transactional
-    public String join(UserDTO userDto) {
+    default User dtoToUserEntity(UserDTO dto, PasswordEncoder passwordEncoder) {
 
         //Authority 객체를 생성하고, 권한 이름을 "ROLE_USER"로 설정
         Authority authority = Authority.builder()
                 .authorityName("ROLE_USER")
                 .build();
 
-        User user = User.builder()
-                .id(userDto.getId())
-                .password(passwordEncoder.encode(userDto.getPassword()))
-                .email(userDto.getEmail())
-                .name(userDto.getName())
+        User entity = User.builder()
+                .id(dto.getId())
+                .password(passwordEncoder.encode(dto.getPassword()))
+                .email(dto.getEmail())
+                .name(dto.getName())
                 .authorities(Collections.singleton(authority))
                 .build();
-        userRepository.save(user);
-
-        // 스탬프 판 17개 목표, 체크 0 으로 insert
-        List<Goal> goals = userRepository.findAllGoals();
-        goals.forEach(goal -> {
-            StampCard stampCard = StampCard.builder()
-                    .user(userRepository.findById(user.getId()).orElseThrow()) // 영속 상태의 User를 참조
-                    .goal(goal)
-                    .checkNum(0)
-                    .build();
-            stampCardRepository.save(stampCard);
-        });;
-        return user.getId();
+        return entity;
     }
 
-    /**
-     * 회원가입 검증
-     */
-    public boolean validateDuplicateMember(UserDTO form, BindingResult bindingResult) {
-
-        boolean checked = false;
-        //checked가 true면 검증 발견
-        //checked가 false면 검증 미발견
-
-        checked = bindingResult.hasErrors();
-
-        //id 중복 검증
-        Optional<User> byId = userRepository.findById(form.getId());
-        if (!byId.isEmpty()) {
-            bindingResult.rejectValue("id", "user.id.notEqual");
-            checked = true;
-        }
-
-        //password 일치 검증
-        if (!form.getPasswordCheck().equals(form.getPassword())) {
-            bindingResult.rejectValue("passwordCheck", "user.password.notEqual");
-            checked = true;
-        }
-
-        //email 중복 검증
-        List<User> findEmail = userRepository.findByEmail(form.getEmail());
-        if (!findEmail.isEmpty()) {
-            bindingResult.rejectValue("email", "user.email.notEqual");
-            checked = true;
-        }
-
-        return checked;
+    default StampCardWithGoalDTO entityToStampCardWithGoalDTO(Goal goal, StampCard stampCard) {
+        StampCardWithGoalDTO dto = StampCardWithGoalDTO.builder()
+                .stampId(stampCard.getId())
+                .userName(stampCard.getUser().getId())
+                .checkNum(stampCard.getCheckNum())
+                .goalId(goal.getGoalId())
+                .goalTitle(goal.getGoalTitle())
+                .build();
+        return dto;
     }
-
-    /**
-     * UserDetailsService
-     */
-    @Override
-    public UserDetails loadUserByUsername(String id) throws UsernameNotFoundException {
-        User user = userRepository.allFindById(id);
-        if (user != null) {
-            return new UserDetailsConfig(user);
-        } else {
-            return null;
-        }
-    }
-
-    /**
-     * 마이페이지 스탬프판
-     */
-    public List<StampCardWithGoalDto> getStampCardWithGoalDtos(Principal principal) {
-        List<Object[]> result = userRepository.stampFindById(principal.getName());
-
-        List<StampCardWithGoalDto> stampCardWithGoals = result.stream()
-                .map(row -> new StampCardWithGoalDto((StampCard) row[0], (Goal) row[1]))
-                .collect(Collectors.toList());
-        return stampCardWithGoals;
-    }
-
 }

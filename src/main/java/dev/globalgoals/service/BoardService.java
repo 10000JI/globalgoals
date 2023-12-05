@@ -43,21 +43,21 @@ public interface BoardService {
         return entity;
     }
 
-        default BoardDTO entityToDto(Board board, User user, Long commentCount, BoardCategory boardCategory) {
-            BoardDTO dto = BoardDTO.builder()
-                    .id(board.getId())
-                    .title(board.getTitle())
-                    .content(board.getContent())
-                    .hit(board.getHit())
-                    .regDate(board.getRegDate())
-                    .modDate(board.getModDate())
-                    .writer(board.getUser().getId())
-                    .writerEmail(board.getUser().getEmail())
-                    .commentCount(commentCount.intValue())
-                    .category(boardCategory.getCategoryName())
-                    .build();
-            return dto;
-        }
+    default BoardDTO entityToDto(Board board, User user, Long commentCount, BoardCategory boardCategory) {
+        BoardDTO dto = BoardDTO.builder()
+                .id(board.getId())
+                .title(board.getTitle())
+                .content(board.getContent())
+                .hit(board.getHit())
+                .regDate(board.getRegDate())
+                .modDate(board.getModDate())
+                .writer(user.getId())
+                .writerEmail(user.getEmail())
+                .commentCount(commentCount.intValue())
+                .category(boardCategory.getCategoryName())
+                .build();
+        return dto;
+    }
 
     default BoardDTO entityToDtoBC(Board board, BoardComment boardComment,  Long commentCount, BoardCategory boardCategory) {
         BoardDTO dto = BoardDTO.builder()
@@ -72,5 +72,20 @@ public interface BoardService {
         return dto;
     }
 
+    default BoardDTO entityToDtoSC(Board board,Long commentCount) {
+        BoardDTO dto = BoardDTO.builder()
+                .id(board.getId())
+                .title(board.getTitle())
+                .content(board.getContent())
+                .hit(board.getHit())
+                .regDate(board.getRegDate())
+                .modDate(board.getModDate())
+                .writer(board.getUser().getId())
+                .writerEmail(board.getUser().getEmail())
+                .commentCount(commentCount.intValue())
+                .category(board.getBoardCategory().getCategoryName())
+                .build();
+        return dto;
+    }
 
 }

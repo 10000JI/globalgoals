@@ -88,7 +88,9 @@ public class BoardServiceImpl implements BoardService{
 
         if (param.equals("comment")) { //내가 쓴 댓글 리스트 볼 시에 불러올 dto
             fn = (en -> entityToDtoBC((Board) en[0], (BoardComment) en[1],(Long)en[2], (BoardCategory)en[3]));
-        } else{ //그 외의 경우
+        } else if (param.equals("scrap")) {
+            fn = (en -> entityToDtoSC((Board)en[0],(Long)en[1]));
+        }else{ //그 외의 경우
             fn = (en -> entityToDto((Board)en[0],(User)en[1],(Long)en[2],(BoardCategory)en[3]));
             //Fuction은 함수이기 때문에 순서와는 무관함
         }

@@ -67,13 +67,15 @@ public class SearchBoardRepositoryImpl extends QuerydslRepositorySupport impleme
         jpqlQuery.leftJoin(category).on(board.boardCategory.eq(category));
         jpqlQuery.leftJoin(boardComment).on(boardComment.board.eq(board));
         if (param.equals("scrap")) {
-            jpqlQuery.leftJoin(user.scrap, board);
+            jpqlQuery.leftJoin(user.scrap, board).on(board.in(user.scrap).and(user.id.eq(principal.getName())));
         }
 
         JPQLQuery<Tuple> tuple;
 
         if (param.equals("comment")) { //'내가 쓴 댓글' 이동 시 게시물 목록 대신 댓글 목록으로 변경
             tuple = jpqlQuery.select(board,boardComment,boardComment.count(),category);
+        } else if(param.equals("scrap")) { //'스크랩' 이동 시 게시물 목록 대신 스크랩 목록으로 변경
+            tuple = jpqlQuery.select(board,boardComment.count());
         }
         else { // 그 외는 다음과 같이 통일
             //SELECT b, w, count(r), bcy FROM Board b
@@ -100,11 +102,15 @@ public class SearchBoardRepositoryImpl extends QuerydslRepositorySupport impleme
         }
 
         if (param.equals("mine")) {
-            booleanBuilder.and(board.user.id.eq(principal.getName())); //게시글 작성자와 동일한 사용자라면 '내가 쓴 글' 리스트에 나타냄, 스크랩한 목록 리스트
+            booleanBuilder.and(board.user.id.eq(principal.getName())); //게시글 작성자와 동일한 사용자라면 '내가 쓴 글' 리스트에 나타냄
         }
 
         if (param.equals("comment")) {
             booleanBuilder.and(boardComment.writer.eq(principal.getName())); //댓글 작성자와 동일한 사용자라면 '내가 쓴 댓글' 리스트에 나타냄
+        }
+
+        if (param.equals("scrap")) {
+            booleanBuilder.and(user.id.eq(principal.getName()));
         }
 
         if(type != null){
@@ -170,6 +176,8 @@ public class SearchBoardRepositoryImpl extends QuerydslRepositorySupport impleme
         long count = tuple.fetchCount();
 
         log.info("COUNT: " +count);
+
+        log.error("Generated JPQL Query: {}", jpqlQuery.toString());
 
         return new PageImpl<Object[]>(
                 result.stream().map(t -> t.toArray()).collect(Collectors.toList()),

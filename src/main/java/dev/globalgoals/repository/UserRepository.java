@@ -17,7 +17,7 @@ public interface UserRepository extends JpaRepository<User, String> {
     @Query("select u from User u join fetch u.authorities a where u.id = :id")
     User allFindById(@Param("id") String id);
 
-    @Query("select s, g from User u join StampCard s on s.user = u join s.goal g where u.id = :id")
+    @Query("select g, s from User u join StampCard s on s.user = u join s.goal g where u.id = :id")
     List<Object[]> stampFindById(@Param("id") String id);
 
     @Query("select g from Goal g")
