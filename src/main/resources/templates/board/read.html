@@ -72,6 +72,8 @@
 
                         <button type="button" class="btn btn-success scrapBtn">스크랩</button>
 
+                        <button th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')') and dto.category == 'fulfill'}"
+                                type="button" class="btn btn-warning certifyBtn">인증</button>
                         <div>
                             <div class="mt-4">
                                 <h5 >
@@ -336,6 +338,32 @@
     document.querySelector('.scrapBtn').addEventListener('click', function () {
 
         fetch('/board/scrap/' + bno, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json; charset=utf-8'
+            }
+        })
+            .then(function(response) {
+                return response.text();
+            })
+            .then(function(result) {
+                console.log("result: " + result);
+                if (result === 'success') {
+                    alert("스크랩이 완료되었습니다.");
+                    modal.hide();
+                }else if (result === 'fail') {
+                    alert("이미 스크랩 되어 있습니다.");
+                    modal.hide();
+                }
+            })
+            .catch(function(error) {
+                console.error('Fetch 오류:', error);
+            });
+    });
+
+    document.querySelector('.certifyBtn').addEventListener('click', function () {
+
+        fetch('/board/certify/' + bno, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json; charset=utf-8'

@@ -67,7 +67,7 @@ public class SearchBoardRepositoryImpl extends QuerydslRepositorySupport impleme
         jpqlQuery.leftJoin(category).on(board.boardCategory.eq(category));
         jpqlQuery.leftJoin(boardComment).on(boardComment.board.eq(board));
         if (param.equals("scrap")) {
-            jpqlQuery.leftJoin(user.scrap, board).on(board.in(user.scrap).and(user.id.eq(principal.getName())));
+            jpqlQuery.leftJoin(user.scrap, board).on(board.in(user.scrap).and(user.id.eq(principal.getName()))); //로그인한 사용자와 스크랩 유저와 동일한 것 조인
         }
 
         JPQLQuery<Tuple> tuple;
@@ -110,7 +110,7 @@ public class SearchBoardRepositoryImpl extends QuerydslRepositorySupport impleme
         }
 
         if (param.equals("scrap")) {
-            booleanBuilder.and(user.id.eq(principal.getName()));
+            booleanBuilder.and(user.id.eq(principal.getName())); // 스크랩한 사용자와 로그인한 사용자 동일한지 더블체크
         }
 
         if(type != null){
