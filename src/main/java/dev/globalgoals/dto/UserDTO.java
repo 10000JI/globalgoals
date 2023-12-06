@@ -36,4 +36,6 @@ public class UserDTO {
 
     // 스탬프 카드 checknum이 1일때 몇개인지 count
     private Long stampCardCount;
+
+    private Long countDonation;
 }

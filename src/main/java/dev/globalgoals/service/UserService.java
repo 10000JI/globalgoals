@@ -31,6 +31,7 @@ public interface UserService {
                 .email(dto.getEmail())
                 .name(dto.getName())
                 .authorities(Collections.singleton(authority))
+                .countDonation(dto.getCountDonation())
                 .build();
         return entity;
     }

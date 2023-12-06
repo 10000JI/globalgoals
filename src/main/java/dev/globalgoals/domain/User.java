@@ -1,6 +1,7 @@
 package dev.globalgoals.domain;
 
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -27,6 +28,10 @@ public class User {
 
     @Column(name = "email")
     private String email;
+
+    @Column(name = "countDonation")
+    @ColumnDefault("0")
+    private Long countDonation;
 
     @ManyToMany
     @JoinTable(

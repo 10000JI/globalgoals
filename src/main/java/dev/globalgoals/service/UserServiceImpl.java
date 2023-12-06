@@ -41,6 +41,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     @Override
     public String join(UserDTO userDto) {
 
+        userDto.setCountDonation(0L); //Use에 Default값 써줬으나 dto로 가져오는 과정 중에 null 일 수 있으니 0으로 세팅
         User user = dtoToUserEntity(userDto, passwordEncoder);
         userRepository.save(user);
 
@@ -123,14 +124,8 @@ public class UserServiceImpl implements UserDetailsService, UserService {
      */
     @Override
     public UserDTO getUserAndStampCount(Principal principal) {
-        Object objects = stampCardRepository.countAndFindUserInfo(principal.getName());
-
-        Object[] arr = (Object[])objects;
-
-        return entityToDto((Long)arr[0], (User) arr[1]);
+        Optional<User> byId = userRepository.findById(principal.getName());
+        return entityToDto(stampCardRepository.countByCheckNum(principal.getName()), byId.get());
     }
-
-
-
 
 }
