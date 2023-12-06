@@ -30,5 +30,8 @@ public class StampCard {
     @Column(name = "check_num")
     private Integer checkNum;
 
+    public void plusCheckNum() {
+        checkNum = 1;
+    }
 
 }

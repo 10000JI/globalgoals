@@ -9,6 +9,7 @@ import javax.validation.constraints.Pattern;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class UserDTO {
 
     @NotBlank(message = "아이디: 필수 정보입니다.")
@@ -31,4 +32,8 @@ public class UserDTO {
 
     @NotBlank(message = "이메일체크: 필수 정보입니다.")
     private String emailCheck;
+
+
+    // 스탬프 카드 checknum이 1일때 몇개인지 count
+    private Long stampCardCount;
 }

@@ -1,5 +1,6 @@
 package dev.globalgoals.service;
 
+import dev.globalgoals.domain.Board;
 import dev.globalgoals.domain.Goal;
 import dev.globalgoals.domain.StampCard;
 import dev.globalgoals.dto.StampCardWithGoalDTO;
@@ -116,5 +117,20 @@ public class UserServiceImpl implements UserDetailsService, UserService {
                 .collect(Collectors.toList());
         return stampCardWithGoals;
     }
+
+    /**
+     * 마이페이지 유저 정보 + 스탬프 갯수
+     */
+    @Override
+    public UserDTO getUserAndStampCount(Principal principal) {
+        Object objects = stampCardRepository.countAndFindUserInfo(principal.getName());
+
+        Object[] arr = (Object[])objects;
+
+        return entityToDto((Long)arr[0], (User) arr[1]);
+    }
+
+
+
 
 }

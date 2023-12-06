@@ -1,6 +1,7 @@
 package dev.globalgoals.controller;
 
 import dev.globalgoals.dto.BoardDTO;
+import dev.globalgoals.dto.CertifyDTO;
 import dev.globalgoals.dto.PageRequestDTO;
 import dev.globalgoals.file.FileStore;
 import dev.globalgoals.file.UploadFile;
@@ -138,6 +139,15 @@ public class BoardController {
         log.info("rno:" + bno );
 
         String result = boardService.saveScrap(bno, principal);
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
+
+    }
+
+    @PostMapping("/certify")
+    public ResponseEntity<String> remove(@RequestBody CertifyDTO certifyDTO) {
+
+        String result = boardService.saveCertify(certifyDTO);
 
         return new ResponseEntity<>(result, HttpStatus.OK);
 

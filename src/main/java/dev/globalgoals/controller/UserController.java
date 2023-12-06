@@ -85,16 +85,11 @@ public class UserController {
     @GetMapping("/mypage")
     public String myPageForm(Principal principal, Model model) {
         List<StampCardWithGoalDTO> stampCardWithGoals = userService.getStampCardWithGoal(principal);
+        UserDTO userAndStampCount = userService.getUserAndStampCount(principal);
         model.addAttribute("stampCardWithGoals", stampCardWithGoals);
+        model.addAttribute("userAndStampCount", userAndStampCount);
         return "users/myPage";
     }
-//
-//    @GetMapping("/mypage/stamp")
-//    public String myStampForm(Principal principal, Model model) {
-//        List<StampCardWithGoalDTO> stampCardWithGoals = userService.getStampCardWithGoal(principal);
-//        model.addAttribute("stampCardWithGoals", stampCardWithGoals);
-//        return "users/stamp";
-//    }
 
     // 자유 게시판 & 실천 방법 등록 & 실천 등록 & 전체 글보기 리스트
     @GetMapping("/{cate}/list")

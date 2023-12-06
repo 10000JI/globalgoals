@@ -7,9 +7,12 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class StampCardWithGoalDTO {
+    //StampCard
     private Long stampId;
-    private String userName;
+    private String userId;
     private Integer checkNum;
+
+    //Goal
     private Long goalId;
     private String goalTitle;
 }

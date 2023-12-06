@@ -1,10 +1,7 @@
 package dev.globalgoals.service;
 
 import dev.globalgoals.domain.*;
-import dev.globalgoals.dto.BoardCommentDTO;
-import dev.globalgoals.dto.BoardDTO;
-import dev.globalgoals.dto.PageRequestDTO;
-import dev.globalgoals.dto.PageResultDTO;
+import dev.globalgoals.dto.*;
 import dev.globalgoals.file.UploadFile;
 
 import java.io.IOException;
@@ -25,6 +22,8 @@ public interface BoardService {
     void modify(BoardDTO dto, String[] storeFileNames) throws IOException;
 
     String saveScrap(Long id, Principal principal);
+
+    String saveCertify(CertifyDTO certifyDTO);
 
     default Board dtoToEntity(BoardDTO dto) {
 

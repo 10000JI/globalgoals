@@ -16,6 +16,8 @@ public interface UserService {
 
     boolean validateDuplicateMember(UserDTO form, BindingResult bindingResult);
 
+    UserDTO getUserAndStampCount(Principal principal);
+
     default User dtoToUserEntity(UserDTO dto, PasswordEncoder passwordEncoder) {
 
         //Authority 객체를 생성하고, 권한 이름을 "ROLE_USER"로 설정
@@ -36,10 +38,20 @@ public interface UserService {
     default StampCardWithGoalDTO entityToStampCardWithGoalDTO(Goal goal, StampCard stampCard) {
         StampCardWithGoalDTO dto = StampCardWithGoalDTO.builder()
                 .stampId(stampCard.getId())
-                .userName(stampCard.getUser().getId())
+                .userId(stampCard.getUser().getId())
                 .checkNum(stampCard.getCheckNum())
                 .goalId(goal.getGoalId())
                 .goalTitle(goal.getGoalTitle())
+                .build();
+        return dto;
+    }
+
+    default UserDTO entityToDto(Long stampCardCount, User user) {
+        UserDTO dto = UserDTO.builder()
+                .id(user.getId())
+                .email(user.getEmail())
+                .name(user.getName())
+                .stampCardCount(stampCardCount)
                 .build();
         return dto;
     }

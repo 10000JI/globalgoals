@@ -73,7 +73,7 @@
                         <button type="button" class="btn btn-success scrapBtn">스크랩</button>
 
                         <button th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')') and dto.category == 'fulfill'}"
-                                type="button" class="btn btn-warning certifyBtn">인증</button>
+                                type="button" class="btn btn-warning certifyBtn" data-bs-toggle="modal" data-bs-target="#certifyModal">인증</button>
                         <div>
                             <div class="mt-4">
                                 <h5 >
@@ -110,11 +110,34 @@
                                             <input type="hidden" name="rno" >
                                         </div>
                                     </div>
-                                    <div class="modal-footer">
+                                    <div class="modal-footer modifyBtn">
                                         <button type="button" class="btn btn-danger replyRemove">삭제</button>
                                         <button type="button" class="btn btn-warning replyModify">수정</button>
                                         <button type="button" class="btn btn-primary replySave">저장</button>
                                         <button type="button" class="btn btn-outline-secondary replyClose">닫기</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Modal -->
+                        <div class="modal fade" id="certifyModal" tabindex="-1" aria-labelledby="certifyModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="certifyModalLabel">인증</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="form-group">
+                                            <select class="form-select" aria-label="Default select example" id="certifySelect">
+                                                <option th:each="i : ${#numbers.sequence(1, 17)}" th:value="${i}" th:text="${i}"></option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-primary certifySave">확인</button>
+                                        <button type="button" class="btn btn-outline-secondary certifyClose">닫기</button>
                                     </div>
                                 </div>
                             </div>
@@ -130,8 +153,10 @@
 
     const bno = [[${dto.id}]];
     const authenticatedUser = [[${#authentication.name}]];
+    const writer = [[${dto.writer}]];
     const listGroup = document.querySelector(".boardCommentList");
-    const modal = new bootstrap.Modal(document.getElementById('addModal'));
+    const addModal = new bootstrap.Modal(document.getElementById('addModal'));
+    const certifyModal = new bootstrap.Modal(document.getElementById('certifyModal'));
     let replyRemoveButton = document.querySelector('.replyRemove');
     let replyModifyButton = document.querySelector('.replyModify');
     let replySaveButton = document.querySelector('.replySave');
@@ -184,12 +209,12 @@
 
     // 모달 초기화 및 버튼 표시
     document.querySelector(".addBoardComment").addEventListener('click', function () {
-        modal.show();
+        //addModal.show();
         // 댓글 입력하는 부분 초기화
         document.querySelector('input[name="replyText"]').value = '';
 
         // 모든 버튼을 숨김
-        let buttons = document.querySelectorAll('.modal-footer .btn');
+        let buttons = document.querySelectorAll('.modifyBtn .btn');
         buttons.forEach(function (button) {
             button.style.display = 'none';
         });
@@ -201,7 +226,7 @@
 
     // 모달 닫기 이벤트 리스너
     document.querySelector(".replyClose").addEventListener('click', function () {
-        modal.hide();
+        addModal.hide();
     })
 
     // 모달 댓글 저장
@@ -230,7 +255,7 @@
                 let newRno = parseInt(data);
 
                 alert(newRno +"번 댓글이 등록되었습니다.");
-                modal.hide();
+                addModal.hide();
                 loadJSONData();
             })
             .catch(function (error) {
@@ -254,7 +279,7 @@
             document.querySelector('input[name="rno"]').value = rno;
 
             // 모든 버튼을 숨김
-            let buttons = document.querySelectorAll('.modal-footer .btn');
+            let buttons = document.querySelectorAll('.modifyBtn .btn');
             buttons.forEach(function (button) {
                 button.style.display = 'none';
             });
@@ -265,7 +290,7 @@
             replyCloseButton.style.display = 'block';
 
             // 모달 보이기
-            modal.show();
+            addModal.show();
         }
     });
 
@@ -286,7 +311,7 @@
                 console.log("result: " + result);
                 if (result === 'success') {
                     alert("댓글이 삭제되었습니다.");
-                    modal.hide();
+                    addModal.hide();
                     loadJSONData();
                 }
             })
@@ -321,7 +346,7 @@
                 console.log("result: " + result);
                 if (result === 'success') {
                     alert("댓글이 수정되었습니다.");
-                    modal.hide();
+                    addModal.hide();
                     loadJSONData();
                 }
             })
@@ -335,6 +360,7 @@
         this.value = [[${dto.category}]]; // 원래 값으로 변경
     });
 
+    // 스크랩하기
     document.querySelector('.scrapBtn').addEventListener('click', function () {
 
         fetch('/board/scrap/' + bno, {
@@ -350,10 +376,8 @@
                 console.log("result: " + result);
                 if (result === 'success') {
                     alert("스크랩이 완료되었습니다.");
-                    modal.hide();
                 }else if (result === 'fail') {
                     alert("이미 스크랩 되어 있습니다.");
-                    modal.hide();
                 }
             })
             .catch(function(error) {
@@ -361,13 +385,29 @@
             });
     });
 
-    document.querySelector('.certifyBtn').addEventListener('click', function () {
+    // 인증 모달 닫기 이벤트 리스너
+    document.querySelector(".certifyClose").addEventListener('click', function () {
+        certifyModal.hide();
+    })
 
-        fetch('/board/certify/' + bno, {
+    // 인증하기
+    document.querySelector('.certifySave').addEventListener('click', function () {
+        const certifyValue = document.getElementById('certifySelect').value;
+
+        // certifyValue를 정수로 변환
+        const goalNum = parseInt(certifyValue, 10);
+
+        let certify = {
+            writer: writer,
+            goalNum: goalNum
+        }
+
+        fetch('/board/certify', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json; charset=utf-8'
-            }
+            },
+            body: JSON.stringify(certify)
         })
             .then(function(response) {
                 return response.text();
@@ -375,17 +415,47 @@
             .then(function(result) {
                 console.log("result: " + result);
                 if (result === 'success') {
-                    alert("스크랩이 완료되었습니다.");
-                    modal.hide();
+                    alert("인증이 완료되었습니다.");
+
+                        //인증 완료되었다는 댓글 자동으로 달기
+                        let reply = {
+                            bno: bno,
+                            comments: "SDGs 목표, "+ certifyValue + "번 인증되었습니다.",
+                            replyer: authenticatedUser
+                        };
+
+                        console.log(reply);
+
+                        fetch('/boardComment/', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json; charset=utf-8'
+                            },
+                            body: JSON.stringify(reply)
+                        })
+                            .then(function (response) {
+                                return response.json();
+                            })
+                            .then(function (data) {
+                                console.log(data);
+
+                                let newRno = parseInt(data);
+
+                                alert(newRno +"번 댓글이 등록되었습니다.");
+                                addModal.hide();
+                                loadJSONData();
+                            })
+                            .catch(function (error) {
+                                console.error('Fetch 오류:', error);
+                            });
                 }else if (result === 'fail') {
-                    alert("이미 스크랩 되어 있습니다.");
-                    modal.hide();
+                    alert("이미 인증 되어 있습니다.");
                 }
             })
             .catch(function(error) {
                 console.error('Fetch 오류:', error);
             });
-    });
+    })
 
 </script>
 </body>

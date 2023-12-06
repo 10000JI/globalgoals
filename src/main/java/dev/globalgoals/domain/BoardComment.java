@@ -25,4 +25,5 @@ public class BoardComment extends BaseEntity {
     private String comments;
 
     private String writer;
+
 }

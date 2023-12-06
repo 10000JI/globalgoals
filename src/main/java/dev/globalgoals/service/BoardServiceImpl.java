@@ -4,6 +4,7 @@ import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import dev.globalgoals.domain.*;
 import dev.globalgoals.dto.BoardDTO;
+import dev.globalgoals.dto.CertifyDTO;
 import dev.globalgoals.dto.PageRequestDTO;
 import dev.globalgoals.dto.PageResultDTO;
 import dev.globalgoals.file.FileStore;
@@ -41,6 +42,8 @@ public class BoardServiceImpl implements BoardService{
     private final BoardCategoryRepository boardCategoryRepository;
 
     private final UserRepository userRepository;
+
+    private final StampCardRepository stampCardRepository;
 
     private final FileStore fileStore;
 
@@ -199,6 +202,22 @@ public class BoardServiceImpl implements BoardService{
 
             // 사용자 정보 저장 (기존 정보는 변경되지 않음)
             userRepository.save(existingUser);
+
+            return "success";
+        } else {
+            return "fail";
+        }
+    }
+
+    @Transactional
+    @Override
+    public String saveCertify(CertifyDTO certifyDTO) {
+
+        StampCard stampCard = stampCardRepository.findByUser_IdAndGoal_GoalId(certifyDTO.getWriter(), certifyDTO.getGoalNum()); // 인증하려고 하는 게시판 유저의 stamp_card 정보 가져오기
+
+        // 해당 목표번호가 스탬프에 찍혔는지 확인 (0이면 미인증 상태)
+        if (stampCard.getCheckNum() == 0) {
+            stampCard.plusCheckNum(); // checkNum 을 1로 변경
 
             return "success";
         } else {

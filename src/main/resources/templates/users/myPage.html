@@ -16,7 +16,7 @@
                     <div class="card-body" style="font-weight: bold;">
                         <img src="https://www.sdgbookclub.com/common/img/default_profile.png" alt="프로필 이미지"
                              class="rounded-circle profile-image">
-                        <span th:text="${#authentication.name}"></span><b style="margin-top: 20px;">님 안녕하세요, 누적 스탬프: 0</b>
+                        <span th:text="${userAndStampCount.id}"></span><b style="margin-top: 20px;">님 안녕하세요, 누적 스탬프: [[${userAndStampCount.stampCardCount}]]개</b>
                     </div>
                 </div>
 
@@ -25,41 +25,71 @@
                     <!-- 4x5 테이블을 생성하는 Thymeleaf 반복문 -->
                     <tr>
                         <!-- 각 행에 대한 Thymeleaf 반복문 -->
-                        <td th:each="dto : ${stampCardWithGoals}" th:if="${dto.goalId <= 4}" >
+                        <td th:each="dto : ${stampCardWithGoals}" th:if="${dto.goalId <= 4}" th:style="${dto.checkNum == 1 ? 'background-color: white;' : ''}">
                             <span th:text="${dto.goalTitle}"></span>
                         </td>
                     </tr>
                     <tr>
                         <!-- Thymeleaf loop for each row -->
-                        <td th:each="dto, rowStat : ${stampCardWithGoals}" th:if="${dto.goalId > 4 and dto.goalId <= 8}">
+                        <td th:each="dto, rowStat : ${stampCardWithGoals}" th:if="${dto.goalId > 4 and dto.goalId <= 8}" th:style="${dto.checkNum == 1 ? 'background-color: white;' : ''}">
                             <span th:text="${dto.goalTitle}"></span>
                         </td>
                     </tr>
                     <tr>
                         <!-- Thymeleaf loop for each row -->
-                        <td th:each="dto, rowStat : ${stampCardWithGoals}" th:if="${dto.goalId > 8 and dto.goalId <= 12}">
+                        <td th:each="dto, rowStat : ${stampCardWithGoals}" th:if="${dto.goalId > 8 and dto.goalId <= 12}" th:style="${dto.checkNum == 1 ? 'background-color: white;' : ''}">
                             <span th:text="${dto.goalTitle}"></span>
                         </td>
                     </tr>
                     <tr>
                         <!-- Thymeleaf loop for each row -->
-                        <td th:each="dto, rowStat : ${stampCardWithGoals}" th:if="${dto.goalId > 12 and dto.goalId <= 16}">
+                        <td th:each="dto, rowStat : ${stampCardWithGoals}" th:if="${dto.goalId > 12 and dto.goalId <= 16}" th:style="${dto.checkNum == 1 ? 'background-color: white;' : ''}">
                             <span th:text="${dto.goalTitle}"></span>
                         </td>
                     </tr>
                     <tr>
                         <!-- Thymeleaf loop for each row -->
-                        <td th:each="dto, rowStat : ${stampCardWithGoals}" th:if="${dto.goalId == 17}">
+                        <td th:each="dto, rowStat : ${stampCardWithGoals}" th:if="${dto.goalId == 17}" th:style="${dto.checkNum == 1 ? 'background-color: white;' : ''}">
                             <span th:text="${dto.goalTitle}"></span>
                         </td>
                     </tr>
                     </tbody>
                 </table>
+
+                <div class="d-flex justify-content-center">
+                    <button th:if="${userAndStampCount.stampCardCount eq 17}" class="btn btn-primary payBtn">기부하기</button>
+                </div>
             </div>
         </div>
     </div>
 </main>
-<script></script>
+<script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.1.5.js"></script>
+<script th:inline="javascript">
+
+    var IMP = window.IMP;
+    IMP.init("imp86476566"); // 예: imp00000000
+
+    document.querySelector('.payBtn').addEventListener('click', function () {
+        IMP.request_pay({ // param
+            pg: "html5_inicis",
+            pay_method: "card",
+            merchant_uid: "ORD20180131-0000011",
+            name: "17개의 목표 완료",
+            amount: 1700,
+            buyer_email: [[${userAndStampCount.id}]],
+            buyer_name: "홍길동",
+            buyer_tel: "010-4242-4242",
+            buyer_addr: "서울특별시 강남구 신사동",
+            buyer_postcode: "01181"
+        }, function (rsp) { // callback
+            if (rsp.success) {
+
+            } else {
+
+            }
+        });
+    })
+</script>
 </body>
 </html>
 
