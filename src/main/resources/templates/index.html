@@ -42,6 +42,10 @@
                                     <div th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}">
                                         <p>User has ROLE_ADMIN permission.</p>
                                     </div>
+
+                                    <div th:if="${#authorization.expression('hasRole(''ROLE_MANAGER'')')}">
+                                        <p>User has ROLE_MANAGER permission.</p>
+                                    </div>
                                     <h2 class="fw-bolder h5">1. 빈곤종식</h2>
                                     <p class="mb-0">모든 형태의 빈곤을 모든 지역에서 종식</p>
                                     <p></p>

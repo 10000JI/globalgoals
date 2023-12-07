@@ -38,4 +38,5 @@ public class UserDTO {
     private Long stampCardCount;
 
     private Long countDonation;
+    private Long donatedPoints;
 }

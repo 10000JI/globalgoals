@@ -18,6 +18,8 @@ public interface UserService {
 
     UserDTO getUserAndStampCount(Principal principal);
 
+    String chargeAdminPoint(DonationDTO donationDTO);
+
     default User dtoToUserEntity(UserDTO dto, PasswordEncoder passwordEncoder) {
 
         //Authority 객체를 생성하고, 권한 이름을 "ROLE_USER"로 설정
@@ -32,6 +34,7 @@ public interface UserService {
                 .name(dto.getName())
                 .authorities(Collections.singleton(authority))
                 .countDonation(dto.getCountDonation())
+                .donatedPoints(dto.getDonatedPoints())
                 .build();
         return entity;
     }
@@ -53,6 +56,7 @@ public interface UserService {
                 .email(user.getEmail())
                 .name(user.getName())
                 .stampCardCount(stampCardCount)
+                .donatedPoints(user.getDonatedPoints())
                 .build();
         return dto;
     }

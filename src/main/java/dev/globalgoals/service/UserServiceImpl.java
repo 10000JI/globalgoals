@@ -3,6 +3,7 @@ package dev.globalgoals.service;
 import dev.globalgoals.domain.Board;
 import dev.globalgoals.domain.Goal;
 import dev.globalgoals.domain.StampCard;
+import dev.globalgoals.dto.DonationDTO;
 import dev.globalgoals.dto.StampCardWithGoalDTO;
 import dev.globalgoals.repository.StampCardRepository;
 import dev.globalgoals.security.UserDetailsConfig;
@@ -42,6 +43,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     public String join(UserDTO userDto) {
 
         userDto.setCountDonation(0L); //Use에 Default값 써줬으나 dto로 가져오는 과정 중에 null 일 수 있으니 0으로 세팅
+        userDto.setDonatedPoints(0L); //Use에 Default값 써줬으나 dto로 가져오는 과정 중에 null 일 수 있으니 0으로 세팅
         User user = dtoToUserEntity(userDto, passwordEncoder);
         userRepository.save(user);
 
@@ -120,12 +122,27 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     }
 
     /**
-     * 마이페이지 유저 정보 + 스탬프 갯수
+     * 마이페이지 유저 정보 + 스탬프 갯수 + 17개 모두 채울 시 포인트 1700점 환급
      */
     @Override
+    @Transactional
     public UserDTO getUserAndStampCount(Principal principal) {
         Optional<User> byId = userRepository.findById(principal.getName());
         return entityToDto(stampCardRepository.countByCheckNum(principal.getName()), byId.get());
+    }
+
+    /**
+     * 관리자 포인트 충전
+     */
+    @Override
+    @Transactional
+    public String chargeAdminPoint(DonationDTO donationDTO) {
+        Optional<User> byId = userRepository.findById(donationDTO.getUserId());
+        if (byId.isPresent()) {
+            byId.get().plusDonatedPoints(donationDTO.getDonatedPoints());
+            return "success";
+        }
+        return "fail";
     }
 
 }

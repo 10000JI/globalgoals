@@ -1,10 +1,14 @@
 package dev.globalgoals.controller;
 
+import dev.globalgoals.domain.User;
 import dev.globalgoals.dto.*;
 import dev.globalgoals.service.BoardService;
 import dev.globalgoals.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -91,11 +95,23 @@ public class UserController {
         return "users/myPage";
     }
 
-    // 자유 게시판 & 실천 방법 등록 & 실천 등록 & 전체 글보기 리스트
+    // 내가 쓴 글, 댓글, 스크랩 등 목록
     @GetMapping("/{cate}/list")
     public String list(PageRequestDTO requestDTO, Model model, @PathVariable String cate, Principal principal) {
         model.addAttribute("result", boardService.getList(requestDTO, cate, principal));
         model.addAttribute("cate", cate);
         return "users/mainList";
+    }
+
+    // 관리자 포인트 충전
+    @PostMapping("/charge")
+    public ResponseEntity<String> remove(@RequestBody DonationDTO donationDTO) {
+
+        log.error("::::::beforeUserId={}, beforeDonatedPoints={}:::::::",donationDTO.getUserId(),donationDTO.getDonatedPoints());
+        String result = userService.chargeAdminPoint(donationDTO);
+        log.error(":::::result={}::::::",result);
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
+
     }
 }

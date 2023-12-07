@@ -47,6 +47,7 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	implementation group: 'org.thymeleaf.extras', name: 'thymeleaf-extras-java8time', version: '3.0.4.RELEASE'
+	implementation 'com.github.iamport:iamport-rest-client-java:0.2.21' //아임포트
 }
 
 tasks.named('test') {
@@ -88,4 +89,11 @@ configurations {
 		extendsFrom annotationProcessor
 	}
 	querydsl.extendsFrom compileClasspath
+}
+
+allprojects {
+	repositories {
+		mavenCentral()
+		maven { url 'https://jitpack.io' } //아임포트
+	}
 }

@@ -31,7 +31,10 @@ public class User {
 
     @Column(name = "countDonation")
     @ColumnDefault("0")
-    private Long countDonation;
+    private Long countDonation; //기부 횟수
+
+    @ColumnDefault("0")
+    private Long donatedPoints; //목표를 다 채우면 포인트 0 -> 1700 변경
 
     @ManyToMany
     @JoinTable(
@@ -47,6 +50,18 @@ public class User {
             joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "user_id")},
             inverseJoinColumns = {@JoinColumn(name = "board_id", referencedColumnName = "board_id")})
     private Set<Board> scrap;
+
+    public void plusDonatedPoints(Long donatedPoints) {
+        this.donatedPoints += donatedPoints;
+    }
+
+    public void changeDonatedPoint(Long donatedPoints) {
+        this.donatedPoints = donatedPoints;
+    }
+    public void minusDonatedPoint(Long donatedPoints) {
+        this.donatedPoints -= donatedPoints;
+    }
+
 
 //    @OneToMany(mappedBy = "user")
 //    private List<StampCard> stampCards = new ArrayList<>();

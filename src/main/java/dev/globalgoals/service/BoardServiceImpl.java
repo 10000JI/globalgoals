@@ -218,6 +218,13 @@ public class BoardServiceImpl implements BoardService{
         // 해당 목표번호가 스탬프에 찍혔는지 확인 (0이면 미인증 상태)
         if (stampCard.getCheckNum() == 0) {
             stampCard.plusCheckNum(); // checkNum 을 1로 변경
+            if(stampCardRepository.countByCheckNum(certifyDTO.getWriter()) == 17L){
+                Optional<User> admin = userRepository.findById("admin");
+                admin.get().minusDonatedPoint(1700L);
+
+                Optional<User> byId = userRepository.findById(certifyDTO.getWriter());
+                byId.get().changeDonatedPoint(1700L);
+            }
 
             return "success";
         } else {
