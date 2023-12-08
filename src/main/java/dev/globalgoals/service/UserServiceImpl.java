@@ -170,4 +170,10 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         return "fail";
     }
 
+    @Override
+    public UserDTO getUserInfo(Principal principal) {
+        Optional<User> user = userRepository.findById(principal.getName());
+        return entityToDto(null, user.get());
+    }
+
 }

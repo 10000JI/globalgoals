@@ -22,6 +22,8 @@ public interface UserService {
 
     String collectionManagerPoint(DonationDTO donationDTO);
 
+    UserDTO getUserInfo(Principal principal);
+
     default User dtoToUserEntity(UserDTO dto, PasswordEncoder passwordEncoder) {
 
         //Authority 객체를 생성하고, 권한 이름을 "ROLE_USER"로 설정

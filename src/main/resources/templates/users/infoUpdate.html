@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html th:replace="~{layout/layoutFile :: layout(~{::title},~{::link},~{::main},~{::script})}" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <title>GoalGoals-SDGs</title>
+    <link/>
+</head>
+<body class="d-flex flex-column min-vh-100">
+<main class="flex-shrink-0">
+    <!-- Navigation-->
+    <nav th:replace="layout/layoutNav :: nav_layout" class="navbar navbar-expand-lg navbar-dark bg-dark"></nav>
+    <div class="container-fluid">
+        <div class="row flex-nowrap" >
+            <div th:replace="layout/layoutSidebarMyPage :: sidebar_layout" class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-dark"></div>
+            <div class="col-md-3 border-right" >
+                <div class="d-flex flex-column align-items-center text-center p-3 py-5"><img class="rounded-circle mt-5" width="150px" src="https://www.sdgbookclub.com/common/img/default_profile.png">
+                    <span class="font-weight-bold">[[${userInfo.id}]]</span>
+                    <span class="text-black-50">[[${userInfo.email}]]</span>
+                    <button id="changePasswordBtn" class="btn btn-primary profile-button mt-3" data-bs-toggle="modal" data-bs-target="#pwModal">비밀번호 변경</button>
+                </div>
+            </div>
+            <div class="col-md-5 border-right">
+                <div class="p-3 py-5">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4 class="text-right">프로필</h4>
+                    </div>
+                    <form id="updateUserForm" method="post" action="userUpdate">
+                        <div class="row mt-3">
+                            <div class="col-md-12">
+                                <label for="name">사용자 이름</label>
+                                <input type="text" id="name" class="form-control" th:value="${userInfo.name}">
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-md-12">
+                                <label for="id">아이디</label>
+                                <input type="text" id="id" class="form-control" th:value="${userInfo.id}" readonly>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="email">이메일</label>
+                                    <input type="email" id="email" class="form-control" th:value="${userInfo.email}">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label></label>
+                                    <button type="button" class="btn btn-primary email_btn w-100" id="sendMail2">인증하기</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="emailCheck">이메일 확인</label>
+                                    <input type="text" name="emailCheck" id="emailCheck" class="form-control" placeholder="이메일 확인" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-5 text-center">
+                            <button class="btn btn-primary profile-button" id="btn2" type="submit">프로필 저장</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+
+            <div class="modal fade" id="pwModal" aria-hidden="true" aria-labelledby="pwModalLabel" tabindex="-1">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="pwModalLabel">비밀번호 변경</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="modalEmail">이메일</label>
+                                        <input type="email" name="email" id="modalEmail" class="form-control" placeholder="이메일">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label></label>
+                                        <button type="button" class="btn btn-primary email_btn w-100" id="sendMail1">인증하기</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="modalEmailCheck">이메일 확인</label>
+                                <input type="text" name="emailCheck" id="modalEmailCheck" class="form-control" placeholder="이메일 확인" />
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary donationSave1" data-bs-target="#pwModal2" data-bs-toggle="modal" data-bs-dismiss="modal">확인</button>
+                            <button type="button" class="btn btn-outline-secondary donationClose">닫기</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" id="pwModal2" aria-hidden="true" aria-labelledby="pwModalLabel2" tabindex="-1">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="pwModalLabel2">비밀번호 변경</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <input type="password" class="form-control" id="pw" name="password" placeholder="새 비밀번호">
+                            </div>
+                            <div class="form-group">
+                                <input type="password" class="form-control" id="pwCheck" placeholder="새 비밀번호 확인">
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary donationSave2">확인</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</main>
+<script></script>
+</body>
+</html>
+

@@ -126,4 +126,12 @@ public class UserController {
         return new ResponseEntity<>(result, HttpStatus.OK);
 
     }
+
+    //마이페이지
+    @GetMapping("/info/update")
+    public String infoUpdate(Principal principal, Model model) {
+        UserDTO userInfo = userService.getUserInfo(principal);
+        model.addAttribute("userInfo", userInfo);
+        return "users/infoUpdate";
+    }
 }
