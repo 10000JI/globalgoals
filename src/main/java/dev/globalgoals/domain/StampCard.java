@@ -34,4 +34,8 @@ public class StampCard {
         checkNum = 1;
     }
 
+    public void minusCheckNum() {
+        checkNum = 0;
+    }
+
 }

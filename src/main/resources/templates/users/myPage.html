@@ -16,7 +16,7 @@
                     <div class="card-body" style="font-weight: bold;">
                         <img src="https://www.sdgbookclub.com/common/img/default_profile.png" alt="프로필 이미지"
                              class="rounded-circle profile-image">
-                        <span th:text="${userAndStampCount.id}"></span><b style="margin-top: 20px;">님 안녕하세요, 누적 스탬프: [[${userAndStampCount.stampCardCount}]]개 / 포인트: [[${userAndStampCount.donatedPoints}]]점</b>
+                        <span th:text="${userAndStampCount.id}"></span><b style="margin-top: 20px;">님 안녕하세요, 누적 스탬프: [[${userAndStampCount.stampCardCount}]]개 / 포인트: [[${userAndStampCount.donatedPoints}]]점 / 기부횟수: [[${userAndStampCount.countDonation}]]회</b>
                     </div>
                 </div>
 
@@ -140,14 +140,17 @@
                 // 위의 rsp.paid_amount 와 data.response.amount를 비교한후 로직 실행 (import 서버검증)
                 if(rsp.paid_amount == data.response.amount){
                     alert("결제 및 결제검증완료");
+
+                    let adminCharge = {
+                        donatedPoints: amount,
+                        userId: [[${userAndStampCount.id}]]
+                    }
+
                     jQuery.ajax({
                         url: "/users/charge", //포인트 충전
                         type: 'POST',
                         contentType: 'application/json',
-                        data: JSON.stringify({
-                            'donatedPoints': amount,
-                            'userId': [[${userAndStampCount.id}]]
-                        }),
+                        data: JSON.stringify(adminCharge),
                         success: function(res) {
                             console.log("result: " + res);
                             var msg = '포인트 충전이 완료되었습니다.';
@@ -162,8 +165,39 @@
         });
     }
 
-    document.querySelector(".donationBtn").addEventListener('click', function () {
-        certifyModal.hide();
+    const donationModal = new bootstrap.Modal(document.getElementById('donationModal'));
+
+    document.querySelector(".donationClose").addEventListener('click', function () { //기부하기 모달창 닫기
+        donationModal.hide();
+    })
+    document.querySelector(".donationSave2").addEventListener('click', function () { //기부하기 실행
+        let userCharge = {
+            donatedPoints: [[${userAndStampCount.donatedPoints}]],
+            userId: [[${userAndStampCount.id}]]
+        }
+
+        fetch('/users/managerCollection', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json; charset=utf-8'
+            },
+            body: JSON.stringify(userCharge)
+        })
+            .then(function(response) {
+                return response.text();
+            })
+            .then(function(result) {
+                console.log("result: " + result);
+                if (result === 'success') {
+                    alert("관리자에게 포인트가 이전되었습니다");
+                    location.href = "/users/mypage";
+                }else if (result === 'fail') {
+                    alert("포인트 이동이 실패하였습니다.");
+                }
+            })
+            .catch(function(error) {
+                console.error('Fetch 오류:', error);
+            });
     })
 </script>
 </body>

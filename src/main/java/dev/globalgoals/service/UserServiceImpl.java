@@ -137,9 +137,34 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     @Override
     @Transactional
     public String chargeAdminPoint(DonationDTO donationDTO) {
-        Optional<User> byId = userRepository.findById(donationDTO.getUserId());
-        if (byId.isPresent()) {
-            byId.get().plusDonatedPoints(donationDTO.getDonatedPoints());
+        Optional<User> admin = userRepository.findById(donationDTO.getUserId());
+        if (admin.isPresent()) {
+            admin.get().plusDonatedPoints(donationDTO.getDonatedPoints());
+            return "success";
+        }
+        return "fail";
+    }
+
+    /**
+     * 사용자 -> 관리자로 포인트 수집
+     */
+    @Override
+    @Transactional
+    public String collectionManagerPoint(DonationDTO donationDTO) {
+        Optional<User> user = userRepository.findById(donationDTO.getUserId());
+        if (user.isPresent()) {
+            //user의 donatedPoint 필드는 1700->0 으로 만들고,  countDonation 필드를 +1 해준다
+            //(기부했으니 포인트는 0이 되나, 기부횟수는 +1된다.)
+            user.get().minusDonatedPoint(donationDTO.getDonatedPoints());
+            user.get().plusCountDonation();
+
+            //user의 stampCard인 checkNum 필드도 모두 1이었으나 0으로 변경하여 초기상태로 돌아간다.
+            Optional.ofNullable(stampCardRepository.getStampCardByUser_Id(donationDTO.getUserId()))
+                    .ifPresent(cards -> cards.stream().forEach(StampCard::minusCheckNum));
+
+            //user의 포인트는 manager에게 전달되어 쌓이게 된다.
+            userRepository.findById("manager").get().plusDonatedPoints(donationDTO.getDonatedPoints());
+
             return "success";
         }
         return "fail";

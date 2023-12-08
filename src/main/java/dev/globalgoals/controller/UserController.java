@@ -35,12 +35,14 @@ public class UserController {
 
     private final BoardService boardService;
 
+    //회원가입
     @GetMapping("/join")
     public String joinForm(Model model) {
         model.addAttribute("userDTO", new UserDTO());
         return "users/join";
     }
 
+    //회원가입
     @PostMapping("/join")
     public String addItem(@Validated @ModelAttribute UserDTO userDTO, BindingResult bindingResult) {
         boolean checked = userService.validateDuplicateMember(userDTO, bindingResult);
@@ -55,6 +57,7 @@ public class UserController {
         return "redirect:/";
     }
 
+    //이메일 인증
     @PostMapping("/checkMail") // AJAX와 URL을 매핑시켜줌
     @ResponseBody  //AJAX후 값을 리턴하기위해 작성
     public String SendMail(String email) throws MessagingException {
@@ -86,6 +89,7 @@ public class UserController {
         return "redirect:../";
     }
 
+    //마이페이지
     @GetMapping("/mypage")
     public String myPageForm(Principal principal, Model model) {
         List<StampCardWithGoalDTO> stampCardWithGoals = userService.getStampCardWithGoal(principal);
@@ -105,11 +109,19 @@ public class UserController {
 
     // 관리자 포인트 충전
     @PostMapping("/charge")
-    public ResponseEntity<String> remove(@RequestBody DonationDTO donationDTO) {
+    public ResponseEntity<String> charge(@RequestBody DonationDTO donationDTO) {
 
-        log.error("::::::beforeUserId={}, beforeDonatedPoints={}:::::::",donationDTO.getUserId(),donationDTO.getDonatedPoints());
         String result = userService.chargeAdminPoint(donationDTO);
-        log.error(":::::result={}::::::",result);
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
+
+    }
+
+    // 사용자의 포인터를 매니저에게 전달하여 포인트 수집
+    @PostMapping("/managerCollection")
+    public ResponseEntity<String> collection(@RequestBody DonationDTO donationDTO) {
+
+        String result = userService.collectionManagerPoint(donationDTO);
 
         return new ResponseEntity<>(result, HttpStatus.OK);
 

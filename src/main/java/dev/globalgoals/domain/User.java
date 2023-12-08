@@ -62,6 +62,10 @@ public class User {
         this.donatedPoints -= donatedPoints;
     }
 
+    public void plusCountDonation() {
+        countDonation++;
+    }
+
 
 //    @OneToMany(mappedBy = "user")
 //    private List<StampCard> stampCards = new ArrayList<>();

@@ -14,4 +14,7 @@ public interface StampCardRepository extends JpaRepository<StampCard, String> {
     // JPQL을 사용하여 checkNum이 1이고 user_id가 특정 값인 StampCard의 개수와 사용자 정보를 조회하는 메서드
     @Query("SELECT COUNT(sc) FROM StampCard sc LEFT JOIN sc.user u WHERE sc.checkNum = 1 AND sc.user.id = :userId")
     Long countByCheckNum(@Param("userId")String userId);
+
+    List<StampCard> getStampCardByUser_Id(String userId);
+    //select * from stamp_card where user_id="dhk9309"
 }
