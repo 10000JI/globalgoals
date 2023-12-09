@@ -198,9 +198,10 @@ public class UserServiceImpl implements UserDetailsService, UserService {
             checked = true;
         }
 
+        Optional<User> user = userRepository.findById(dto.getId());
         //email 중복 검증
         List<User> findEmail = userRepository.findByEmail(dto.getEmail());
-        if (!findEmail.isEmpty()) {
+        if (!findEmail.isEmpty() && !user.get().getEmail().equals(dto.getEmail())) {
             bindingResult.rejectValue("email", "user.email.notEqual");
             checked = true;
         }

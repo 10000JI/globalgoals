@@ -10914,7 +10914,7 @@ html {
   display: none;
 }
 
-.field-errors {
+.error-field {
    border-color: #dc3545;
    color: #dc3545;
  }

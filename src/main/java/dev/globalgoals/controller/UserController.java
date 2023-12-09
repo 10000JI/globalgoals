@@ -136,8 +136,8 @@ public class UserController {
     @GetMapping("/info/update")
     @PreAuthorize("isAuthenticated()")
     public String infoUpdate(Principal principal, Model model) {
-        UserDTO userInfo = userService.getUserInfo(principal);
-        model.addAttribute("userInfo", userInfo);
+        UserDTO userDTO = userService.getUserInfo(principal);
+        model.addAttribute("userDTO", userDTO);
         return "users/infoUpdate";
     }
     //마이페이지
