@@ -170,10 +170,51 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         return "fail";
     }
 
+    /**
+     *마이페이지
+     */
     @Override
     public UserDTO getUserInfo(Principal principal) {
         Optional<User> user = userRepository.findById(principal.getName());
         return entityToDto(null, user.get());
+    }
+
+
+    /**
+     * 마이페이지 수정 폼 검증
+     */
+    @Override
+    public boolean validateDuplicateMyPage(UserDTO dto, BindingResult bindingResult , Principal principal) {
+
+        boolean checked = false;
+        //checked가 true면 검증 발견
+        //checked가 false면 검증 미발견
+
+        checked = bindingResult.hasErrors();
+
+        //id는 변경되면 안됨 -> dto와 principle id 일치 여부 확인
+        if (!principal.getName().equals(dto.getId())) {
+            bindingResult.rejectValue("id", "user.id.notEqual2");
+            checked = true;
+        }
+
+        //email 중복 검증
+        List<User> findEmail = userRepository.findByEmail(dto.getEmail());
+        if (!findEmail.isEmpty()) {
+            bindingResult.rejectValue("email", "user.email.notEqual");
+            checked = true;
+        }
+
+        return checked;
+    }
+
+    @Override
+    @Transactional
+    public void userInfoUpdate(UserDTO dto) {
+        Optional<User> user = userRepository.findById(dto.getId());
+        user.get().changeName(dto.getName());
+        user.get().changeEmail(dto.getEmail());
+        // save 메서드는 생략 가능 (영속성 컨텍스트)
     }
 
 }

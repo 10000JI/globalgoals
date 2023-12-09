@@ -24,6 +24,10 @@ public interface UserService {
 
     UserDTO getUserInfo(Principal principal);
 
+    boolean validateDuplicateMyPage(UserDTO form, BindingResult bindingResult, Principal principal);
+
+    void userInfoUpdate(UserDTO dto);
+
     default User dtoToUserEntity(UserDTO dto, PasswordEncoder passwordEncoder) {
 
         //Authority 객체를 생성하고, 권한 이름을 "ROLE_USER"로 설정

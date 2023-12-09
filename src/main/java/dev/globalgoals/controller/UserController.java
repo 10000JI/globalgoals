@@ -9,11 +9,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.mail.MessagingException;
 import javax.servlet.http.Cookie;
@@ -34,6 +38,7 @@ public class UserController {
     private final MailManager mailManager;
 
     private final BoardService boardService;
+
 
     //회원가입
     @GetMapping("/join")
@@ -129,9 +134,41 @@ public class UserController {
 
     //마이페이지
     @GetMapping("/info/update")
+    @PreAuthorize("isAuthenticated()")
     public String infoUpdate(Principal principal, Model model) {
         UserDTO userInfo = userService.getUserInfo(principal);
         model.addAttribute("userInfo", userInfo);
         return "users/infoUpdate";
+    }
+    //마이페이지
+    @PostMapping("/info/update")
+    public String infoUpdate(@Validated @ModelAttribute UserDTO userDTO, BindingResult bindingResult, Principal principal) {
+
+        boolean checked = userService.validateDuplicateMyPage(userDTO, bindingResult, principal);
+
+        //검증에 실패하면 다시 입력 폼으로
+        if (checked) {
+            log.info("errors={}", bindingResult);
+            return "users/infoUpdate";
+        }
+
+        userService.userInfoUpdate(userDTO);
+
+        // 해당 부분 어떻게 처리할지 고민하기
+//        //자동 로그인 처리
+//        String username = userVO.getUsername();
+//        String password = userVO.getPassword();
+//
+//        //사용자 인증 객체 생성
+//        Authentication authentication = new UsernamePasswordAuthenticationToken(username,password);
+//        SecurityContextHolder.getContext().setAuthentication(authentication);
+//
+//        //쿠키 생성 및 저장
+//        Cookie cookie = new Cookie("autologin" , username + ":" + password);
+//        cookie.setMaxAge(30 * 24 * 60 * 60); // 쿠키 유효기간 설정 (30일)
+//        cookie.setPath("/");
+//        response.addCookie(cookie);
+
+        return "redirect:/";
     }
 }

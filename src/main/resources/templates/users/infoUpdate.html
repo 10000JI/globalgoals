@@ -23,30 +23,39 @@
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <h4 class="text-right">프로필</h4>
                     </div>
-                    <form id="updateUserForm" method="post" action="userUpdate">
+                    <form th:action="@{/users/info/update}" th:method="post">
                         <div class="row mt-3">
                             <div class="col-md-12">
                                 <label for="name">사용자 이름</label>
-                                <input type="text" id="name" class="form-control" th:value="${userInfo.name}">
+                                <input type="text" id="name" class="form-control"  th:errorclass="field-errors" th:value="${userInfo.name}" placeholder="이름" >
+                                <div class="field-errors" th:errors="${userInfo.name}">
+                                    이름 오류
+                                </div>
                             </div>
                         </div>
                         <div class="row mt-3">
                             <div class="col-md-12">
                                 <label for="id">아이디</label>
-                                <input type="text" id="id" class="form-control" th:value="${userInfo.id}" readonly>
+                                <input type="text" id="id" class="form-control"  th:errorclass="field-errors" th:value="${userInfo.id}" placeholder="아이디"  readonly>
+                                <div class="field-errors" th:errors="${userInfo.id}">
+                                    아이디 오류
+                                </div>
                             </div>
                         </div>
                         <div class="row mt-3">
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="email">이메일</label>
-                                    <input type="email" id="email" class="form-control" th:value="${userInfo.email}">
+                                    <input type="email" id="email" class="form-control"  th:errorclass="field-errors" th:value="${userInfo.email}" placeholder="이메일" >
+                                    <div class="field-errors" th:errors="${userInfo.email}">
+                                        이메일 오류
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label></label>
-                                    <button type="button" class="btn btn-primary email_btn w-100" id="sendMail2">인증하기</button>
+                                    <button type="button" class="btn btn-primary email_btn w-100" id="sendMail">인증하기</button>
                                 </div>
                             </div>
                         </div>
@@ -54,7 +63,8 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label for="emailCheck">이메일 확인</label>
-                                    <input type="text" name="emailCheck" id="emailCheck" class="form-control" placeholder="이메일 확인" />
+                                    <input type="text" id="emailCheck" th:value="${userInfo.emailCheck}" th:errorclass="field-errors" class="form-control" placeholder="이메일 확인" />
+                                    <span id="emailCheckValidation"></span>
                                 </div>
                             </div>
                         </div>
@@ -82,7 +92,7 @@
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <div class="form-group">
+                                    <div class="form-group">`
                                         <label></label>
                                         <button type="button" class="btn btn-primary email_btn w-100" id="sendMail1">인증하기</button>
                                     </div>
@@ -125,7 +135,47 @@
         </div>
     </div>
 </main>
-<script></script>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!--Custom Js-->
+<script type="text/javascript">
+    const emailCheckInput = document.querySelector('#emailCheck');
+    emailCheckInput.addEventListener('input', validateEmailCheck);
+    let key = "";
+    $("#sendMail").click(function() {// 메일 입력 유효성 검사
+
+        $.ajax({
+            type : "Post",
+            url : "/users/checkMail",
+            data : {
+                email:$('#email').val()
+            },
+            success:function(result){
+                console.log(result)
+                alert("인증번호가 발송되었습니다.");
+                key = result;
+            },
+            error:function(){
+                console.log()
+                alert("인증번호 발송이 실패하였습니다.")
+            }
+        })
+    });
+
+    function validateEmailCheck() {
+        const emailCheck = this.value;
+
+        if (emailCheck === key) {
+            // 이메일 인증 성공
+            document.querySelector('#emailCheckValidation').textContent = '인증 성공';
+            $("#submitButton").prop("disabled", false);
+        } else {
+            // 이메일 인증 실패
+            document.querySelector('#emailCheckValidation').textContent = '인증 실패';
+            $("#submitButton").prop("disabled", true);
+        }
+    }
+</script>
 </body>
 </html>
 

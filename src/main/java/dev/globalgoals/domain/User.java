@@ -66,6 +66,14 @@ public class User {
         countDonation++;
     }
 
+    public void changeName(String name){
+        this.name = name;
+    }
+
+    public void changeEmail(String email) {
+        this.email = email;
+    }
+
 
 //    @OneToMany(mappedBy = "user")
 //    private List<StampCard> stampCards = new ArrayList<>();
