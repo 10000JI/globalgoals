@@ -4,6 +4,7 @@ import dev.globalgoals.domain.Board;
 import dev.globalgoals.domain.Goal;
 import dev.globalgoals.domain.StampCard;
 import dev.globalgoals.dto.DonationDTO;
+import dev.globalgoals.dto.MyPageDTO;
 import dev.globalgoals.dto.StampCardWithGoalDTO;
 import dev.globalgoals.repository.StampCardRepository;
 import dev.globalgoals.security.UserDetailsConfig;
@@ -86,8 +87,8 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         }
 
         //email 중복 검증
-        List<User> findEmail = userRepository.findByEmail(form.getEmail());
-        if (!findEmail.isEmpty()) {
+        Optional<User> userEmail = userRepository.findByEmail(form.getEmail());
+        if (userEmail.isPresent()) {
             bindingResult.rejectValue("email", "user.email.notEqual");
             checked = true;
         }
@@ -184,7 +185,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
      * 마이페이지 수정 폼 검증
      */
     @Override
-    public boolean validateDuplicateMyPage(UserDTO dto, BindingResult bindingResult , Principal principal) {
+    public boolean validateDuplicateMyPage(MyPageDTO dto, BindingResult bindingResult , Principal principal) {
 
         boolean checked = false;
         //checked가 true면 검증 발견
@@ -198,24 +199,42 @@ public class UserServiceImpl implements UserDetailsService, UserService {
             checked = true;
         }
 
-        Optional<User> user = userRepository.findById(dto.getId());
+        Optional<User> user = userRepository.findById(principal.getName());
         //email 중복 검증
-        List<User> findEmail = userRepository.findByEmail(dto.getEmail());
-        if (!findEmail.isEmpty() && !user.get().getEmail().equals(dto.getEmail())) {
+        Optional<User> findEmail = userRepository.findByEmail(dto.getEmail());
+        if (findEmail.isPresent() && !user.get().getEmail().equals(dto.getEmail())) {
             bindingResult.rejectValue("email", "user.email.notEqual");
             checked = true;
         }
+
 
         return checked;
     }
 
     @Override
     @Transactional
-    public void userInfoUpdate(UserDTO dto) {
+    public void userInfoUpdate(MyPageDTO dto) {
         Optional<User> user = userRepository.findById(dto.getId());
         user.get().changeName(dto.getName());
         user.get().changeEmail(dto.getEmail());
         // save 메서드는 생략 가능 (영속성 컨텍스트)
+    }
+
+    /**
+     * 이메일 인증 본인 검증
+     */
+    @Override
+    public boolean validateEmail(String email) {
+
+        boolean checked = false;
+        //checked가 true면 검증 발견
+        //checked가 false면 검증 미발견
+
+        if (!userRepository.findByEmail(email).get().getEmail().equals(email)) {
+            checked = true;
+        }
+
+        return checked;
     }
 
 }

@@ -12,7 +12,7 @@ import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, String> {
 
-    List<User> findByEmail(String email);
+    Optional<User> findByEmail(String email);
 
     @Query("select u from User u join fetch u.authorities a where u.id = :id")
     User allFindById(@Param("id") String id);

@@ -22,7 +22,7 @@
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <h4 class="text-right">프로필</h4>
                     </div>
-                    <form action="infoUpdate.html" th:action="@{/users/info/update}" th:object="${userDTO}" method="post">
+                    <form action="infoUpdate.html" th:action="@{/users/info/update}" th:object="${myPageDTO}" method="post">
 
                         <div class="row mt-3">
                             <div class="col-md-12">
@@ -43,7 +43,7 @@
                             </div>
                         </div>
                         <div class="row mt-3">
-                            <div class="col-md-6">
+                            <div class="col-md-12">
                                 <div class="form-group">
                                     <label for="email">이메일</label>
                                     <input type="email" id="email" th:field="*{email}" th:errorclass="error-field" class="form-control"  placeholder="이메일" />
@@ -52,22 +52,8 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label></label>
-                                    <button type="button" class="btn btn-primary email_btn w-100" id="sendMail">인증하기</button>
-                                </div>
-                            </div>
                         </div>
-                        <div class="row mt-3">
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    <label for="emailCheck">이메일 확인</label>
-                                    <input type="text" id="emailCheck" th:field="*{emailCheck}" th:errorclass="error-field" class="form-control" placeholder="이메일 확인" />
-                                    <span id="emailCheckValidation"></span>
-                                </div>
-                            </div>
-                        </div>
+
                         <div class="mt-5 text-center">
                             <button class="btn btn-primary profile-button" id="btn2" type="submit">프로필 저장</button>
                         </div>
@@ -85,96 +71,98 @@
                         </div>
                         <div class="modal-body">
                             <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="modalEmail">이메일</label>
-                                        <input type="email" name="email" id="modalEmail" class="form-control" placeholder="이메일">
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">`
-                                        <label></label>
-                                        <button type="button" class="btn btn-primary email_btn w-100" id="sendMail1">인증하기</button>
-                                    </div>
+                                <div class="form-group">
+                                    <label for="modalPw">현재 비밀번호</label>
+                                    <input type="password" name="email" id="modalPw" class="form-control" placeholder="현재 비밀번호">
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <label for="modalEmailCheck">이메일 확인</label>
-                                <input type="text" name="emailCheck" id="modalEmailCheck" class="form-control" placeholder="이메일 확인" />
+                            <div class="row">
+                                <div class="form-group">
+                                    <label for="modalNewPw">새 비밀번호</label>
+                                    <input type="password" name="newPassword" id="modalNewPw" class="form-control" placeholder="새 비밀번호">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group">
+                                    <label for="modalNewPwCheck">새 비밀번호 확인</label>
+                                    <input type="password" name="passwordCheck" id="modalNewPwCheck" class="form-control" placeholder="새 비밀번호 확인">
+                                </div>
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-primary donationSave1" data-bs-target="#pwModal2" data-bs-toggle="modal" data-bs-dismiss="modal">확인</button>
-                            <button type="button" class="btn btn-outline-secondary donationClose">닫기</button>
+                            <button type="button" class="btn btn-primary donationSave1">확인</button>
+                            <button type="button" class="btn btn-outline-secondary donationClose"  data-bs-dismiss="modal">닫기</button>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="modal fade" id="pwModal2" aria-hidden="true" aria-labelledby="pwModalLabel2" tabindex="-1">
-                <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="pwModalLabel2">비밀번호 변경</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="form-group">
-                                <input type="password" class="form-control" id="pw" name="password" placeholder="새 비밀번호">
-                            </div>
-                            <div class="form-group">
-                                <input type="password" class="form-control" id="pwCheck" placeholder="새 비밀번호 확인">
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-primary donationSave2">확인</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
         </div>
     </div>
 </main>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <!--Custom Js-->
-<script type="text/javascript">
-    const emailCheckInput = document.querySelector('#emailCheck');
-    emailCheckInput.addEventListener('input', validateEmailCheck);
-    let key = "";
-    $("#sendMail").click(function() {// 메일 입력 유효성 검사
-
-        $.ajax({
-            type : "Post",
-            url : "/users/checkMail",
-            data : {
-                email:$('#email').val()
-            },
-            success:function(result){
-                console.log(result)
-                alert("인증번호가 발송되었습니다.");
-                key = result;
-            },
-            error:function(){
-                console.log()
-                alert("인증번호 발송이 실패하였습니다.")
-            }
-        })
-    });
-
-    function validateEmailCheck() {
-        const emailCheck = this.value;
-
-        if (emailCheck === key) {
-            // 이메일 인증 성공
-            document.querySelector('#emailCheckValidation').textContent = '인증 성공';
-            $("#submitButton").prop("disabled", false);
-        } else {
-            // 이메일 인증 실패
-            document.querySelector('#emailCheckValidation').textContent = '인증 실패';
-            $("#submitButton").prop("disabled", true);
-        }
-    }
+<script th:inline="javascript">
+    // const emailCheckInput = document.querySelector('#emailCheck');
+    // emailCheckInput.addEventListener('input', validateEmailCheck);
+    // let key = "";
+    // $("#sendMail").click(function() {// 메일 입력 유효성 검사
+    //
+    //     $.ajax({
+    //         type : "Post",
+    //         url : "/users/checkMeMail",
+    //         data : {
+    //             email:$('#modalEmail').val()
+    //         },
+    //         success:function(result){
+    //             console.log(result);
+    //             alert("인증번호가 발송되었습니다.");
+    //             key = result;
+    //         },
+    //         error:function(){
+    //             console.log()
+    //             alert("인증번호 발송이 실패하였습니다.")
+    //
+    //         }
+    //     })
+    // });
+    //
+    // function validateEmailCheck() {
+    //     const emailCheck = this.value;
+    //
+    //     if (emailCheck === key) {
+    //         // 이메일 인증 성공
+    //         document.querySelector('#emailCheckValidation').textContent = '인증 성공';
+    //         // #pwModal2 모달 엘리먼트에 data-bs-target, data-bs-toggle 속성 추가
+    //             $("#donationSave1").on("click", function () {
+    //                 // #pwModal2에 data-bs-target 및 data-bs-toggle 속성 추가하고 모달을 표시
+    //                 $('#pwModal2').attr('data-bs-target', '#pwModal2').attr('data-bs-toggle', 'modal').modal("show");
+    //             });
+    //         }
+    //     } else {
+    //         // 이메일 인증 실패
+    //         document.querySelector('#emailCheckValidation').textContent = '인증 실패';
+    //         $("#submitButton").prop("disabled", true);
+    //     }
+    // }
+    //
+    // // // 첫 번째 모달에서 확인 버튼이 눌렸을 때
+    // // $("#pwModal .donationSave1").click(function() {
+    // //     // 두 번째 모달을 띄우기
+    // //     $("#pwModal2").modal("show");
+    // //     // 첫 번째 모달 닫기
+    // //     $("#pwModal").modal("hide");
+    // // });
+    // //
+    // // // 두 번째 모달에서 확인 버튼이 눌렸을 때
+    // // $("#pwModal2 .donationSave2").click(function() {
+    // //     // 여기에 두 번째 모달에서의 로직을 추가하십시오.
+    // //     // 예를 들어, 서버에 데이터 전송 등을 수행할 수 있습니다.
+    // //     // ...
+    // //
+    // //     // 두 번째 모달 닫기
+    // //     $("#pwModal2").modal("hide");
+    // // });
 </script>
 </body>
 </html>

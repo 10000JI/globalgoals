@@ -6,6 +6,7 @@ import dev.globalgoals.service.BoardService;
 import dev.globalgoals.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -62,15 +63,32 @@ public class UserController {
         return "redirect:/";
     }
 
-    //이메일 인증
+    //이메일 인증 (join)
     @PostMapping("/checkMail") // AJAX와 URL을 매핑시켜줌
     @ResponseBody  //AJAX후 값을 리턴하기위해 작성
     public String SendMail(String email) throws MessagingException {
+        String key = getEmail(email);
+        return key;
+    }
+
+    //이메일 인증 (myPage, 본인 인증)
+    @PostMapping("/checkMeMail") // AJAX와 URL을 매핑시켜줌
+    @ResponseBody  //AJAX후 값을 리턴하기위해 작성
+    public String SendMeMail(String email) throws MessagingException {
+        if (userService.validateEmail(email)) {
+            return "false";
+        }
+        String key = getEmail(email);
+        return key;
+    }
+
+    @NotNull
+    private String getEmail(String email) throws MessagingException {
         UUID uuid = UUID.randomUUID(); // 랜덤한 UUID 생성
         String key = uuid.toString().substring(0, 7); // UUID 문자열 중 7자리만 사용하여 인증번호 생성
         String sub ="인증번호 입력을 위한 메일 전송";
         String con = "인증 번호 : "+key;
-        log.error("======{}======",email);
+        log.error("======{}======", email);
         mailManager.send(email,sub,con);
         return key;
     }
@@ -137,14 +155,16 @@ public class UserController {
     @PreAuthorize("isAuthenticated()")
     public String infoUpdate(Principal principal, Model model) {
         UserDTO userDTO = userService.getUserInfo(principal);
-        model.addAttribute("userDTO", userDTO);
+        model.addAttribute("myPageDTO", userDTO);
+        log.error("myPageDTO={}",userDTO);
         return "users/infoUpdate";
     }
+
     //마이페이지
     @PostMapping("/info/update")
-    public String infoUpdate(@Validated @ModelAttribute UserDTO userDTO, BindingResult bindingResult, Principal principal) {
+    public String infoUpdate(@Validated @ModelAttribute MyPageDTO myPageDTO, BindingResult bindingResult, Principal principal) {
 
-        boolean checked = userService.validateDuplicateMyPage(userDTO, bindingResult, principal);
+        boolean checked = userService.validateDuplicateMyPage(myPageDTO, bindingResult, principal);
 
         //검증에 실패하면 다시 입력 폼으로
         if (checked) {
@@ -152,23 +172,10 @@ public class UserController {
             return "users/infoUpdate";
         }
 
-        userService.userInfoUpdate(userDTO);
-
-        // 해당 부분 어떻게 처리할지 고민하기
-//        //자동 로그인 처리
-//        String username = userVO.getUsername();
-//        String password = userVO.getPassword();
-//
-//        //사용자 인증 객체 생성
-//        Authentication authentication = new UsernamePasswordAuthenticationToken(username,password);
-//        SecurityContextHolder.getContext().setAuthentication(authentication);
-//
-//        //쿠키 생성 및 저장
-//        Cookie cookie = new Cookie("autologin" , username + ":" + password);
-//        cookie.setMaxAge(30 * 24 * 60 * 60); // 쿠키 유효기간 설정 (30일)
-//        cookie.setPath("/");
-//        response.addCookie(cookie);
+        userService.userInfoUpdate(myPageDTO);
 
         return "redirect:/";
     }
+
+
 }

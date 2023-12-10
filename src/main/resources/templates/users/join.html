@@ -92,7 +92,10 @@
                                 <div class="form-group">
                                     <label for="emailCheck">이메일 확인</label>
                                     <input type="text" id="emailCheck" th:field="*{emailCheck}" th:errorclass="field-error" class="form-control" placeholder="이메일 확인" />
-                                    <span id="emailCheckValidation"></span>
+                                    <div class="field-error" th:errors="*{emailCheck}">
+                                        이메일 체크 오류
+                                    </div>
+                                    <span id="emailCheckValidation" class="field-error"></span>
                                 </div>
                             </div>
                             <div class="col-lg-6 d-flex align-items-center">
