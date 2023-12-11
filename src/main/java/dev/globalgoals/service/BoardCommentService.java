@@ -34,6 +34,7 @@ public interface BoardCommentService {
     //BoardComment객체를 BoardCommentDTO로 변환 Board 객체가 필요하지 않으므로 게시물 번호만
     default BoardCommentDTO entityToDTO(BoardComment comment){
         String commentWriter = (comment.getWriter() == null) ? "(알 수 없음)" : comment.getWriter();
+        //탈퇴한 회원 댓글은 알수없음으로 표시
 
         BoardCommentDTO dto = BoardCommentDTO.builder()
                 .rno(comment.getId())

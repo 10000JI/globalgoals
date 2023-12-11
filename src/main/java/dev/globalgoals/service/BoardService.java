@@ -45,6 +45,7 @@ public interface BoardService {
     default BoardDTO entityToDto(Board board, User user, Long commentCount, BoardCategory boardCategory) {
         String writerName = (board.getUser() == null) ? "(알 수 없음)" : user.getId();
         String writerEmail = (board.getUser() == null) ? " " : user.getEmail();
+        //탈퇴한 회원 게시물은 알수없음 으로 표시
 
         BoardDTO dto = BoardDTO.builder()
                 .id(board.getId())
@@ -75,6 +76,10 @@ public interface BoardService {
     }
 
     default BoardDTO entityToDtoSC(Board board,Long commentCount) {
+        String writerName = (board.getUser() == null) ? "(알 수 없음)" : board.getUser().getId();
+        String writerEmail = (board.getUser() == null) ? " " : board.getUser().getEmail();
+        //탈퇴한 회원 게시물은 알수없음 으로 표시
+
         BoardDTO dto = BoardDTO.builder()
                 .id(board.getId())
                 .title(board.getTitle())
@@ -82,8 +87,8 @@ public interface BoardService {
                 .hit(board.getHit())
                 .regDate(board.getRegDate())
                 .modDate(board.getModDate())
-                .writer(board.getUser().getId())
-                .writerEmail(board.getUser().getEmail())
+                .writer(writerName)
+                .writerEmail(writerEmail)
                 .commentCount(commentCount.intValue())
                 .category(board.getBoardCategory().getCategoryName())
                 .build();
