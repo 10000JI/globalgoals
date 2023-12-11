@@ -1,12 +1,11 @@
 package dev.globalgoals.service;
 
-import dev.globalgoals.domain.Board;
-import dev.globalgoals.domain.Goal;
-import dev.globalgoals.domain.StampCard;
+import dev.globalgoals.domain.*;
 import dev.globalgoals.dto.*;
+import dev.globalgoals.repository.BoardCommentRepository;
+import dev.globalgoals.repository.BoardRepository;
 import dev.globalgoals.repository.StampCardRepository;
 import dev.globalgoals.security.UserDetailsConfig;
-import dev.globalgoals.domain.User;
 import dev.globalgoals.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -32,6 +31,10 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     private final PasswordEncoder passwordEncoder;
 
     private final StampCardRepository stampCardRepository;
+
+    private final BoardRepository boardRepository;
+
+    private final BoardCommentRepository commentRepository;
 
     /**
      * 회원가입
@@ -256,11 +259,22 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         Optional<User> user = userRepository.findById(principal.getName());
         user.get().changePw(passwordEncoder.encode(dto.getNewPassword()));
     }
-//
-//    //id는 변경되면 안됨 -> dto와 principle id 일치 여부 확인
-//        if (principal.getName().equals(dto.getId())) {
-//        //html에서 뿌린 dto의 id와 principal의 name(=id)와 동일할 시에 패스워드 검증 ( 검증이 성공하면 데이터 변경이 이루어지므로 검증 할때 동일 사용자인지 체크하자 )
-//    }
+
+    /**
+     * 회원 탈퇴
+     */
+    @Override
+    @Transactional
+    public void remove(String id) {
+        for (Board board : boardRepository.getBoardByUser_Id(id)) {
+            // null이 아닌 "(알수없음)" 으로 변경하자
+        }
+        for (BoardComment comment : commentRepository.getBoardCommentByWriter(id)) {
+            comment.nullWriter(); //BoardComment의 작성자(fk)는 null로 변경
+        }
+        stampCardRepository.deleteByUserId(id);
+        userRepository.deleteById(id);
+    }
 
 //    /**
 //     * 이메일 인증 본인 검증

@@ -80,8 +80,8 @@
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-primary donationSave1" data-bs-target="#donationModal2" data-bs-toggle="modal" data-bs-dismiss="modal">확인</button>
-                                <button type="button" class="btn btn-outline-secondary donationClose">닫기</button>
+                                <button type="button" class="btn btn-primary donationSave1" data-bs-target="#donationModal2" data-bs-toggle="modal" >확인</button>
+                                <button type="button" class="btn btn-outline-secondary donationClose" data-bs-dismiss="modal">닫기</button>
                             </div>
                         </div>
                     </div>
@@ -94,7 +94,7 @@
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
-                                <p>기부자 목록에 등록되셨습니다.</p>
+                                <p>확인 버튼을 누르면 기부자 목록에 자동 등록됩니다.</p>
                                 <p>1700 포인트가 1700원 현금으로 변환됩니다.</p>
                                 <p>기부는 다른 사용자와 함께 일괄적으로 이루어 집니다.</p>
                             </div>
@@ -167,9 +167,6 @@
 
     const donationModal = new bootstrap.Modal(document.getElementById('donationModal'));
 
-    document.querySelector(".donationClose").addEventListener('click', function () { //기부하기 모달창 닫기
-        donationModal.hide();
-    })
     document.querySelector(".donationSave2").addEventListener('click', function () { //기부하기 실행
         let userCharge = {
             donatedPoints: [[${userAndStampCount.donatedPoints}]],
@@ -199,6 +196,7 @@
                 console.error('Fetch 오류:', error);
             });
     })
+
 </script>
 </body>
 </html>

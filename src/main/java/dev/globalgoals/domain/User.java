@@ -36,7 +36,7 @@ public class User {
     @ColumnDefault("0")
     private Long donatedPoints; //목표를 다 채우면 포인트 0 -> 1700 변경
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinTable(
             name = "user_authority",
             joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "user_id")},
@@ -44,7 +44,7 @@ public class User {
     private Set<Authority> authorities;
 
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinTable(
             name = "board_scrap",
             joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "user_id")},

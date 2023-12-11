@@ -57,6 +57,10 @@ public class Board extends BaseEntity{
         hit++;
     }
 
+    public void nullUserId(User user){
+        this.user = user; //게시물 작성자는 null로 변경 (fk null이어도 상관 없음)
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true; //객체가 자기 자신인지 확인

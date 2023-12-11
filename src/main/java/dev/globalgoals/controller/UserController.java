@@ -9,6 +9,7 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -205,9 +206,20 @@ public class UserController {
         }
 
         userService.userPwModify(myPwDTO, principal);
-        redirectAttributes.addFlashAttribute("msg", principal.getName());
+        redirectAttributes.addFlashAttribute("pwMsg", principal.getName());
 
-        return "redirect:/users/info/myPwModify";
+        return "redirect:/";
+    }
+
+    @DeleteMapping("/withdraw")
+    public ResponseEntity<String> remove(Principal principal) {
+
+        userService.remove(principal.getName());
+
+        SecurityContextHolder.clearContext(); //스프링 시큐리티 탈퇴 시 로그아웃 처리 (사용자의 인증 정보 및 권한을 지웁니다)
+
+        return new ResponseEntity<>("success", HttpStatus.OK);
+
     }
 
 }

@@ -20,4 +20,6 @@ public interface BoardCommentRepository extends JpaRepository<BoardComment, Long
     //FROM reply
     //WHERE board_id = ?
     //ORDER BY rno;
+
+    List<BoardComment> getBoardCommentByWriter(String writer);
 }

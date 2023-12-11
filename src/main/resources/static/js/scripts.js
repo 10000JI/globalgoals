@@ -5,3 +5,28 @@
 */
 // This file is intentionally blank
 // Use this file to add JavaScript to your project
+
+const outModal = new bootstrap.Modal(document.getElementById('outModal'));
+
+document.querySelector(".outSave").addEventListener('click', function () {
+    fetch('/users/withdraw', {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json; charset=utf-8'
+        }
+    })
+        .then(function(response) {
+            return response.text();
+        })
+        .then(function(result) {
+            console.log("result: " + result);
+            if (result === 'success') {
+                alert("정상적으로 탈퇴되었습니다.");
+                outModal.hide();
+                location.href="/"
+            }
+        })
+        .catch(function(error) {
+            console.error('Fetch 오류:', error);
+        });
+})

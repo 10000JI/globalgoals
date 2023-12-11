@@ -266,7 +266,13 @@
                 </div>
             </section>
         </main>
-    <script>
+    <script th:inline="javascript">
+        let msg = [[${pwMsg}]];
+        console.log(msg);
+
+        if (msg) {
+            alert([[${pwMsg}]]+"님의 정보 수정이 완료되었습니다.")
+        }
     </script>
     </body>
 </html>

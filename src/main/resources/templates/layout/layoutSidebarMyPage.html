@@ -31,11 +31,33 @@
                     <i class="fs-4 bi-info-square"></i> <span class="ms-1 d-none d-sm-inline">정보수정</span> </a>
             </li>
             <li>
-                <a href="#" class="nav-link px-0 align-middle text-white ">
+                <a href="#" class="nav-link px-0 align-middle text-white " data-bs-toggle="modal" data-bs-target="#outModal">
                     <i class="fs-4 bi-people"></i> <span class="ms-1 d-none d-sm-inline">회원탈퇴</span> </a>
             </li>
         </ul>
         <hr>
+    </div>
+
+    <div class="modal fade" id="outModal" aria-hidden="true" aria-labelledby="outModallLabel" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="outModallLabel">탈퇴</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <p>게시물 포함 가입된 회원정보가 모두 삭제됩니다.</p>
+                        <p>탈퇴 후 같은 계정으로 재가입 시 기존에 가지고 있던 기부금 및 스탬프는 복원되지 않습니다.</p>
+                        <p>회원 탈퇴를 진행하시겠습니까?</p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary outSave">확인</button>
+                    <button type="button" class="btn btn-outline-secondary donationClose" data-bs-dismiss="modal">닫기</button>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 </html>

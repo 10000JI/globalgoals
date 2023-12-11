@@ -55,7 +55,7 @@
                             <tr th:each="dto : ${result.dtoList}">
                                 <th scope="row"><small>[[${dto.id}]]</small></th>
                                 <td><a id="titleLink" th:href="@{/board/{cate}/read(cate = ${cate}, id = ${dto.id}, page = ${result.page},type = ${pageRequestDTO.type},keyword =${pageRequestDTO.keyword})}">[[${dto.title}]]----------------  [<b th:text="${dto.commentCount}"></b>]</a></td>
-                                <td>[[${dto.writer}]]<small>  [[${dto.writerEmail}]]</small> </td>
+                                <td th:unless="${dto.writer != null}" th:text="'(Unknown User)'">[[${dto.writer}]]<small>  [[${dto.writerEmail}]]</small> </td>
                                 <td>[[${#temporals.format(dto.regDate,'yyyy/MM/dd')}]]</td>
                             </tr>
                             </tbody>
@@ -86,23 +86,6 @@
 
     if (msg) {
         alert("등록 번호" + [[${msg}]])
-        // console.log("모달 진입");
-        // // 모달 열기
-        // let modal = document.querySelector(".modal");
-        // modal.classList.add("show");
-        //
-        // // Close 버튼에 이벤트 리스너 추가
-        // let closeModalButton = modal.querySelector(".btn-close");
-        // closeModalButton.addEventListener("click", function() {
-        //     modal.classList.remove("show");
-        // });
-        //
-        // // Close 버튼 외의 부분을 클릭하면 모달 닫기
-        // window.addEventListener("click", function(event) {
-        //     if (event.target === modal) {
-        //         modal.classList.remove("show");
-        //     }
-        // });
     }
 
     const searchForm = document.querySelector("#searchForm");

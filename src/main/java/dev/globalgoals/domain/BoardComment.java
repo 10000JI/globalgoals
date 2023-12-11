@@ -26,4 +26,8 @@ public class BoardComment extends BaseEntity {
 
     private String writer;
 
+    public void nullWriter(){
+        this.writer = null;
+    }
+
 }

@@ -32,6 +32,8 @@ public interface UserService {
 
     void userPwModify(MyPwDTO dto, Principal principal);
 
+    void remove(String id);
+
 //    boolean validateEmail(String email);
 
     default User dtoToUserEntity(UserDTO dto, PasswordEncoder passwordEncoder) {
