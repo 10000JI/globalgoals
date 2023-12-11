@@ -14,7 +14,7 @@
             <div class="col-md-3 border-right" >
                 <div class="d-flex flex-column align-items-center text-center p-3 py-5"><img class="rounded-circle mt-5" width="150px" src="https://www.sdgbookclub.com/common/img/default_profile.png">
                     <span class="font-weight-bold">[[${#authentication.name}]]</span>
-                    <button id="changePasswordBtn" class="btn btn-primary profile-button mt-3" data-bs-toggle="modal" data-bs-target="#pwModal">비밀번호 변경</button>
+                    <a th:href="@{/users/info/myPwModify}" class="btn btn-primary profile-button mt-3">비밀번호 변경</a>
                 </div>
             </div>
             <div class="col-md-5 border-right">
@@ -22,7 +22,7 @@
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <h4 class="text-right">프로필</h4>
                     </div>
-                    <form action="infoUpdate.html" th:action="@{/users/info/update}" th:object="${myPageDTO}" method="post">
+                    <form action="infoModify.html" th:action="@{/users/info/modify}" th:object="${myPageDTO}" method="post">
 
                         <div class="row mt-3">
                             <div class="col-md-12">
@@ -61,48 +61,23 @@
                 </div>
             </div>
 
-
-            <div class="modal fade" id="pwModal" aria-hidden="true" aria-labelledby="pwModalLabel" tabindex="-1">
-                <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="pwModalLabel">비밀번호 변경</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="row">
-                                <div class="form-group">
-                                    <label for="modalPw">현재 비밀번호</label>
-                                    <input type="password" name="email" id="modalPw" class="form-control" placeholder="현재 비밀번호">
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="form-group">
-                                    <label for="modalNewPw">새 비밀번호</label>
-                                    <input type="password" name="newPassword" id="modalNewPw" class="form-control" placeholder="새 비밀번호">
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="form-group">
-                                    <label for="modalNewPwCheck">새 비밀번호 확인</label>
-                                    <input type="password" name="passwordCheck" id="modalNewPwCheck" class="form-control" placeholder="새 비밀번호 확인">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-primary donationSave1">확인</button>
-                            <button type="button" class="btn btn-outline-secondary donationClose"  data-bs-dismiss="modal">닫기</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 </main>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!--<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>-->
 <!--Custom Js-->
 <script th:inline="javascript">
+
+    let msg = [[${msg}]];
+    console.log(msg);
+
+    if (msg) {
+        alert([[${msg}]]+"님의 정보 수정이 완료되었습니다.")
+    }
+
+
+
     // const emailCheckInput = document.querySelector('#emailCheck');
     // emailCheckInput.addEventListener('input', validateEmailCheck);
     // let key = "";

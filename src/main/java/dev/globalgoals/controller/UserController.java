@@ -1,6 +1,5 @@
 package dev.globalgoals.controller;
 
-import dev.globalgoals.domain.User;
 import dev.globalgoals.dto.*;
 import dev.globalgoals.service.BoardService;
 import dev.globalgoals.service.UserService;
@@ -8,25 +7,26 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 
 import javax.mail.MessagingException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.security.Principal;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Controller
@@ -71,16 +71,16 @@ public class UserController {
         return key;
     }
 
-    //이메일 인증 (myPage, 본인 인증)
-    @PostMapping("/checkMeMail") // AJAX와 URL을 매핑시켜줌
-    @ResponseBody  //AJAX후 값을 리턴하기위해 작성
-    public String SendMeMail(String email) throws MessagingException {
-        if (userService.validateEmail(email)) {
-            return "false";
-        }
-        String key = getEmail(email);
-        return key;
-    }
+//    //이메일 인증 (myPage, 본인 인증)
+//    @PostMapping("/checkMeMail") // AJAX와 URL을 매핑시켜줌
+//    @ResponseBody  //AJAX후 값을 리턴하기위해 작성
+//    public String SendMeMail(String email) throws MessagingException {
+//        if (userService.validateEmail(email)) {
+//            return "false";
+//        }
+//        String key = getEmail(email);
+//        return key;
+//    }
 
     @NotNull
     private String getEmail(String email) throws MessagingException {
@@ -150,32 +150,64 @@ public class UserController {
 
     }
 
-    //마이페이지
-    @GetMapping("/info/update")
+    //마이페이지 수정
+    @GetMapping("/info/modify")
     @PreAuthorize("isAuthenticated()")
-    public String infoUpdate(Principal principal, Model model) {
+    public String infoModify(Principal principal, Model model) {
         UserDTO userDTO = userService.getUserInfo(principal);
         model.addAttribute("myPageDTO", userDTO);
         log.error("myPageDTO={}",userDTO);
-        return "users/infoUpdate";
+        return "users/infoModify";
     }
 
-    //마이페이지
-    @PostMapping("/info/update")
-    public String infoUpdate(@Validated @ModelAttribute MyPageDTO myPageDTO, BindingResult bindingResult, Principal principal) {
+    //마이페이지 수정
+    @PostMapping("/info/modify")
+    @PreAuthorize("isAuthenticated()")
+    public String infoModify(@Validated @ModelAttribute MyPageDTO myPageDTO, BindingResult bindingResult, Principal principal, RedirectAttributes redirectAttributes) {
 
         boolean checked = userService.validateDuplicateMyPage(myPageDTO, bindingResult, principal);
 
         //검증에 실패하면 다시 입력 폼으로
         if (checked) {
             log.info("errors={}", bindingResult);
-            return "users/infoUpdate";
+            return "users/infoModify";
         }
 
-        userService.userInfoUpdate(myPageDTO);
+        userService.userInfoModify(myPageDTO);
+        redirectAttributes.addFlashAttribute("msg", principal.getName());
 
-        return "redirect:/";
+        return "redirect:/users/info/modify";
     }
 
+    //마이페이지 PW 수정
+    @GetMapping("/info/myPwModify")
+    @PreAuthorize("isAuthenticated()")
+    public String myPwModify(Model model) {
+        model.addAttribute("myPwDTO", new MyPwDTO());
+        return "users/infoModifyPw";
+    }
+
+    //마이페이지 PW 수정
+    @PostMapping("/info/myPwModify")
+    @PreAuthorize("isAuthenticated()")
+    public String pwModify(@Validated @ModelAttribute MyPwDTO myPwDTO, BindingResult bindingResult, Principal principal, RedirectAttributes redirectAttributes) {
+
+        log.error("myPwDTO={}", myPwDTO.getPassword());
+        log.error("myPwDTO={}", myPwDTO.getNewPassword());
+        log.error("myPwDTO={}", myPwDTO.getPasswordCheck());
+
+        boolean checked = userService.validateDuplicatePw(myPwDTO, bindingResult, principal);
+
+        // 검증에 실패하면 다시 입력 폼으로
+        if (checked) {
+            log.info("errors={}", bindingResult);
+            return "users/infoModifyPw";
+        }
+
+        userService.userPwModify(myPwDTO, principal);
+        redirectAttributes.addFlashAttribute("msg", principal.getName());
+
+        return "redirect:/users/info/myPwModify";
+    }
 
 }

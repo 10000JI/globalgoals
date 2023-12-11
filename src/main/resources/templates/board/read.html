@@ -114,7 +114,7 @@
                                         <button type="button" class="btn btn-danger replyRemove">삭제</button>
                                         <button type="button" class="btn btn-warning replyModify">수정</button>
                                         <button type="button" class="btn btn-primary replySave">저장</button>
-                                        <button type="button" class="btn btn-outline-secondary replyClose">닫기</button>
+                                        <button type="button" class="btn btn-outline-secondary replyClose" data-bs-dismiss="modal">닫기</button>
                                     </div>
                                 </div>
                             </div>
@@ -137,7 +137,7 @@
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-primary certifySave">확인</button>
-                                        <button type="button" class="btn btn-outline-secondary certifyClose">닫기</button>
+                                        <button type="button" class="btn btn-outline-secondary certifyClose" data-bs-dismiss="modal">닫기</button>
                                     </div>
                                 </div>
                             </div>
@@ -223,11 +223,6 @@
         replySaveButton.style.display = 'block';
         replyCloseButton.style.display = 'block';
     });
-
-    // 모달 닫기 이벤트 리스너
-    document.querySelector(".replyClose").addEventListener('click', function () {
-        addModal.hide();
-    })
 
     // 모달 댓글 저장
     document.querySelector('.replySave').addEventListener('click', function () {
@@ -384,11 +379,6 @@
                 console.error('Fetch 오류:', error);
             });
     });
-
-    // 인증 모달 닫기 이벤트 리스너
-    document.querySelector(".certifyClose").addEventListener('click', function () {
-        certifyModal.hide();
-    })
 
     // 인증하기
     document.querySelector('.certifySave').addEventListener('click', function () {

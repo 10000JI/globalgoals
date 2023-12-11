@@ -26,9 +26,13 @@ public interface UserService {
 
     boolean validateDuplicateMyPage(MyPageDTO myPageDTO, BindingResult bindingResult, Principal principal);
 
-    void userInfoUpdate(MyPageDTO dto);
+    void userInfoModify(MyPageDTO dto);
 
-    boolean validateEmail(String email);
+    boolean validateDuplicatePw(MyPwDTO myPwDTO, BindingResult bindingResult, Principal principal);
+
+    void userPwModify(MyPwDTO dto, Principal principal);
+
+//    boolean validateEmail(String email);
 
     default User dtoToUserEntity(UserDTO dto, PasswordEncoder passwordEncoder) {
 

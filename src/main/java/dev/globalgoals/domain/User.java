@@ -74,6 +74,10 @@ public class User {
         this.email = email;
     }
 
+    public void changePw(String password) {
+        this.password = password;
+    }
+
 
 //    @OneToMany(mappedBy = "user")
 //    private List<StampCard> stampCards = new ArrayList<>();

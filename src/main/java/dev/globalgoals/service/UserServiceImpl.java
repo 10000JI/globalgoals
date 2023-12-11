@@ -3,13 +3,10 @@ package dev.globalgoals.service;
 import dev.globalgoals.domain.Board;
 import dev.globalgoals.domain.Goal;
 import dev.globalgoals.domain.StampCard;
-import dev.globalgoals.dto.DonationDTO;
-import dev.globalgoals.dto.MyPageDTO;
-import dev.globalgoals.dto.StampCardWithGoalDTO;
+import dev.globalgoals.dto.*;
 import dev.globalgoals.repository.StampCardRepository;
 import dev.globalgoals.security.UserDetailsConfig;
 import dev.globalgoals.domain.User;
-import dev.globalgoals.dto.UserDTO;
 import dev.globalgoals.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -211,9 +208,12 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         return checked;
     }
 
+    /**
+     * 먀이페이지 프로필 수정
+     */
     @Override
     @Transactional
-    public void userInfoUpdate(MyPageDTO dto) {
+    public void userInfoModify(MyPageDTO dto) {
         Optional<User> user = userRepository.findById(dto.getId());
         user.get().changeName(dto.getName());
         user.get().changeEmail(dto.getEmail());
@@ -221,20 +221,62 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     }
 
     /**
-     * 이메일 인증 본인 검증
+     * 먀이페이지 비밀번호 검증
      */
     @Override
-    public boolean validateEmail(String email) {
+    public boolean validateDuplicatePw(MyPwDTO dto, BindingResult bindingResult, Principal principal) {
 
         boolean checked = false;
         //checked가 true면 검증 발견
         //checked가 false면 검증 미발견
 
-        if (!userRepository.findByEmail(email).get().getEmail().equals(email)) {
+        checked = bindingResult.hasErrors();
+
+        //사용자가 입력한 password와 db안에 암호화된 password와 동일하지 않다면 검증 발견
+        if(!passwordEncoder.matches(dto.getPassword(), userRepository.findById(principal.getName()).get().getPassword())){
+            bindingResult.rejectValue("password", "user.password.notEqual2");
+            checked = true;
+        }
+
+        // 새 비밀번호와 비밀번호 확인 일치 검증
+        if (!dto.getPasswordCheck().equals(dto.getNewPassword())) {
+            bindingResult.rejectValue("passwordCheck", "user.password.notEqual3");
             checked = true;
         }
 
         return checked;
     }
+
+    /**
+     * 마이페이지 비밀번호 수정
+     */
+    @Override
+    @Transactional
+    public void userPwModify(MyPwDTO dto, Principal principal) {
+        Optional<User> user = userRepository.findById(principal.getName());
+        user.get().changePw(passwordEncoder.encode(dto.getNewPassword()));
+    }
+//
+//    //id는 변경되면 안됨 -> dto와 principle id 일치 여부 확인
+//        if (principal.getName().equals(dto.getId())) {
+//        //html에서 뿌린 dto의 id와 principal의 name(=id)와 동일할 시에 패스워드 검증 ( 검증이 성공하면 데이터 변경이 이루어지므로 검증 할때 동일 사용자인지 체크하자 )
+//    }
+
+//    /**
+//     * 이메일 인증 본인 검증
+//     */
+//    @Override
+//    public boolean validateEmail(String email) {
+//
+//        boolean checked = false;
+//        //checked가 true면 검증 발견
+//        //checked가 false면 검증 미발견
+//
+//        if (!userRepository.findByEmail(email).get().getEmail().equals(email)) {
+//            checked = true;
+//        }
+//
+//        return checked;
+//    }
 
 }
