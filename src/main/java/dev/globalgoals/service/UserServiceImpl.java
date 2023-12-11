@@ -267,7 +267,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     @Transactional
     public void remove(String id) {
         for (Board board : boardRepository.getBoardByUser_Id(id)) {
-            // null이 아닌 "(알수없음)" 으로 변경하자
+            board.nullUserId();
         }
         for (BoardComment comment : commentRepository.getBoardCommentByWriter(id)) {
             comment.nullWriter(); //BoardComment의 작성자(fk)는 null로 변경

@@ -7,7 +7,7 @@
 // Use this file to add JavaScript to your project
 
 const outModal = new bootstrap.Modal(document.getElementById('outModal'));
-
+//회원탈퇴 모달
 document.querySelector(".outSave").addEventListener('click', function () {
     fetch('/users/withdraw', {
         method: 'DELETE',

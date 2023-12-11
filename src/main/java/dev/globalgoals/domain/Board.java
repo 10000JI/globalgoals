@@ -57,8 +57,8 @@ public class Board extends BaseEntity{
         hit++;
     }
 
-    public void nullUserId(User user){
-        this.user = user; //게시물 작성자는 null로 변경 (fk null이어도 상관 없음)
+    public void nullUserId(){
+        this.user = null; //게시물 작성자는 null로 변경 (fk null이어도 상관 없음)
     }
 
     @Override

@@ -43,6 +43,9 @@ public interface BoardService {
     }
 
     default BoardDTO entityToDto(Board board, User user, Long commentCount, BoardCategory boardCategory) {
+        String writerName = (board.getUser() == null) ? "(알 수 없음)" : user.getId();
+        String writerEmail = (board.getUser() == null) ? " " : user.getEmail();
+
         BoardDTO dto = BoardDTO.builder()
                 .id(board.getId())
                 .title(board.getTitle())
@@ -50,8 +53,8 @@ public interface BoardService {
                 .hit(board.getHit())
                 .regDate(board.getRegDate())
                 .modDate(board.getModDate())
-                .writer(user.getId())
-                .writerEmail(user.getEmail())
+                .writer(writerName)
+                .writerEmail(writerEmail)
                 .commentCount(commentCount.intValue())
                 .category(boardCategory.getCategoryName())
                 .build();
