@@ -75,7 +75,7 @@ public interface BoardService {
         return dto;
     }
 
-    default BoardDTO entityToDtoSC(Board board,Long commentCount) {
+    default BoardDTO entityToDtoSC(Board board) {
         String writerName = (board.getUser() == null) ? "(알 수 없음)" : board.getUser().getId();
         String writerEmail = (board.getUser() == null) ? " " : board.getUser().getEmail();
         //탈퇴한 회원 게시물은 알수없음 으로 표시
@@ -89,7 +89,7 @@ public interface BoardService {
                 .modDate(board.getModDate())
                 .writer(writerName)
                 .writerEmail(writerEmail)
-                .commentCount(commentCount.intValue())
+                .commentCount(board.getCommentCount())
                 .category(board.getBoardCategory().getCategoryName())
                 .build();
         return dto;

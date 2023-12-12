@@ -63,19 +63,20 @@ public class SearchBoardRepositoryImpl extends QuerydslRepositorySupport impleme
         QBoardCategory category = QBoardCategory.boardCategory;
 
         JPQLQuery<Board> jpqlQuery = from(board);
+        jpqlQuery.leftJoin(boardComment).on(boardComment.board.eq(board));
         jpqlQuery.leftJoin(user).on(board.user.eq(user));
         jpqlQuery.leftJoin(category).on(board.boardCategory.eq(category));
-        jpqlQuery.leftJoin(boardComment).on(boardComment.board.eq(board));
         if (param.equals("scrap")) {
             jpqlQuery.leftJoin(user.scrap, board).on(board.in(user.scrap).and(user.id.eq(principal.getName()))); //로그인한 사용자와 스크랩 유저와 동일한 것 조인
         }
+
 
         JPQLQuery<Tuple> tuple;
 
         if (param.equals("comment")) { //'내가 쓴 댓글' 이동 시 게시물 목록 대신 댓글 목록으로 변경
             tuple = jpqlQuery.select(board,boardComment,boardComment.count(),category);
         } else if(param.equals("scrap")) { //'스크랩' 이동 시 게시물 목록 대신 스크랩 목록으로 변경
-            tuple = jpqlQuery.select(board,boardComment.count());
+            tuple = jpqlQuery.<Object>select(board);
         }
         else { // 그 외는 다음과 같이 통일
             //SELECT b, w, count(r), bcy FROM Board b
@@ -85,6 +86,7 @@ public class SearchBoardRepositoryImpl extends QuerydslRepositorySupport impleme
         //where 조건
         BooleanBuilder booleanBuilder = new BooleanBuilder();
 
+        //카테고리
         if (param.equals("free")) {
             booleanBuilder.and(board.boardCategory.id.eq(1L));
         } else if(param.equals("manner")){
@@ -158,12 +160,8 @@ public class SearchBoardRepositoryImpl extends QuerydslRepositorySupport impleme
 
         });
 
-
-        if (param.equals("comment")) { //동일한 댓글 작성자가 동일한 게시글에 여러 댓글을 작성한 경우에도 모든 댓글을 가져오고 싶다면 GROUP BY 문에서 comment_num을 고려하여 그룹화를 수행
-            tuple.groupBy(board,boardComment);
-        } else { //댓글 리스트를 불러오지 않는 경우에는 Board의 id만 그룹화
-            tuple.groupBy(board);
-        }
+        //그룹화
+        tuple.groupBy(board);
 
         //page 처리
         tuple.offset(pageable.getOffset());

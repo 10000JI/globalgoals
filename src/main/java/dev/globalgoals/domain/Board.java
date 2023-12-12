@@ -6,6 +6,8 @@ import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -38,6 +40,13 @@ public class Board extends BaseEntity{
     @Column(name = "board_hit")
     @ColumnDefault("0")
     private Long hit;
+
+    @OneToMany(mappedBy = "board")
+    private List<BoardComment> boardComments = new ArrayList<>();
+
+    public int getCommentCount() {
+        return boardComments.size(); //스크랩 할 때만 리스트 내 댓글 갯수 가져옴
+    }
 
     // 엔티티(도메인)은 불변으로 설계하는 것이 좋지만, 필요한 부분은 수정할 수 있도록 메서드를 만드는 건 좋은 예시이다.
     // 불변으로 설계하게 되면, 불필요한 로직이 너무 많이 들어가기 때문에 일부 데이터를 수정하고 싶을 땐 메서드를 만들자 -> 대신 의미있는 메서드 이름
