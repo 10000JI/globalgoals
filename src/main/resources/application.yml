@@ -42,3 +42,6 @@ logging:
 
 file:
   dir: C:/SpringStudy/file/
+
+server:
+  port: 80

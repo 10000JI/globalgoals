@@ -134,7 +134,7 @@ public class BoardController {
     }
 
     @PostMapping("/scrap/{bno}")
-    public ResponseEntity<String> remove(@PathVariable("bno") Long bno, Principal principal) {
+    public ResponseEntity<String> scrap(@PathVariable("bno") Long bno, Principal principal) {
 
         log.info("rno:" + bno );
 
@@ -145,7 +145,7 @@ public class BoardController {
     }
 
     @PostMapping("/certify")
-    public ResponseEntity<String> remove(@RequestBody CertifyDTO certifyDTO) { // 스탬프 0->1 성공시 success , 이미 찍혔다면 fail 리턴
+    public ResponseEntity<String> certify(@RequestBody CertifyDTO certifyDTO) { // 스탬프 0->1 성공시 success , 이미 찍혔다면 fail 리턴
 
         String result = boardService.saveCertify(certifyDTO);
 
