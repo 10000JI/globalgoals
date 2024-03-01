@@ -70,7 +70,7 @@
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h5 class="modal-title" id="donationModalLabel">기부</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
                                 <div class="form-group">
@@ -186,7 +186,7 @@
             .then(function(result) {
                 console.log("result: " + result);
                 if (result === 'success') {
-                    alert("관리자에게 포인트가 이전되었습니다");
+                    alert("매니저에게 포인트가 이전되었습니다");
                     location.href = "/users/mypage";
                 }else if (result === 'fail') {
                     alert("포인트 이동이 실패하였습니다.");

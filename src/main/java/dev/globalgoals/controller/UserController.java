@@ -19,10 +19,10 @@ import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 
-import javax.mail.MessagingException;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
+import jakarta.mail.MessagingException;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import java.security.Principal;
 import java.util.Collections;
 import java.util.List;

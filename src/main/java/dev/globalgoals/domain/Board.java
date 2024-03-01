@@ -4,7 +4,7 @@ import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,6 +41,7 @@ public class Board extends BaseEntity{
     @ColumnDefault("0")
     private Long hit;
 
+    @Builder.Default
     @OneToMany(mappedBy = "board")
     private List<BoardComment> boardComments = new ArrayList<>();
 
@@ -54,9 +55,12 @@ public class Board extends BaseEntity{
     public void changeTitle(String title) {
         this.title = title;
     }
+
     public void changeContent(String content) {
         this.content = content;
     }
+
+
 
     public void changeBoardCategory(BoardCategory boardCategory){
         this.boardCategory = boardCategory;

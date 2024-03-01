@@ -3,41 +3,34 @@ package dev.globalgoals.config;
 import dev.globalgoals.security.UserLoginFailHandler;
 import dev.globalgoals.security.UserLogoutSucessHandler;
 import dev.globalgoals.security.UserSuceessHandler;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
 
-@EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
+@Configuration
+@RequiredArgsConstructor
 public class SecurityConfig {
-    @Bean
-        //public 을 선언하면 default로 바꾸라는 메세지 출력
-    WebSecurityCustomizer webSecurityConfig() {
-        //Security에서 무시해야하는 URL 패턴 등록
-        return web -> web
-                .ignoring()
-                .antMatchers("/img/**")
-                .antMatchers("/js/**")
-                .antMatchers("/css/**")
-                .antMatchers("/fonts/**");
-    }
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.csrf().disable().cors().disable()
-                .authorizeHttpRequests(request -> request
-                        .antMatchers("/", "/users/**").permitAll()
+    SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
+        CsrfTokenRequestAttributeHandler requestHandler = new CsrfTokenRequestAttributeHandler();
+        requestHandler.setCsrfRequestAttributeName("_csrf");
+
+        http
+                //CorsConfigurationSource 인터페이스를 구현하는 익명 클래스 생성하여 getCorsConfiguration() 메소드 재정의
+                .cors(cors -> cors.disable())
+                .csrf(csrf -> csrf.disable())
+                .authorizeRequests((requests) -> requests
+                        .requestMatchers("/img/**", "/js/**", "/css/**", "/fonts/**","/", "/users/**").permitAll()
                         .anyRequest().authenticated()
                 )
+                //DaoAuthenticationProvider의 세부 내역을 AuthenticationProvider 빈을 만들어 정의했으므로 인증을 구성해줘야 한다.
                 .formLogin(login -> login
                                 .loginPage("/users/login")
                                 .usernameParameter("id")
@@ -56,4 +49,10 @@ public class SecurityConfig {
                 );
         return http.build();
     }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
 }
